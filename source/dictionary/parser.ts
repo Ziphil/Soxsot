@@ -366,7 +366,7 @@ export class MarkupParser<S, E> {
       if (char === "{" || char === "[" || char === "/" || char === "") {
         break;
       } else if (char === "`") {
-        string += this.consumeEsacpe();
+        string += this.consumeEscape();
       } else {
         this.pointer ++;
         string += char;
@@ -382,7 +382,7 @@ export class MarkupParser<S, E> {
       if (char === "}" || char === "/" || char === "" || char === " " || char === "," || char === "." || char === "!" || char === "?") {
         break;
       } else if (char === "`") {
-        string += this.consumeEsacpe();
+        string += this.consumeEscape();
       } else {
         this.pointer ++;
         string += char;
@@ -398,7 +398,7 @@ export class MarkupParser<S, E> {
       if (char === "]" || char === "/" || char === "") {
         break;
       } else if (char === "`") {
-        string += this.consumeEsacpe();
+        string += this.consumeEscape();
       } else {
         this.pointer ++;
         string += char;
@@ -414,7 +414,7 @@ export class MarkupParser<S, E> {
       if (char === "/" || char === "") {
         break;
       } else if (char === "`") {
-        string += this.consumeEsacpe();
+        string += this.consumeEscape();
       } else {
         this.pointer ++;
         string += char;
@@ -423,7 +423,7 @@ export class MarkupParser<S, E> {
     return string;
   }
 
-  private consumeEsacpe(): string {
+  private consumeEscape(): string {
     this.pointer ++;
     let char = this.resolver.resolveEscape(this.source.charAt(this.pointer ++));
     return char;
