@@ -32,7 +32,7 @@ npm i soxsot
 ## Basic usage
 ### Loading
 ```typescript
-import {DirectoryLoadr} from "soxsot/dist/io";
+import {DirectoryLoader} from "soxsot/dist/io";
 
 // create a loader
 let loader = new DirectoryLoader("directory-path");
