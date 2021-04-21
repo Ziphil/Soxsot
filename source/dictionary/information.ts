@@ -71,7 +71,7 @@ export class InformationKindUtil {
   public static fromTag(tag: string): InformationKind | undefined {
     let entry = ObjectUtil.entries(INFORMATION_KIND_DATA).find(([kind, data]) => data.tag === tag);
     if (entry !== undefined) {
-      return entry[0] as any;
+      return entry[0];
     } else {
       return undefined;
     }
