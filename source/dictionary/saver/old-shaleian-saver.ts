@@ -71,9 +71,9 @@ export class OldShaleianSaver extends Saver {
 
   private writeWord(word: ParsedWord<string>): void {
     this.stream.write(`* ${word.uniqueName}\n`);
-    this.stream.write(`+ ${word.date} 〈${word.parts.ja?.lexicalCategory}〉\n`);
+    this.stream.write(`+ ${word.date} 〈${word.parts["ja"]?.lexicalCategory}〉\n`);
     this.stream.write("\n");
-    for (let section of word.parts.ja?.sections ?? []) {
+    for (let section of word.parts["ja"]?.sections ?? []) {
       for (let equivalent of section.equivalents) {
         this.stream.write("=");
         if (equivalent.hidden) {
