@@ -1,7 +1,7 @@
 //
 
 
-export const LEXICAL_CATEGORY_DATA = {
+export const SORT_DATA = {
   verbal: {
     names: {ja: "動辞", en: "Verbal"},
     abbreviations: {ja: "動", en: "V"}
@@ -147,7 +147,7 @@ export const NEGATIVE_DATA = {
   prefix: "du"
 };
 
-export type LexicalCategory = keyof typeof LEXICAL_CATEGORY_DATA;
+export type Sort = keyof typeof SORT_DATA;
 export type Category = keyof typeof CATEGORY_DATA;
 export type VerbalInflectionCategory = keyof typeof VERBAL_INFLECTION_CATEGORY_DATA;
 export type AdverbialInflectionCategory = keyof typeof ADVERBIAL_INFLECTION_CATEGORY_DATA;
@@ -155,4 +155,5 @@ export type ParticleInflectionType = keyof typeof PARTICLE_INFLECTION_TYPE_DATA;
 export type Tense = keyof typeof TENSE_DATA;
 export type Aspect = keyof typeof ASPECT_DATA;
 export type Transitivity = keyof typeof TRANSITIVITY_DATA;
+
 export type VerbFeature = {tense: Tense, aspect: Aspect, transitivity: Transitivity};

@@ -16,13 +16,13 @@ import {
 
 export class Section<S> {
 
-  public readonly lexicalCategory: string | null;
+  public readonly sort: string | null;
   public readonly equivalents: ReadonlyArray<Equivalent<S>>;
   public readonly informations: ReadonlyArray<Information<S>>;
   public readonly relations: ReadonlyArray<Relation<S>>;
 
-  public constructor(lexicalCategory: string | null, equivalents: ReadonlyArray<Equivalent<S>>, informations: ReadonlyArray<Information<S>>, relations: ReadonlyArray<Relation<S>>) {
-    this.lexicalCategory = lexicalCategory;
+  public constructor(sort: string | null, equivalents: ReadonlyArray<Equivalent<S>>, informations: ReadonlyArray<Information<S>>, relations: ReadonlyArray<Relation<S>>) {
+    this.sort = sort;
     this.equivalents = equivalents;
     this.informations = informations;
     this.relations = relations;
