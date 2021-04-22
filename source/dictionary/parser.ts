@@ -74,19 +74,19 @@ export class Parser<S> {
     let lines = content.split(/\r\n|\r|\n/);
     let sections = [];
     let before = true;
-    let currentLexicalCategory = null as string | null;
+    let currentSort = null as string | null;
     let currentEquivalents = [];
     let currentInformations = [];
     let currentRelations = [];
     for (let line of lines) {
-      let lexicalCategoryMatch = line.match(/^\+\s*(?:<(.*?)>)/);
-      if (lexicalCategoryMatch) {
+      let sortMatch = line.match(/^\+\s*(?:<(.*?)>)/);
+      if (sortMatch) {
         if (!before) {
-          let section = new Section(currentLexicalCategory, currentEquivalents, currentInformations, currentRelations);
+          let section = new Section(currentSort, currentEquivalents, currentInformations, currentRelations);
           sections.push(section);
         }
         before = false;
-        currentLexicalCategory = lexicalCategoryMatch[1] || null;
+        currentSort = sortMatch[1] || null;
         currentEquivalents = [];
         currentInformations = [];
         currentRelations = [];
@@ -103,7 +103,7 @@ export class Parser<S> {
       }
     }
     if (!before) {
-      let section = new Section(currentLexicalCategory, currentEquivalents, currentInformations, currentRelations);
+      let section = new Section(currentSort, currentEquivalents, currentInformations, currentRelations);
       sections.push(section);
     }
     let part = new Part(sections);
@@ -196,7 +196,7 @@ export class Parser<S> {
     }
   }
 
-  public lookupLexicalCategory(word: Word, language: string): string | null | undefined {
+  public lookupSort(word: Word, language: string): string | null | undefined {
     let content = word.contents[language];
     if (content !== undefined) {
       let match = content.match(/^\+\s*(?:<(.*?)>)/m);
@@ -366,7 +366,7 @@ export class MarkupParser<S, E> {
       if (char === "{" || char === "[" || char === "/" || char === "") {
         break;
       } else if (char === "`") {
-        string += this.consumeEsacpe();
+        string += this.consumeEscape();
       } else {
         this.pointer ++;
         string += char;
@@ -382,7 +382,7 @@ export class MarkupParser<S, E> {
       if (char === "}" || char === "/" || char === "" || char === " " || char === "," || char === "." || char === "!" || char === "?") {
         break;
       } else if (char === "`") {
-        string += this.consumeEsacpe();
+        string += this.consumeEscape();
       } else {
         this.pointer ++;
         string += char;
@@ -398,7 +398,7 @@ export class MarkupParser<S, E> {
       if (char === "]" || char === "/" || char === "") {
         break;
       } else if (char === "`") {
-        string += this.consumeEsacpe();
+        string += this.consumeEscape();
       } else {
         this.pointer ++;
         string += char;
@@ -414,7 +414,7 @@ export class MarkupParser<S, E> {
       if (char === "/" || char === "") {
         break;
       } else if (char === "`") {
-        string += this.consumeEsacpe();
+        string += this.consumeEscape();
       } else {
         this.pointer ++;
         string += char;
@@ -423,7 +423,7 @@ export class MarkupParser<S, E> {
     return string;
   }
 
-  private consumeEsacpe(): string {
+  private consumeEscape(): string {
     this.pointer ++;
     let char = this.resolver.resolveEscape(this.source.charAt(this.pointer ++));
     return char;

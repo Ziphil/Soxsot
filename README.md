@@ -15,7 +15,7 @@ Those concerning file I/O are exported separately from `dist/io`, which requires
 
 This package is currently under development and its API may be significantly changed in the future.
 
-新シャレイア語辞典形式 (.xdn/.xdnw/.xdnw) で記述された辞書を操作するための公式ライブラリです。
+新シャレイア語辞典形式 (.xdn/.xdnw/.xdns) で記述された辞書を操作するための公式ライブラリです。
 パース, 検索, 編集などといったシャレイア語辞典に対する様々な操作を行うことができます。
 
 辞書データの操作を行うクラスや関数はメインエントリーポイントからエクスポートされていて、Node.js とブラウザの両方で動きます。

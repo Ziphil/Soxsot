@@ -12,10 +12,10 @@ import {
   ASPECT_DATA,
   AdverbialInflectionCategory,
   CATEGORY_DATA,
-  LEXICAL_CATEGORY_DATA,
   NEGATIVE_DATA,
   PARTICLE_INFLECTION_TYPE_DATA,
   ParticleInflectionType,
+  SORT_DATA,
   TENSE_DATA,
   TRANSITIVITY_DATA,
   VERBAL_INFLECTION_CATEGORY_DATA,
@@ -141,12 +141,12 @@ export class InflectionSuggester extends Suggester {
   public suggest(word: Word, dictionary: Dictionary): Array<Suggestion> {
     let suggestions = [];
     let normalizedName = StringNormalizer.normalize(word.name, this.ignoreOptions);
-    for (let [lexicalCategory, candidates] of ObjectUtil.entries(this.candidates)) {
+    for (let [sort, candidates] of ObjectUtil.entries(this.candidates)) {
       for (let candidate of candidates) {
-        let wordLexicalCategory = Parser.createKeep().lookupLexicalCategory(word, "ja");
-        let desiredLexicalCategory = LEXICAL_CATEGORY_DATA[lexicalCategory].abbreviations["ja"];
-        if (candidate[0] === normalizedName && wordLexicalCategory?.startsWith(desiredLexicalCategory)) {
-          let suggestion = this.createSuggestion(lexicalCategory, word, candidate);
+        let wordSort = Parser.createKeep().lookupSort(word, "ja");
+        let desiredSort = SORT_DATA[sort].abbreviations["ja"];
+        if (candidate[0] === normalizedName && wordSort?.startsWith(desiredSort)) {
+          let suggestion = this.createSuggestion(sort, word, candidate);
           suggestions.push(suggestion);
         }
       }
@@ -154,14 +154,14 @@ export class InflectionSuggester extends Suggester {
     return suggestions;
   }
 
-  private createSuggestion(lexicalCategory: keyof Candidates, word: Word, candidate: any): Suggestion {
-    if (lexicalCategory === "verbal") {
+  private createSuggestion(sort: keyof Candidates, word: Word, candidate: any): Suggestion {
+    if (sort === "verbal") {
       return new VerbalInflectionSuggestion(word.name, candidate[1], candidate[2], candidate[3]);
-    } else if (lexicalCategory === "nominal") {
+    } else if (sort === "nominal") {
       return new NominalInflectionSuggestion(word.name);
-    } else if (lexicalCategory === "adverbial") {
+    } else if (sort === "adverbial") {
       return new AdverbialInflectionSuggestion(word.name, candidate[1]);
-    } else if (lexicalCategory === "particle") {
+    } else if (sort === "particle") {
       return new ParticleInflectionSuggestion(word.name);
     } else {
       throw new Error("cannot happen");
