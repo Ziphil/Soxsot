@@ -11,7 +11,7 @@ An official library for manipulating dictionaries written in the new Shaleian di
 It enables you to perform various operations on Shaleian dictionaries, including parsing, searching and editing.
 
 Classes and functions for manipulating dictionary data are exported from the main entrypoint, and run on both Node.js and browsers.
-Those concerning file I/O are exported separately from `dist/io`, which requires Node.js modules and run only on Node.js.
+Those concerning file I/O are exported separately from `dist/io`, which require Node.js modules and run only on Node.js.
 
 This package is currently under development and its API may be significantly changed in the future.
 
@@ -32,8 +32,6 @@ npm i soxsot
 ## Basic usage
 ### Loading
 ```typescript
-import {DirectoryLoader} from "soxsot/dist/io";
-
 // create a loader
 let loader = new DirectoryLoader("directory-path");
 // load a dictionary from the specified direcotry
@@ -42,8 +40,6 @@ let dictionary = await loader.asPromise();
 
 ### Saving
 ```typescript
-import {DirectorySaver} from "soxsot/dist/io";
-
 // create a saver
 let saver = new DirectorySaver(dictionary, "directory-path");
 // save a dictionary to the specified directory
@@ -52,20 +48,40 @@ await saver.asPromise();
 
 ### Searching
 ```typescript
-import {NormalWordParameter} from "soxsot";
-
 // create a parameter object for searching
 // here we will perform a prefix search of “savac”
 // from the word names of the Japanese entries ignoring diacritics and cases
-let parameter = new NormalWordParameter(
+let parameter = new NormalParameter(
   "savac",   // what to search
   "name",    // where to search from
   "prefix",  // how to match (exact, prefix, part or etc…)
   "ja",      // language
-  {case: true, diacritic: true}
+  {case: true, diacritic: true}  // what to ignore
 );
 // perform the search
 let result = dictionary.search(parameter);
 let words = result.words;
 let suggestions = result.suggestions;
+```
+
+### Plain objects
+Classes related to dictionary data itself, such as `Dictionary` and `Word`, have several properties for internal processing.
+Therefore, when you send objects of these classes using IPC/HTTP communication, if you do not modify them and serialise them as-is, unnecessary data will be included.
+To prevent this, each such class provides the `toPlain` method to create plain objects without internal data, and the `fromPlain` static method to reconvert them to the class objects.
+
+`Dictionary` や `Word` などの辞書データ本体に関するクラスは、内部処理用のメソッドをいくつかもっています。
+そのため、IPC/HTTP 通信を使ってこれらのクラスのオブジェクトを送信するときに、そのオブジェクトに手を加えずにそのままシリアライズすると、不必要なデータが含まれることになります。
+これを防ぐため、そのようなクラスには、内部データを含まないプレーンオブジェクトを作る `toPlain` メソッドと、それらをクラスのオブジェクトに戻す `fromPlain` 静的メソッドが定義されています。
+
+```typescript
+// create a plain object
+let plainDictionary = dictionary.toPlain();
+// send a plain object using IPC/HTTP communication
+ipcRenderer.send("foo", plainDicitonary);
+
+// receive a plain object
+ipcMain.on("foo", (event, plainDictionary) => {
+  // convert the plain object to a class object
+  let dictionary = Dictionary.fromPlain(plainDictionary);
+});
 ```
