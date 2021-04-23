@@ -20,13 +20,13 @@ import {
   Word
 } from "../word";
 import {
+  Parameter,
   WordMode,
-  WordParameter,
   WordType
-} from "./word-parameter";
+} from "./parameter";
 
 
-export class NormalWordParameter extends WordParameter {
+export class NormalParameter extends Parameter {
 
   public search: string;
   public mode: WordMode;
@@ -43,14 +43,14 @@ export class NormalWordParameter extends WordParameter {
     this.ignoreOptions = ignoreOptions ?? this.getDefaultIgnoreOptions();
   }
 
-  public static createEmpty(language: string): NormalWordParameter {
-    let parameter = new NormalWordParameter("", "both", "prefix", language);
+  public static createEmpty(language: string): NormalParameter {
+    let parameter = new NormalParameter("", "both", "prefix", language);
     return parameter;
   }
 
   public match(word: Word): boolean {
-    let candidates = WordParameter.createCandidates(word, this.mode, this.language);
-    let matcher = WordParameter.createMatcher(this.type);
+    let candidates = Parameter.createCandidates(word, this.mode, this.language);
+    let matcher = Parameter.createMatcher(this.type);
     let normalizedSearch = StringNormalizer.normalize(this.search, this.ignoreOptions);
     let predicate = candidates.some((candidate) => {
       let normalizedCandidate = StringNormalizer.normalize(candidate, this.ignoreOptions);
