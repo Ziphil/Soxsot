@@ -67,24 +67,32 @@ export class SingleLoader extends Loader {
       }
     };
     this.interface.on("line", (line) => {
-      let nameMatch = line.match(/^\*\s*@(\d+)\s*(.+)/);
-      let othersMatch = line.match(/^\*\*/);
-      if (nameMatch || othersMatch) {
+      try {
+        let nameMatch = line.match(/^\*\s*@(\d+)\s*(.+)/);
+        let othersMatch = line.match(/^\*\*/);
+        if (nameMatch || othersMatch) {
+          if (!before) {
+            setVariable(currentType, currentString);
+          }
+          before = false;
+          currentType = (nameMatch) ? "word" : "others";
+          currentString = "";
+        }
+        currentString += line + "\n";
+      } catch (error) {
+        this.emit("error", error);
+      }
+    });
+    this.interface.on("close", () => {
+      try {
         if (!before) {
           setVariable(currentType, currentString);
         }
-        before = false;
-        currentType = (nameMatch) ? "word" : "others";
-        currentString = "";
+        let dictionary = new Dictionary(words, settings, markers, this.path);
+        this.emit("end", dictionary);
+      } catch (error) {
+        this.emit("error", error);
       }
-      currentString += line + "\n";
-    });
-    this.interface.on("close", () => {
-      if (!before) {
-        setVariable(currentType, currentString);
-      }
-      let dictionary = new Dictionary(words, settings, markers, this.path);
-      this.emit("end", dictionary);
     });
   }
 
