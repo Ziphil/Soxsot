@@ -57,6 +57,10 @@ describe("load/save single file format", () => {
         - @1139 {pacar} → {parec}
         - @1202 {los} → {loc}
         - @1205 {'s} → {'c}
+        !MARKER
+        - xoq: pentagon, circle, square
+        - sôd: up
+        - sakil: hexagon, diamond, heart, trapezoid, cross
       `
     });
   });
@@ -64,7 +68,9 @@ describe("load/save single file format", () => {
   let check = function (dictionary: Dictionary): void {
     let words = dictionary.words;
     let settings = dictionary.settings;
-    expect.assertions(11);
+    let markers = dictionary.markers;
+    expect.assertions(15);
+    expect(dictionary.path).toBe("testdic.xdn");
     expect(words.length).toBe(4);
     expect(words.map((word) => word.uniqueName)).toEqual(expect.arrayContaining(["ter", "sôd", "sakil", "xoq"]));
     expect(settings.version).toBe("S");
@@ -76,6 +82,9 @@ describe("load/save single file format", () => {
     expect(settings.revisions[2]?.date).toBe(1205);
     expect(settings.revisions[2]?.beforeName).toBe("'s");
     expect(settings.revisions[2]?.afterName).toBe("'c");
+    expect(markers.get("xoq")).toEqual(expect.arrayContaining(["pentagon", "circle", "square"]));
+    expect(markers.get("sôd")).toEqual(expect.arrayContaining(["up"]));
+    expect(markers.get("sakil")).toEqual(expect.arrayContaining(["hexagon", "diamond", "heart", "trapezoid", "cross"]));
   };
   test("load via promise", async () => {
     let loader = new SingleLoader("testdic.xdn");
