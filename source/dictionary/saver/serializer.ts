@@ -36,10 +36,12 @@ export class Serializer {
     return string;
   }
 
-  public serializeDictionarySettings(settings: PlainDictionarySettings): string {
+  public serializeDictionarySettings(settings: PlainDictionarySettings, skipHeader?: boolean): string {
     let string = "";
-    string += "**\n";
-    string += "\n";
+    if (!skipHeader) {
+      string += "**\n";
+      string += "\n";
+    }
     string += "!VERSION\n";
     string += `- ${settings.version}\n`;
     string += "\n";
@@ -69,10 +71,12 @@ export class Serializer {
     return string;
   }
 
-  public serializeMarkers(markers: PlainMarkers): string {
+  public serializeMarkers(markers: PlainMarkers, skipHeader?: boolean): string {
     let string = "";
-    string += "**\n";
-    string += "\n";
+    if (!skipHeader) {
+      string += "**\n";
+      string += "\n";
+    }
     string += "!MARKER\n";
     for (let [uniqueName, wordMarkers] of markers.entries()) {
       string += `- ${uniqueName}: ${wordMarkers.join(", ")}\n`;
