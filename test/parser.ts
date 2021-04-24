@@ -50,7 +50,7 @@ describe("markup parser", () => {
   test("nested", () => {
     expect(parser.parse("[/K/o/s/ a tel]")).toBe("<B|<S|K>o<S|s> a tel>");
     expect(parser.parse("{milcit/a/s}")).toBe("<C|<L:milcitas|milcit<S|a>s>>");
-    expect(parser.parse("{kôm/os/, a}[,K/, ]{e hâl.}")).toBe("<C|<L:kômos|kôm<S|os>>, <L:a|a>><B| <S|K>, ><C|<L:e|e> <L:hâl|hâl>.>");
+    expect(parser.parse("{kôm/os/, a}[ /K/, ]{e hâl.}")).toBe("<C|<L:kômos|kôm<S|os>>, <L:a|a>><B| <S|K>, ><C|<L:e|e> <L:hâl|hâl>.>");
   });
 });
 
@@ -212,7 +212,7 @@ describe("parser", () => {
     expect(relations[0].entries[1].name).toBe("{káz}");
     expect(relations[0].entries[1].refer).toBeFalse();
     expect(relations[0].entries[2].name).toBe("{valcas}");
-    expect(relations[0].entries[3].refer).toBeFalse();
+    expect(relations[0].entries[2].refer).toBeFalse();
     expect(relations[1].title).toBe("対");
     expect(relations[1].entries[0].name).toBe("{sakil}");
   });
