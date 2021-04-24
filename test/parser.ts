@@ -209,9 +209,9 @@ describe("parser", () => {
     expect(relations[0].title).toBe("類");
     expect(relations[0].entries[0].name).toBe("{likom}");
     expect(relations[0].entries[0].refer).toBeTrue();
-    expect(relations[0].entries[1].name).toBe("{likom}");
+    expect(relations[0].entries[1].name).toBe("{káz}");
     expect(relations[0].entries[1].refer).toBeFalse();
-    expect(relations[0].entries[2].name).toBe("{likom}");
+    expect(relations[0].entries[2].name).toBe("{valcas}");
     expect(relations[0].entries[3].refer).toBeFalse();
     expect(relations[1].title).toBe("対");
     expect(relations[1].entries[0].name).toBe("{sakil}");
