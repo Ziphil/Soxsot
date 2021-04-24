@@ -68,7 +68,7 @@ describe("directory format", () => {
   afterAll(mock.restore);
   test("load via promise", async () => {
     let loader = new DirectoryLoader("testdic");
-    let dictionary = await loader.asPromise({});
+    let dictionary = await loader.asPromise();
     let words = dictionary.words;
     let settings = dictionary.settings;
     expect.assertions(12);
@@ -119,9 +119,9 @@ describe("directory format", () => {
     };
     let loadAndSaveDictionary = async function (): Promise<void> {
       let loader = new DirectoryLoader("testdic");
-      let dictionary = await loader.asPromise({});
+      let dictionary = await loader.asPromise();
       let saver = new DirectorySaver(dictionary, "testdic");
-      await saver.asPromise({});
+      await saver.asPromise();
     };
     await loadAndSaveDictionary();
     let firstData = await loadData();
