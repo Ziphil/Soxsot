@@ -112,7 +112,7 @@ describe("directory format", () => {
     loader.start();
   });
   test("idempotency (saving without any modification of the loaded data should not change the file contents)", async () => {
-    let loadData = async function (): Promise<{sakil: string, sod: string, settings: string}> {
+    let loadData = async function (): Promise<{[path: string]: string}> {
       let paths = await fs.readdir("testdic");
       let promises = paths.map((path) => fs.readFile("testdic/" + path, {encoding: "utf-8"}).then((data) => [path, data]));
       let entries = await Promise.all(promises);
