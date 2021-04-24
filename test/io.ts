@@ -6,7 +6,8 @@ import {
 import mock from "mock-fs";
 import dedent from "ts-dedent";
 import {
-  DirectoryLoader, DirectorySaver
+  DirectoryLoader,
+  DirectorySaver
 } from "../source/io";
 
 
