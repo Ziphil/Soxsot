@@ -36,25 +36,43 @@ export class Serializer {
     return string;
   }
 
-  public serializeDictionarySettings(settings: PlainDictionarySettings, skipHeader?: boolean): string {
+  public serializeDictionarySettings(settings: PlainDictionarySettings, skipHeader: {root?: boolean} = {}): string {
     let string = "";
-    if (!skipHeader) {
+    if (!skipHeader.root) {
       string += "**\n";
       string += "\n";
     }
-    string += "!VERSION\n";
-    string += `- ${settings.version}\n`;
+    string += this.serializeVersion(settings.version);
     string += "\n";
-    string += "!ALPHABET\n";
-    string += `- ${settings.alphabetRule}\n`;
+    string += this.serializeAlphabetRule(settings.alphabetRule);
     string += "\n";
-    string += "!REVISION\n";
     string += this.serializeRevisions(settings.revisions);
     return string;
   }
 
-  public serializeRevisions(revisions: PlainRevisions): string {
+  public serializeVersion(version: string, skipHeader: {part?: boolean} = {}): string {
     let string = "";
+    if (!skipHeader.part) {
+      string += "!VERSION\n";
+    }
+    string += `- ${version}\n`;
+    return string;
+  }
+
+  public serializeAlphabetRule(alphabetRule: string, skipHeader: {part?: boolean} = {}): string {
+    let string = "";
+    if (!skipHeader.part) {
+      string += "!ALPHABET\n";
+    }
+    string += `- ${alphabetRule}\n`;
+    return string;
+  }
+
+  public serializeRevisions(revisions: PlainRevisions, skipHeader: {part?: boolean} = {}): string {
+    let string = "";
+    if (!skipHeader.part) {
+      string += "!REVISION\n";
+    }
     for (let revision of revisions) {
       string += this.serializeRevision(revision);
     }
@@ -62,22 +80,24 @@ export class Serializer {
   }
 
   public serializeRevision(revision: PlainRevision): string {
-    let string = "";
-    string += "- ";
+    let line = "";
+    line += "- ";
     if (revision.date !== null) {
-      string += `@${revision.date} `;
+      line += `@${revision.date} `;
     }
-    string += `{${revision.beforeName}} → {${revision.afterName}}\n`;
-    return string;
+    line += `{${revision.beforeName}} → {${revision.afterName}}\n`;
+    return line;
   }
 
-  public serializeMarkers(markers: PlainMarkers, skipHeader?: boolean): string {
+  public serializeMarkers(markers: PlainMarkers, skipHeader: {root?: boolean, part?: boolean} = {}): string {
     let string = "";
-    if (!skipHeader) {
+    if (!skipHeader.root) {
       string += "**\n";
       string += "\n";
     }
-    string += "!MARKER\n";
+    if (!skipHeader.part) {
+      string += "!MARKER\n";
+    }
     for (let [uniqueName, wordMarkers] of markers.entries()) {
       string += `- ${uniqueName}: ${wordMarkers.join(", ")}\n`;
     }

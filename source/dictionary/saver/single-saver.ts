@@ -62,9 +62,11 @@ export class SingleSaver extends Saver {
   }
 
   private writeOthers(dictionary: Dictionary): void {
-    this.stream.write(this.serializer.serializeDictionarySettings(dictionary.settings, false));
+    this.stream.write("**\n");
     this.stream.write("\n");
-    this.stream.write(this.serializer.serializeMarkers(dictionary.markers, true));
+    this.stream.write(this.serializer.serializeDictionarySettings(dictionary.settings, {root: true}));
+    this.stream.write("\n");
+    this.stream.write(this.serializer.serializeMarkers(dictionary.markers, {root: true}));
   }
 
   private emitProgress(): void {
