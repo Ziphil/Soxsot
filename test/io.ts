@@ -1,9 +1,12 @@
 //
 
+import {
+  promises as fs
+} from "fs";
 import mock from "mock-fs";
 import dedent from "ts-dedent";
 import {
-  DirectoryLoader
+  DirectoryLoader, DirectorySaver
 } from "../source/io";
 
 
@@ -106,5 +109,24 @@ describe("directory format", () => {
       done(error);
     });
     loader.start();
+  });
+  test("idempotency (saving without any modification of the loaded data should not change the file contents)", async () => {
+    let loadData = async function (): Promise<{sakil: string, sod: string, settings: string}> {
+      let paths = await fs.readdir("testdic");
+      let promises = paths.map((path) => fs.readFile("testdic/" + path, {encoding: "utf-8"}).then((data) => [path, data]));
+      let entries = await Promise.all(promises);
+      return Object.fromEntries(entries);
+    };
+    let loadAndSaveDictionary = async function (): Promise<void> {
+      let loader = new DirectoryLoader("testdic");
+      let dictionary = await loader.asPromise({});
+      let saver = new DirectorySaver(dictionary, "testdic");
+      await saver.asPromise({});
+    };
+    await loadAndSaveDictionary();
+    let firstData = await loadData();
+    await loadAndSaveDictionary();
+    let secondData = await loadData();
+    expect(firstData).toEqual(secondData);
   });
 });
