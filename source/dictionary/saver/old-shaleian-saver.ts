@@ -38,7 +38,7 @@ export class OldShaleianSaver extends Saver {
   private size: number = 0;
   private count: number = 0;
 
-  public constructor(dictionary: Dictionary, path: string | null) {
+  public constructor(dictionary: Dictionary, path: string) {
     super(dictionary, path);
     let resolver = OldShaleianSaver.createMarkupResolver();
     this.stream = fs.createWriteStream(this.path, {encoding: "utf-8"});
