@@ -111,9 +111,9 @@ export class Parser<S> {
   }
 
   private parseField(line: string): Equivalent<S> | Information<S> | Relation<S> | null {
-    if (line.match(/^=/)) {
+    if (line.match(/^=\??/)) {
       return this.parseEquivalent(line);
-    } else if (line.match(/^\w:/)) {
+    } else if (line.match(/^\w\??:/)) {
       return this.parseInformation(line);
     } else if (line.match(/^\-/)) {
       return this.parseRelation(line);
