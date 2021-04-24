@@ -96,6 +96,7 @@ describe("parser", () => {
         O: Task.
         N: Note.
         H: History.
+        P: {te tesil acál} → in another moment
         P: {fi qelar} → aloud, out loud | Phrase.
         S: {pîtas e tel, dà kelitas e tel te lôk avév.} → I was scared, but at the same time, I was also relieved.
         - <S> {likom}*, {káz}, {valcas}
@@ -133,11 +134,10 @@ describe("parser", () => {
       expect(word.parts[language]!.sections.length).toBe(2);
       expect(word.parts[language]!.sections[0].equivalents.length).toBe(2);
       expect(word.parts[language]!.sections[0].informations.length).toBe(12);
-      expect(word.parts[language]!.sections[0].equivalents.length).toBe(2);
+      expect(word.parts[language]!.sections[0].relations.length).toBe(2);
       expect(word.parts[language]!.sections[1].equivalents.length).toBe(2);
       expect(word.parts[language]!.sections[1].informations.length).toBe(2);
-      expect(word.parts[language]!.sections[1].equivalents.length).toBe(1);
-      console.log(word.parts[language]!.sections[1].equivalents);
+      expect(word.parts[language]!.sections[1].relations.length).toBe(1);
     }
   });
   test("part japanese, section 0, equivalents", async () => {
