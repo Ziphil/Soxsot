@@ -80,9 +80,9 @@ export class Deserializer {
           alphabetRule = match[1];
         }
       } else if (mode === "REVISION") {
-        revisions = outerThis.deserializeRevisions(string);
+        revisions = outerThis.deserializeRevisions(string, true);
       } else if (mode === "MARKER") {
-        markers = outerThis.deserializeMarkers(string, true);
+        markers = outerThis.deserializeMarkers(string, true, true);
       }
     };
     while (index < lines.length) {
@@ -118,61 +118,16 @@ export class Deserializer {
   }
 
   public deserializeDictionarySettings(string: string): DictionarySettings {
-    let lines = string.trim().split(/\r\n|\r|\n/);
-    let match = lines[0]?.match(/^\*\*/);
-    if (match) {
-      let version;
-      let alphabetRule;
-      let revisions;
-      let before = true;
-      let currentMode = "";
-      let currentString = "";
-      let outerThis = this;
-      let setProperty = function (mode: string, string: string) {
-        if (mode === "VERSION") {
-          let match = string.match(/^\-\s*(.*)$/m);
-          if (match) {
-            version = match[1];
-          }
-        } else if (mode === "ALPHABET") {
-          let match = string.match(/^\-\s*(.*)$/m);
-          if (match) {
-            alphabetRule = match[1];
-          }
-        } else if (mode === "REVISION") {
-          revisions = outerThis.deserializeRevisions(string);
-        }
-      };
-      for (let i = 1 ; i < lines.length ; i ++) {
-        let line = lines[i];
-        let headerMatch = line.match(/^!(\w+)/);
-        if (headerMatch) {
-          if (!before) {
-            setProperty(currentMode, currentString);
-          }
-          before = false;
-          currentMode = headerMatch[1];
-          currentString = "";
-        } else {
-          currentString += line + "\n";
-        }
-      }
-      if (!before) {
-        setProperty(currentMode, currentString);
-      }
-      if (version !== undefined && alphabetRule !== undefined && revisions !== undefined) {
-        let settings = new DictionarySettings(version, alphabetRule, revisions);
-        return settings;
-      } else {
-        throw new ParseError("insufficientDictionarySettings", "there are not enough sections in the dictionary settings");
-      }
-    } else {
-      throw new ParseError("noDictionarySettingsHeader", "no header");
-    }
+    let [settings, markers] = this.deserializeOthers(string);
+    return settings;
   }
 
-  public deserializeRevisions(string: string): Revisions {
+  public deserializeRevisions(string: string, skipPartHeader?: boolean): Revisions {
     let lines = string.trim().split(/\r\n|\r|\n/);
+    let index = 0;
+    if (!skipPartHeader) {
+      index = this.skipOthersPartHeader(lines, "REVISION", index);
+    }
     let revisions = new Revisions();
     for (let line of lines) {
       if (line.trim() !== "") {
