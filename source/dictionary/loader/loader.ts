@@ -13,7 +13,7 @@ export abstract class Loader extends EventEmitter {
   protected readonly path: string;
   private lastProgressDate: Date | null = null;
 
-  public constructor(path: string) {
+  protected constructor(path: string) {
     super();
     this.path = path;
   }
