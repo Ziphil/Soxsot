@@ -115,7 +115,7 @@ export class Word implements PlainWord {
   }
 
   private updateName(): void {
-    let name = this.uniqueName.replaceAll("~", "");
+    let name = this.uniqueName.replace(/~/g, "");
     this.name = name;
   }
 

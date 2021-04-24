@@ -28,7 +28,7 @@ export class Serializer {
           string += "\n";
         }
         string += `!${language.toUpperCase()}\n`;
-        string += content.replaceAll(/\r\n|\r|\n/g, "\n").trim();
+        string += content.replace(/\r\n|\r|\n/g, "\n").trim();
         string += "\n";
         first = false;
       }

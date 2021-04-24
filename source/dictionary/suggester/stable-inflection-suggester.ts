@@ -73,7 +73,7 @@ export class InflectionSuggester extends Suggester {
             let prefix = (negative) ? NEGATIVE_DATA.prefix : "";
             if (normalizedSearch.startsWith(prefix) && normalizedSearch.endsWith(suffix)) {
               let regexp = new RegExp(`^${prefix}|${suffix}$`, "g");
-              let name = normalizedSearch.replaceAll(regexp, "");
+              let name = normalizedSearch.replace(regexp, "");
               let feature = {tense, aspect, transitivity};
               this.candidates.push({sort: "verbal", data: [name, category, feature, negative]});
             }
@@ -93,7 +93,7 @@ export class InflectionSuggester extends Suggester {
         let prefix = categoryPrefix + negativePrefix;
         if (normalizedSearch.startsWith(prefix)) {
           let regexp = new RegExp(`^${prefix}`, "g");
-          let name = normalizedSearch.replaceAll(regexp, "");
+          let name = normalizedSearch.replace(regexp, "");
           let feature = null;
           this.candidates.push({sort: "verbal", data: [name, category, feature, negative]});
         }
@@ -106,7 +106,7 @@ export class InflectionSuggester extends Suggester {
     let prefix = NEGATIVE_DATA.prefix;
     if (normalizedSearch.startsWith(prefix)) {
       let regexp = new RegExp(`^${prefix}`, "g");
-      let name = normalizedSearch.replaceAll(regexp, "");
+      let name = normalizedSearch.replace(regexp, "");
       this.candidates.push({sort: "nominal", data: [name]});
     }
   }
@@ -119,7 +119,7 @@ export class InflectionSuggester extends Suggester {
       let prefix = categoryPrefix + negativePrefix;
       if (normalizedSearch.startsWith(prefix)) {
         let regexp = new RegExp(`^${prefix}`, "g");
-        let name = normalizedSearch.replaceAll(regexp, "");
+        let name = normalizedSearch.replace(regexp, "");
         this.candidates.push({sort: "adverbial", data: [name, negative]});
       }
     }
@@ -130,7 +130,7 @@ export class InflectionSuggester extends Suggester {
     let prefix = PARTICLE_INFLECTION_TYPE_DATA.nonverb.prefix;
     if (normalizedSearch.startsWith(prefix)) {
       let regexp = new RegExp(`^${prefix}`, "g");
-      let name = normalizedSearch.replaceAll(regexp, "");
+      let name = normalizedSearch.replace(regexp, "");
       this.candidates.push({sort: "particle", data: [name]});
     }
   }
