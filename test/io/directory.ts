@@ -17,13 +17,15 @@ import {
 describe("load/save directory format", () => {
   beforeAll(() => {
     mock({
-      "testdic/sakil.xdnw": dedent`
-        * @1150 sakil
+      "testdic/ter.xdnw": dedent`
+        * @1128 ter
         !JA
-        + <名>
-        = <名> リンゴ
-        =? りんご, 林檎
-        M: ?
+        + <動>
+        = <動> (/a/ が /e/ を) 飲む
+        M: /e/ を噛まずに口から体の中へ入れる。
+        U: 「飲む」という意味で一般に用いられるのが {ter}。「体の内部に入れてしまう」という意味を強調したのが {dazkut}。
+        - <類> {dazkut}
+        - <類> {sôd}* 
       `,
       "testdic/sôd.xdnw": dedent`
         * @1128 sôd
@@ -36,15 +38,13 @@ describe("load/save directory format", () => {
         - <類> {ter}
         - <類> {tonis}
       `,
-      "testdic/ter.xdnw": dedent`
-        * @1128 ter
+      "testdic/sakil.xdnw": dedent`
+        * @1150 sakil
         !JA
-        + <動>
-        = <動> (/a/ が /e/ を) 飲む
-        M: /e/ を噛まずに口から体の中へ入れる。
-        U: 「飲む」という意味で一般に用いられるのが {ter}。「体の内部に入れてしまう」という意味を強調したのが {dazkut}。
-        - <類> {dazkut}
-        - <類> {sôd}* 
+        + <名>
+        = <名> リンゴ
+        =? りんご, 林檎
+        M: ?
       `,
       "testdic/xoq.xdnw": dedent`
         * @1035 xoq
@@ -74,7 +74,7 @@ describe("load/save directory format", () => {
     let settings = dictionary.settings;
     expect.assertions(11);
     expect(words.length).toBe(4);
-    expect(words.map((word) => word.uniqueName)).toEqual(expect.arrayContaining(["sakil", "sôd", "ter", "xoq"]));
+    expect(words.map((word) => word.uniqueName)).toEqual(expect.arrayContaining(["ter", "sôd", "sakil", "xoq"]));
     expect(settings.version).toBe("S");
     expect(settings.alphabetRule).toBe("sztdkgfvpbcqxjlrnmyhaâáàeêéèiîíìoôòuûù");
     expect(settings.revisions.length).toBe(3);

@@ -18,12 +18,14 @@ describe("load/save single file format", () => {
   beforeAll(() => {
     mock({
       "testdic.xdn": dedent`
-        * @1150 sakil
+        * @1128 ter
         !JA
-        + <名>
-        = <名> リンゴ
-        =? りんご, 林檎
-        M: ?
+        + <動>
+        = <動> (/a/ が /e/ を) 飲む
+        M: /e/ を噛まずに口から体の中へ入れる。
+        U: 「飲む」という意味で一般に用いられるのが {ter}。「体の内部に入れてしまう」という意味を強調したのが {dazkut}。
+        - <類> {dazkut}
+        - <類> {sôd}*
         * @1128 sôd
         !JA
         + <動>
@@ -33,14 +35,12 @@ describe("load/save single file format", () => {
         U: {sôd} は、とにかく何かを口にすることを表す。一方 {tonis} は、昼食や夕食などの 1 日のうちに摂るまとまった食事を食べることのみを表す。
         - <類> {ter}
         - <類> {tonis}
-        * @1128 ter
+        * @1150 sakil
         !JA
-        + <動>
-        = <動> (/a/ が /e/ を) 飲む
-        M: /e/ を噛まずに口から体の中へ入れる。
-        U: 「飲む」という意味で一般に用いられるのが {ter}。「体の内部に入れてしまう」という意味を強調したのが {dazkut}。
-        - <類> {dazkut}
-        - <類> {sôd}* 
+        + <名>
+        = <名> リンゴ
+        =? りんご, 林檎
+        M: ?
         * @1035 xoq
         !JA
         + <名>
@@ -66,7 +66,7 @@ describe("load/save single file format", () => {
     let settings = dictionary.settings;
     expect.assertions(11);
     expect(words.length).toBe(4);
-    expect(words.map((word) => word.uniqueName)).toEqual(expect.arrayContaining(["sakil", "sôd", "ter", "xoq"]));
+    expect(words.map((word) => word.uniqueName)).toEqual(expect.arrayContaining(["ter", "sôd", "sakil", "xoq"]));
     expect(settings.version).toBe("S");
     expect(settings.alphabetRule).toBe("sztdkgfvpbcqxjlrnmyhaâáàeêéèiîíìoôòuûù");
     expect(settings.revisions.length).toBe(3);
