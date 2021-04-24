@@ -3,10 +3,13 @@
 import {
   promises as fs
 } from "fs";
+import "jest-extended";
 import mock from "mock-fs";
 import dedent from "ts-dedent";
 import {
-  Dictionary
+  Dictionary,
+  DictionarySettings,
+  Markers
 } from "../../source";
 import {
   DirectoryLoader,
@@ -104,7 +107,6 @@ describe("load/save directory format", () => {
   });
   test("load via event emitter", (done) => {
     let loader = new DirectoryLoader("testdic");
-    expect.assertions(12);
     loader.on("end", (dictionary) => {
       check(dictionary);
       done();
@@ -132,5 +134,64 @@ describe("load/save directory format", () => {
     await loadAndSaveDictionary();
     let secondData = await loadData();
     expect(firstData).toEqual(secondData);
+  });
+});
+
+describe("directory format without system files", () => {
+  beforeAll(() => {
+    mock({
+      "testdic/monaf.xdnw": dedent`
+        * @1068 monaf
+        !JA
+        + <名>
+        = <名> 猫
+        =? ネコ, ねこ
+        M: ?
+      `
+    });
+  });
+  afterAll(mock.restore);
+  test("settings", async () => {
+    let loader = new DirectoryLoader("testdic");
+    let dictionary = await loader.asPromise();
+    let settings = dictionary.settings;
+    let emptySettings = DictionarySettings.createEmpty();
+    expect(settings).not.toBeNil();
+    expect(settings).toEqual(emptySettings);
+  });
+  test("markers", async () => {
+    let loader = new DirectoryLoader("testdic");
+    let dictionary = await loader.asPromise();
+    let markers = dictionary.markers;
+    let emptyMarkers = Markers.createEmpty();
+    expect(markers).not.toBeNil();
+    expect(markers).toEqual(emptyMarkers);
+  });
+});
+
+describe("directory format with insufficient settings", () => {
+  beforeAll(() => {
+    mock({
+      "testdic/monaf.xdnw": dedent`
+        * @1068 monaf
+        !JA
+        + <名>
+        = <名> 猫
+        =? ネコ, ねこ
+        M: ?
+      `,
+      "testdic/#SETTINGS.xdns": dedent`
+        **
+        !VERSION
+        - S
+        !REVISION
+        - @1139 {pacar} → {parec}
+      `
+    });
+  });
+  afterAll(mock.restore);
+  test("test", async () => {
+    let loader = new DirectoryLoader("testdic");
+    await expect(loader.asPromise()).toReject();
   });
 });

@@ -3,10 +3,13 @@
 import {
   promises as fs
 } from "fs";
+import "jest-extended";
 import mock from "mock-fs";
 import dedent from "ts-dedent";
 import {
-  Dictionary
+  Dictionary,
+  DictionarySettings,
+  Markers
 } from "../../source";
 import {
   SingleLoader,
@@ -91,6 +94,17 @@ describe("load/save single file format", () => {
     let dictionary = await loader.asPromise();
     check(dictionary);
   });
+  test("load via event emitter", (done) => {
+    let loader = new SingleLoader("testdic.xdn");
+    loader.on("end", (dictionary) => {
+      check(dictionary);
+      done();
+    });
+    loader.on("error", (error) => {
+      done(error);
+    });
+    loader.start();
+  });
   test("idempotency", async () => {
     let loadData = async function (): Promise<string> {
       let data = await fs.readFile("testdic.xdn", {encoding: "utf-8"});
@@ -107,5 +121,122 @@ describe("load/save single file format", () => {
     await loadAndSaveDictionary();
     let secondData = await loadData();
     expect(firstData).toEqual(secondData);
+  });
+});
+
+describe("single file format without system data (neither)", () => {
+  beforeAll(() => {
+    mock({
+      "testdic.xdn": dedent`
+        * @1068 monaf
+        !JA
+        + <名>
+        = <名> 猫
+        =? ネコ, ねこ
+        M: ?
+      `
+    });
+  });
+  afterAll(mock.restore);
+  test("settings", async () => {
+    let loader = new SingleLoader("testdic.xdn");
+    let dictionary = await loader.asPromise();
+    let settings = dictionary.settings;
+    let emptySettings = DictionarySettings.createEmpty();
+    expect(settings).not.toBeNil();
+    expect(settings).toEqual(emptySettings);
+  });
+  test("markers", async () => {
+    let loader = new SingleLoader("testdic.xdn");
+    let dictionary = await loader.asPromise();
+    let markers = dictionary.markers;
+    let emptyMarkers = Markers.createEmpty();
+    expect(markers).not.toBeNil();
+    expect(markers).toEqual(emptyMarkers);
+  });
+});
+
+describe("single file format without system data (no settings)", () => {
+  beforeAll(() => {
+    mock({
+      "testdic.xdn": dedent`
+        * @1068 monaf
+        !JA
+        + <名>
+        = <名> 猫
+        =? ネコ, ねこ
+        M: ?
+        **
+        !MARKER
+        - xoq: pentagon, circle, square
+      `
+    });
+  });
+  afterAll(mock.restore);
+  test("settings", async () => {
+    let loader = new SingleLoader("testdic.xdn");
+    let dictionary = await loader.asPromise();
+    let settings = dictionary.settings;
+    let emptySettings = DictionarySettings.createEmpty();
+    expect(settings).not.toBeNil();
+    expect(settings).toEqual(emptySettings);
+  });
+});
+
+describe("single file format without system data (no markers)", () => {
+  beforeAll(() => {
+    mock({
+      "testdic.xdn": dedent`
+        * @1068 monaf
+        !JA
+        + <名>
+        = <名> 猫
+        =? ネコ, ねこ
+        M: ?
+        **
+        !VERSION
+        - S
+        !ALPHABET
+        - sztdkgfvpbcqxjlrnmyhaâáàeêéèiîíìoôòuûù
+        !REVISION
+        - @1139 {pacar} → {parec}
+      `
+    });
+  });
+  afterAll(mock.restore);
+  test("markers", async () => {
+    let loader = new SingleLoader("testdic.xdn");
+    let dictionary = await loader.asPromise();
+    let markers = dictionary.markers;
+    let emptyMarkers = Markers.createEmpty();
+    expect(markers).not.toBeNil();
+    expect(markers).toEqual(emptyMarkers);
+  });
+});
+
+describe("single file format with insufficient settings", () => {
+  beforeAll(() => {
+    mock({
+      "testdic.xdn": dedent`
+        * @1068 monaf
+        !JA
+        + <名>
+        = <名> 猫
+        =? ネコ, ねこ
+        M: ?
+        **
+        !VERSION
+        - S
+        !REVISION
+        - @1139 {pacar} → {parec}
+        !MARKER
+        - xoq: pentagon, circle, square
+      `
+    });
+  });
+  afterAll(mock.restore);
+  test("test", async () => {
+    let loader = new SingleLoader("testdic.xdn");
+    await expect(loader.asPromise()).toReject();
   });
 });
