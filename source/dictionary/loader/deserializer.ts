@@ -79,7 +79,7 @@ export class Deserializer {
       } else if (tag === "REVISION") {
         revisions = outerThis.deserializeRevisions(string);
       } else if (tag === "MARKER") {
-        markers = outerThis.deserializeMarkers(string, {root: false});
+        markers = outerThis.deserializeMarkers(string, {root: true});
       }
     };
     while (index < lines.length) {
