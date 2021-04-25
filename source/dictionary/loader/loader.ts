@@ -13,12 +13,12 @@ export abstract class Loader extends EventEmitter {
   protected readonly path: string;
   private lastProgressDate: Date | null = null;
 
-  public constructor(path: string) {
+  protected constructor(path: string) {
     super();
     this.path = path;
   }
 
-  public asPromise(listeners: LoaderEventListeners): Promise<Dictionary> {
+  public asPromise(listeners: LoaderEventListeners = {}): Promise<Dictionary> {
     let promise = new Promise<Dictionary>((resolve, reject) => {
       if (listeners.onProgress) {
         this.on("progress", listeners.onProgress);

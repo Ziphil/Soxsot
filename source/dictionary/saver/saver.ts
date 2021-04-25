@@ -14,7 +14,7 @@ export abstract class Saver extends EventEmitter {
   protected readonly path: string;
   private lastProgressDate: Date | null = null;
 
-  public constructor(dictionary: Dictionary, path: string | null) {
+  protected constructor(dictionary: Dictionary, path: string | null) {
     super();
     let nextPath = path ?? dictionary.path;
     if (nextPath !== null && nextPath !== undefined) {
@@ -25,7 +25,7 @@ export abstract class Saver extends EventEmitter {
     }
   }
 
-  public asPromise(listeners: SaverEventListeners): Promise<void> {
+  public asPromise(listeners: SaverEventListeners = {}): Promise<void> {
     let promise = new Promise<void>((resolve, reject) => {
       if (listeners.onProgress) {
         this.on("progress", listeners.onProgress);

@@ -14,7 +14,7 @@ import {
 } from "../word";
 
 
-export abstract class WordParameter {
+export abstract class Parameter {
 
   public abstract language: string;
   private suggesters?: Array<Suggester>;

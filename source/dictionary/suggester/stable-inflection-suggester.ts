@@ -44,14 +44,14 @@ export class InflectionSuggester extends Suggester {
   private search: string;
   private normalizedSearch: string;
   private ignoreOptions: IgnoreOptions;
-  private candidates: Candidates;
+  private candidates: Array<Candidate>;
 
   public constructor(search: string, ignoreOptions: IgnoreOptions) {
     super();
     this.search = search;
     this.normalizedSearch = StringNormalizer.normalize(search, ignoreOptions);
     this.ignoreOptions = ignoreOptions;
-    this.candidates = {verbal: [], nominal: [], adverbial: [], particle: []};
+    this.candidates = [];
   }
 
   public prepare(): void {
@@ -73,9 +73,9 @@ export class InflectionSuggester extends Suggester {
             let prefix = (negative) ? NEGATIVE_DATA.prefix : "";
             if (normalizedSearch.startsWith(prefix) && normalizedSearch.endsWith(suffix)) {
               let regexp = new RegExp(`^${prefix}|${suffix}$`, "g");
-              let name = normalizedSearch.replaceAll(regexp, "");
+              let name = normalizedSearch.replace(regexp, "");
               let feature = {tense, aspect, transitivity};
-              this.candidates.verbal.push([name, category, feature, negative]);
+              this.candidates.push({sort: "verbal", data: [name, category, feature, negative]});
             }
           }
         }
@@ -85,16 +85,17 @@ export class InflectionSuggester extends Suggester {
 
   private prepareVerbalOthers(): void {
     let normalizedSearch = this.normalizedSearch;
-    for (let category of ["adjective", "adverb", "nounAdverb"] as const) {
+    let categories = ["adjective", "adverb", "nounAdverb"] as const;
+    for (let category of categories) {
       for (let negative of [true, false]) {
         let categoryPrefix = VERBAL_INFLECTION_CATEGORY_DATA[category].prefix;
         let negativePrefix = (negative) ? NEGATIVE_DATA.prefix : "";
         let prefix = categoryPrefix + negativePrefix;
         if (normalizedSearch.startsWith(prefix)) {
           let regexp = new RegExp(`^${prefix}`, "g");
-          let name = normalizedSearch.replaceAll(regexp, "");
+          let name = normalizedSearch.replace(regexp, "");
           let feature = null;
-          this.candidates.verbal.push([name, category, feature, negative]);
+          this.candidates.push({sort: "verbal", data: [name, category, feature, negative]});
         }
       }
     }
@@ -105,8 +106,8 @@ export class InflectionSuggester extends Suggester {
     let prefix = NEGATIVE_DATA.prefix;
     if (normalizedSearch.startsWith(prefix)) {
       let regexp = new RegExp(`^${prefix}`, "g");
-      let name = normalizedSearch.replaceAll(regexp, "");
-      this.candidates.nominal.push([name]);
+      let name = normalizedSearch.replace(regexp, "");
+      this.candidates.push({sort: "nominal", data: [name]});
     }
   }
 
@@ -118,8 +119,8 @@ export class InflectionSuggester extends Suggester {
       let prefix = categoryPrefix + negativePrefix;
       if (normalizedSearch.startsWith(prefix)) {
         let regexp = new RegExp(`^${prefix}`, "g");
-        let name = normalizedSearch.replaceAll(regexp, "");
-        this.candidates.adverbial.push([name, negative]);
+        let name = normalizedSearch.replace(regexp, "");
+        this.candidates.push({sort: "adverbial", data: [name, negative]});
       }
     }
   }
@@ -129,8 +130,8 @@ export class InflectionSuggester extends Suggester {
     let prefix = PARTICLE_INFLECTION_TYPE_DATA.nonverb.prefix;
     if (normalizedSearch.startsWith(prefix)) {
       let regexp = new RegExp(`^${prefix}`, "g");
-      let name = normalizedSearch.replaceAll(regexp, "");
-      this.candidates.particle.push([name]);
+      let name = normalizedSearch.replace(regexp, "");
+      this.candidates.push({sort: "particle", data: [name]});
     }
   }
 
@@ -141,27 +142,26 @@ export class InflectionSuggester extends Suggester {
   public suggest(word: Word, dictionary: Dictionary): Array<Suggestion> {
     let suggestions = [];
     let normalizedName = StringNormalizer.normalize(word.name, this.ignoreOptions);
-    for (let [sort, candidates] of ObjectUtil.entries(this.candidates)) {
-      for (let candidate of candidates) {
-        let wordSort = Parser.createKeep().lookupSort(word, "ja");
-        let desiredSort = SORT_DATA[sort].abbreviations["ja"];
-        if (candidate[0] === normalizedName && wordSort?.startsWith(desiredSort)) {
-          let suggestion = this.createSuggestion(sort, word, candidate);
-          suggestions.push(suggestion);
-        }
+    for (let candidate of this.candidates) {
+      let {sort, data} = candidate;
+      let wordSort = Parser.createKeep().lookupSort(word, "ja");
+      let desiredSort = SORT_DATA[sort].abbreviations["ja"];
+      if (normalizedName === data[0] && wordSort?.startsWith(desiredSort)) {
+        let suggestion = this.createSuggestion(word, candidate);
+        suggestions.push(suggestion);
       }
     }
     return suggestions;
   }
 
-  private createSuggestion(sort: keyof Candidates, word: Word, candidate: any): Suggestion {
-    if (sort === "verbal") {
-      return new VerbalInflectionSuggestion(word.name, candidate[1], candidate[2], candidate[3]);
-    } else if (sort === "nominal") {
+  private createSuggestion(word: Word, candidate: Candidate): Suggestion {
+    if (candidate.sort === "verbal") {
+      return new VerbalInflectionSuggestion(word.name, candidate.data[1], candidate.data[2], candidate.data[3]);
+    } else if (candidate.sort === "nominal") {
       return new NominalInflectionSuggestion(word.name);
-    } else if (sort === "adverbial") {
-      return new AdverbialInflectionSuggestion(word.name, candidate[1]);
-    } else if (sort === "particle") {
+    } else if (candidate.sort === "adverbial") {
+      return new AdverbialInflectionSuggestion(word.name, candidate.data[1]);
+    } else if (candidate.sort === "particle") {
       return new ParticleInflectionSuggestion(word.name);
     } else {
       throw new Error("cannot happen");
@@ -287,9 +287,10 @@ export const INFLECTION_SUGGESTION_KIND_DATA = {
 
 export type InflectionSuggestionKind = keyof typeof INFLECTION_SUGGESTION_KIND_DATA;
 
-type Candidates = {
-  verbal: Array<Readonly<ConstructorParameters<typeof VerbalInflectionSuggestion>>>,
-  nominal: Array<Readonly<ConstructorParameters<typeof NominalInflectionSuggestion>>>,
-  adverbial: Array<Readonly<ConstructorParameters<typeof AdverbialInflectionSuggestion>>>,
-  particle: Array<Readonly<ConstructorParameters<typeof ParticleInflectionSuggestion>>>
+type CandidateData = {
+  verbal: Readonly<ConstructorParameters<typeof VerbalInflectionSuggestion>>,
+  nominal: Readonly<ConstructorParameters<typeof NominalInflectionSuggestion>>,
+  adverbial: Readonly<ConstructorParameters<typeof AdverbialInflectionSuggestion>>,
+  particle: Readonly<ConstructorParameters<typeof ParticleInflectionSuggestion>>
 };
+type Candidate = {[K in keyof CandidateData]: {sort: K, data: CandidateData[K]}}[keyof CandidateData];

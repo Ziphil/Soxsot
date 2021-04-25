@@ -12,15 +12,15 @@ import {
   PlainMarkers
 } from "./marker";
 import {
+  Parameter
+} from "./parameter/parameter";
+import {
   SearchResult
 } from "./search-result";
 import {
   PlainWord,
   Word
 } from "./word";
-import {
-  WordParameter
-} from "./word-parameter/word-parameter";
 
 
 export class Dictionary implements PlainDictionary {
@@ -57,7 +57,7 @@ export class Dictionary implements PlainDictionary {
     return {words, settings, markers, path};
   }
 
-  public search(parameter: WordParameter): SearchResult {
+  public search(parameter: Parameter): SearchResult {
     let result = SearchResult.measure(() => {
       let words = [];
       let suggestions = [];

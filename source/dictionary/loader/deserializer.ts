@@ -53,68 +53,120 @@ export class Deserializer {
       let word = new Word(uniqueName, date, contents);
       return word;
     } else {
-      throw new ParseError("invalidWordLine", `invalid line: ${lines[0]}`);
+      throw new ParseError("noHeader", "no header");
     }
+  }
+
+  public deserializeOthers(string: string, skipHeader: {root?: boolean} = {}): [DictionarySettings, Markers] {
+    let lines = string.trim().split(/\r\n|\r|\n/);
+    let index = 0;
+    if (!skipHeader.root) {
+      index = this.skipOthersRootHeader(lines, index);
+    }
+    let version;
+    let alphabetRule;
+    let revisions;
+    let markers = Markers.createEmpty();
+    let before = true;
+    let currentTag = "";
+    let currentString = "";
+    let outerThis = this;
+    let setVariable = function (tag: string, string: string) {
+      if (tag === "VERSION") {
+        version = outerThis.deserializeVersion(string);
+      } else if (tag === "ALPHABET") {
+        alphabetRule = outerThis.deserializeAlphabetRule(string);
+      } else if (tag === "REVISION") {
+        revisions = outerThis.deserializeRevisions(string);
+      } else if (tag === "MARKER") {
+        markers = outerThis.deserializeMarkers(string, {root: true});
+      }
+    };
+    while (index < lines.length) {
+      let line = lines[index ++];
+      let headerMatch = line.match(/^!(\w+)/);
+      if (headerMatch) {
+        if (!before) {
+          setVariable(currentTag, currentString);
+        }
+        before = false;
+        currentTag = headerMatch[1];
+        currentString = "";
+      }
+      currentString += line + "\n";
+    }
+    if (!before) {
+      setVariable(currentTag, currentString);
+    }
+    let createDictionarySettings = function (version?: string, alphabetRule?: string, revisions?: Revisions): DictionarySettings {
+      if (version === undefined && alphabetRule === undefined && revisions === undefined) {
+        return DictionarySettings.createEmpty();
+      } else {
+        if (version !== undefined && alphabetRule !== undefined && revisions !== undefined) {
+          return new DictionarySettings(version, alphabetRule, revisions);
+        } else {
+          throw new ParseError("insufficientDictionarySettings", "there are not enough sections in the dictionary settings");
+        }
+      }
+    };
+    let settings = createDictionarySettings(version, alphabetRule, revisions);
+    return [settings, markers];
   }
 
   public deserializeDictionarySettings(string: string): DictionarySettings {
-    let lines = string.trim().split(/\r\n|\r|\n/);
-    let match = lines[0]?.match(/^\*\*/);
-    if (match) {
-      let version;
-      let alphabetRule;
-      let revisions;
-      let before = true;
-      let currentMode = "";
-      let currentString = "";
-      let outerThis = this;
-      let setProperty = function (mode: string, string: string) {
-        if (mode === "VERSION") {
-          let match = string.match(/^\-\s*(.*)$/m);
-          if (match) {
-            version = match[1];
-          }
-        } else if (mode === "ALPHABET") {
-          let match = string.match(/^\-\s*(.*)$/m);
-          if (match) {
-            alphabetRule = match[1];
-          }
-        } else if (mode === "REVISION") {
-          revisions = outerThis.deserializeRevisions(string);
-        }
-      };
-      for (let i = 1 ; i < lines.length ; i ++) {
-        let line = lines[i];
-        let headerMatch = line.match(/^!(\w+)/);
-        if (headerMatch) {
-          if (!before) {
-            setProperty(currentMode, currentString);
-          }
-          before = false;
-          currentMode = headerMatch[1];
-          currentString = "";
-        } else {
-          currentString += line + "\n";
-        }
-      }
-      if (!before) {
-        setProperty(currentMode, currentString);
-      }
-      if (version !== undefined && alphabetRule !== undefined && revisions !== undefined) {
-        let settings = new DictionarySettings(version, alphabetRule, revisions);
-        return settings;
-      } else {
-        throw new ParseError("insufficientDictionarySettings", "there are not enough sections in the dictionary settings");
-      }
-    } else {
-      throw new ParseError("noDictionarySettingsHeader", "no header");
-    }
+    let [settings, markers] = this.deserializeOthers(string);
+    return settings;
   }
 
-  public deserializeRevisions(string: string): Revisions {
+  public deserializeVersion(string: string, skipHeader: {part?: boolean} = {}): string {
     let lines = string.trim().split(/\r\n|\r|\n/);
+    let index = 0;
+    if (!skipHeader.part) {
+      index = this.skipOthersPartHeader(lines, "VERSION", index);
+    }
+    while (index < lines.length) {
+      let line = lines[index ++];
+      if (line.trim() !== "") {
+        let match = line.match(/^\-\s*(.*)$/);
+        if (match) {
+          return match[1];
+        } else {
+          throw new ParseError("invalidVersionLine", `invalid line in version definition: '${line}'`);
+        }
+      }
+    }
+    throw new ParseError("noVersion", "no version definition");
+  }
+
+  public deserializeAlphabetRule(string: string, skipHeader: {part?: boolean} = {}): string {
+    let lines = string.trim().split(/\r\n|\r|\n/);
+    let index = 0;
+    if (!skipHeader.part) {
+      index = this.skipOthersPartHeader(lines, "ALPHABET", index);
+    }
+    while (index < lines.length) {
+      let line = lines[index ++];
+      if (line.trim() !== "") {
+        let match = line.match(/^\-\s*(.*)$/);
+        if (match) {
+          return match[1];
+        } else {
+          throw new ParseError("invalidAlphabetRuleLine", `invalid line in alphabet definition: '${line}'`);
+        }
+      }
+    }
+    throw new ParseError("noAlphabetRule", "no alphabet definition");
+  }
+
+  public deserializeRevisions(string: string, skipHeader: {part?: boolean} = {}): Revisions {
+    let lines = string.trim().split(/\r\n|\r|\n/);
+    let index = 0;
+    if (!skipHeader.part) {
+      index = this.skipOthersPartHeader(lines, "REVISION", index);
+    }
     let revisions = new Revisions();
-    for (let line of lines) {
+    while (index < lines.length) {
+      let line = lines[index ++];
       if (line.trim() !== "") {
         let revision = this.deserializeRevision(line.trim());
         revisions.push(revision);
@@ -123,8 +175,8 @@ export class Deserializer {
     return revisions;
   }
 
-  public deserializeRevision(string: string): Revision {
-    let match = string.match(/^\-\s*(?:@(\d+)\s*)?\{(.*?)\}\s*→\s*\{(.*?)\}\s*$/);
+  public deserializeRevision(line: string): Revision {
+    let match = line.match(/^\-\s*(?:@(\d+)\s*)?\{(.*?)\}\s*→\s*\{(.*?)\}\s*$/);
     if (match) {
       let date = (match[1] !== undefined) ? parseInt(match[1], 10) : null;
       let beforeName = match[2];
@@ -132,33 +184,35 @@ export class Deserializer {
       let revision = new Revision(date, beforeName, afterName);
       return revision;
     } else {
-      throw new ParseError("invalidRevisionLine", `invalid line: '${string}'`);
+      throw new ParseError("invalidRevisionLine", `invalid line in revision definition: '${line}'`);
     }
   }
 
-  public deserializeMarkers(string: string): Markers {
+  public deserializeMarkers(string: string, skipHeader: {root?: boolean, part?: boolean} = {}): Markers {
     let lines = string.trim().split(/\r\n|\r|\n/);
-    let match = lines[0]?.match(/^\*\*/);
-    if (match) {
-      let rawMarkers = new Map<string, Array<Marker>>();
-      for (let i = 1 ; i < lines.length ; i ++) {
-        let line = lines[i];
-        if (line.trim() !== "" && line.trim() !== "!MARKER") {
-          let [uniqueName, wordMarkers] = this.deserializeWordMarker(line.trim());
-          if (wordMarkers.length > 0) {
-            rawMarkers.set(uniqueName, wordMarkers);
-          }
+    let index = 0;
+    if (!skipHeader.root) {
+      index = this.skipOthersRootHeader(lines, index);
+    }
+    if (!skipHeader.part) {
+      index = this.skipOthersPartHeader(lines, "MARKER", index);
+    }
+    let rawMarkers = new Map<string, Array<Marker>>();
+    while (index < lines.length) {
+      let line = lines[index ++];
+      if (line.trim() !== "") {
+        let [uniqueName, wordMarkers] = this.deserializeWordMarker(line.trim());
+        if (wordMarkers.length > 0) {
+          rawMarkers.set(uniqueName, wordMarkers);
         }
       }
-      let markers = new Markers(rawMarkers.entries());
-      return markers;
-    } else {
-      throw new ParseError("noMarkersHeader", "no header");
     }
+    let markers = new Markers(rawMarkers.entries());
+    return markers;
   }
 
-  public deserializeWordMarker(string: string): [string, Array<Marker>] {
-    let match = string.match(/^\-\s*(?:\{(.*?)\}|(.*?))\s*:\s*(.*?)\s*$/);
+  public deserializeWordMarker(line: string): [string, Array<Marker>] {
+    let match = line.match(/^\-\s*(?:\{(.*?)\}|(.*?))\s*:\s*(.*?)\s*$/);
     if (match) {
       let uniqueName = match[1] ?? match[2];
       let wordMarkers = match[3].split(/\s*,\s*/).map((value) => {
@@ -171,8 +225,48 @@ export class Deserializer {
       });
       return [uniqueName, wordMarkers];
     } else {
-      throw new ParseError("invalidMarkerLine", `invalid line: '${string}'`);
+      throw new ParseError("invalidMarkerLine", `invalid line in marker definition: '${line}'`);
     }
+  }
+
+  private skipOthersRootHeader(lines: Array<string>, fromIndex: number): number {
+    let index = fromIndex;
+    let found = false;
+    while (index < lines.length) {
+      let line = lines[index ++];
+      if (line.trim() !== "") {
+        if (line.trim() === "**") {
+          found = true;
+          break;
+        } else {
+          throw new ParseError("invalidHeader", `invalid header: ${line}`);
+        }
+      }
+    }
+    if (!found) {
+      throw new ParseError("noHeader", "no header");
+    }
+    return index;
+  }
+
+  private skipOthersPartHeader(lines: Array<string>, tag: string, fromIndex: number): number {
+    let index = fromIndex;
+    let found = false;
+    while (index < lines.length) {
+      let line = lines[index ++];
+      if (line.trim() !== "") {
+        if (line.trim() === "!" + tag) {
+          found = true;
+          break;
+        } else {
+          throw new ParseError("invalidPartHeader", `invalid part header: ${line}`);
+        }
+      }
+    }
+    if (!found) {
+      throw new ParseError("noPartHeader", "no part header");
+    }
+    return index;
   }
 
 }

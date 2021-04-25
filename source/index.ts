@@ -1,9 +1,9 @@
 //
 
 export * from "./dictionary/loader/deserializer";
+export * from "./dictionary/parameter/normal-parameter";
+export * from "./dictionary/parameter/parameter";
 export * from "./dictionary/saver/serializer";
-export * from "./dictionary/word-parameter/normal-word-parameter";
-export * from "./dictionary/word-parameter/word-parameter";
 export * from "./dictionary/dictionary";
 export * from "./dictionary/dictionary-settings";
 export * from "./dictionary/equivalent";
@@ -20,4 +20,4 @@ export * from "./dictionary/suggestion";
 export * from "./dictionary/word";
 
 
-export const VERSION = "0.0.1";
+export const VERSION = "0.1.0";

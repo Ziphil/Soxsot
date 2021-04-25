@@ -111,9 +111,9 @@ export class Parser<S> {
   }
 
   private parseField(line: string): Equivalent<S> | Information<S> | Relation<S> | null {
-    if (line.match(/^=/)) {
+    if (line.match(/^=\??/)) {
       return this.parseEquivalent(line);
-    } else if (line.match(/^\w:/)) {
+    } else if (line.match(/^\w\??:/)) {
       return this.parseInformation(line);
     } else if (line.match(/^\-/)) {
       return this.parseRelation(line);
@@ -322,7 +322,7 @@ export class MarkupParser<S, E> {
         }
         this.pointer ++;
         children.push(char);
-      } else if (char === "}") {
+      } else if (char === "}" || char === "") {
         if (currentChildren.length > 0) {
           children.push(this.resolver.resolveLink(currentName, currentChildren));
           currentChildren = [];
@@ -349,7 +349,7 @@ export class MarkupParser<S, E> {
       if (char === "/") {
         let [, slashElement] = this.consumeSlash();
         children.push(slashElement);
-      } else if (char === "]") {
+      } else if (char === "]" || char === "") {
         break;
       } else {
         let string = this.consumeBracketString();
@@ -425,8 +425,14 @@ export class MarkupParser<S, E> {
 
   private consumeEscape(): string {
     this.pointer ++;
-    let char = this.resolver.resolveEscape(this.source.charAt(this.pointer ++));
-    return char;
+    let char = this.source.charAt(this.pointer);
+    if (char !== "") {
+      let string = this.resolver.resolveEscape(char);
+      this.pointer ++;
+      return string;
+    } else {
+      return "";
+    }
   }
 
 }
