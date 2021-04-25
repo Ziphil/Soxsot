@@ -322,7 +322,7 @@ export class MarkupParser<S, E> {
         }
         this.pointer ++;
         children.push(char);
-      } else if (char === "}") {
+      } else if (char === "}" || char === "") {
         if (currentChildren.length > 0) {
           children.push(this.resolver.resolveLink(currentName, currentChildren));
           currentChildren = [];
@@ -349,7 +349,7 @@ export class MarkupParser<S, E> {
       if (char === "/") {
         let [, slashElement] = this.consumeSlash();
         children.push(slashElement);
-      } else if (char === "]") {
+      } else if (char === "]" || char === "") {
         break;
       } else {
         let string = this.consumeBracketString();
@@ -425,8 +425,14 @@ export class MarkupParser<S, E> {
 
   private consumeEscape(): string {
     this.pointer ++;
-    let char = this.resolver.resolveEscape(this.source.charAt(this.pointer ++));
-    return char;
+    let char = this.source.charAt(this.pointer);
+    if (char !== "") {
+      let string = this.resolver.resolveEscape(char);
+      this.pointer ++;
+      return string;
+    } else {
+      return "";
+    }
   }
 
 }

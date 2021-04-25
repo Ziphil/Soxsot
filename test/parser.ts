@@ -52,6 +52,13 @@ describe("markup parser", () => {
     expect(parser.parse("{milcit/a/s}")).toBe("<C|<L:milcitas|milcit<S|a>s>>");
     expect(parser.parse("{kôm/os/, a}[ /K/, ]{e hâl.}")).toBe("<C|<L:kômos|kôm<S|os>>, <L:a|a>><B| <S|K>, ><C|<L:e|e> <L:hâl|hâl>.>");
   });
+  test("mismatching syntax", () => {
+    expect(parser.parse("[ces")).toBe(parser.parse("[ces]"));
+    expect(parser.parse("{tel")).toBe(parser.parse("{tel}"));
+    expect(parser.parse("/foo")).toBe(parser.parse("/foo/"));
+    expect(parser.parse("{sôd/es")).toBe(parser.parse("{sôd/es/}"));
+    expect(parser.parse("foo`")).toBe(parser.parse("foo"));
+  });
 });
 
 describe("parser", () => {
