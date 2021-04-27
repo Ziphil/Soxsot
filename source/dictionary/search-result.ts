@@ -10,6 +10,8 @@ import {
 
 export class SearchResult {
 
+  public static sizePerPage: number = 30;
+
   public readonly words: ReadonlyArray<Word>;
   public readonly suggestions: ReadonlyArray<Suggestion>;
   public readonly elapsedTime: number;
@@ -43,7 +45,9 @@ export class SearchResult {
   }
 
   public sliceWords(page: number) {
-    return this.words.slice(page * 30, page * 30 + 30);
+    let sizePerPage = SearchResult.sizePerPage;
+    let words = this.words.slice(page * sizePerPage, page * sizePerPage + sizePerPage);
+    return words;
   }
 
   public get minPage() {
@@ -51,7 +55,8 @@ export class SearchResult {
   }
 
   public get maxPage() {
-    return Math.max(Math.ceil(this.words.length / 30) - 1, 0);
+    let sizePerPage = SearchResult.sizePerPage;
+    return Math.max(Math.ceil(this.words.length / sizePerPage) - 1, 0);
   }
 
 }
