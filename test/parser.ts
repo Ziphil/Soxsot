@@ -137,14 +137,30 @@ describe("parser", () => {
     expect(word.date).toBe(1036);
     expect(word.parts).toHaveProperty("ja");
     expect(word.parts).toHaveProperty("en");
+    expect(word.parts["ja"]!.sort).toBe("動");
+    expect(word.parts["en"]!.sort).toBe("V");
+  });
+  test("sections", async () => {
+    let [, word] = await getWord();
+    expect(word.parts["ja"]!.sections[0].sort).toBe("動");
+    expect(word.parts["ja"]!.sections[1].sort).toBe("動当");
+    expect(word.parts["en"]!.sections[0].sort).toBe("V");
+    expect(word.parts["en"]!.sections[1].sort).toBe("Vk");
     for (let language of ["ja", "en"]) {
-      expect(word.parts[language]!.sections.length).toBe(2);
-      expect(word.parts[language]!.sections[0].equivalents.length).toBe(2);
-      expect(word.parts[language]!.sections[0].informations.length).toBe(12);
-      expect(word.parts[language]!.sections[0].relations.length).toBe(2);
-      expect(word.parts[language]!.sections[1].equivalents.length).toBe(2);
-      expect(word.parts[language]!.sections[1].informations.length).toBe(2);
-      expect(word.parts[language]!.sections[1].relations.length).toBe(1);
+      let sections = word.parts[language]!.sections;
+      expect(sections.length).toBe(2);
+      expect(sections[0].getFields(true).length).toBe(13);
+      expect(sections[0].getFields(false).length).toBe(16);
+      expect(sections[0].equivalents.length).toBe(2);
+      expect(sections[0].getEquivalents(true).length).toBe(1);
+      expect(sections[0].getEquivalents(false).length).toBe(2);
+      expect(sections[0].informations.length).toBe(12);
+      expect(sections[0].getInformations(true).length).toBe(10);
+      expect(sections[0].getInformations(false).length).toBe(12);
+      expect(sections[0].relations.length).toBe(2);
+      expect(sections[1].equivalents.length).toBe(2);
+      expect(sections[1].informations.length).toBe(2);
+      expect(sections[1].relations.length).toBe(1);
     }
   });
   test("part japanese, section 0, equivalents", async () => {
@@ -163,9 +179,11 @@ describe("parser", () => {
   test("part japanese, section 0, normal informations", async () => {
     let [, word] = await getWord();
     let informations = word.parts["ja"]!.sections[0].informations.slice(0, 9) as Array<NormalInformation<string>>;
+    let normalInformations = word.parts["ja"]!.sections[0].getNormalInformations(false);
     for (let information of informations) {
       expect(information).toBeInstanceOf(NormalInformation);
     }
+    expect(informations).toEqual(normalInformations);
     expect(informations[0].kind).toBe("meaning");
     expect(informations[1].kind).toBe("etymology");
     expect(informations[2].kind).toBe("usage");
@@ -189,10 +207,12 @@ describe("parser", () => {
   test("part japanese, section 0, phrase informations", async () => {
     let [, word] = await getWord();
     let informations = word.parts["ja"]!.sections[0].informations.slice(9, 11) as Array<PhraseInformation<string>>;
+    let phraseInformations = word.parts["ja"]!.sections[0].getPhraseInformations(false);
     for (let information of informations) {
       expect(information).toBeInstanceOf(PhraseInformation);
       expect(information.kind).toBe("phrase");
     }
+    expect(informations).toEqual(phraseInformations);
     expect(informations[0].expression).toBe("{te tesil acál}");
     expect(informations[0].equivalentNames).toEqual(["次の瞬間に"]);
     expect(informations[0].text).toBeNull();
@@ -203,10 +223,12 @@ describe("parser", () => {
   test("part japanese, section 0, example informations", async () => {
     let [, word] = await getWord();
     let informations = word.parts["ja"]!.sections[0].informations.slice(11, 12) as Array<ExampleInformation<string>>;
+    let exampleInformations = word.parts["ja"]!.sections[0].getExampleInformations(false);
     for (let information of informations) {
       expect(information).toBeInstanceOf(ExampleInformation);
       expect(information.kind).toBe("example");
     }
+    expect(informations).toEqual(exampleInformations);
     expect(informations[0].sentence).toBe("{pîtas e tel, dà kelitas e tel te lôk avév.}");
     expect(informations[0].translation).toBe("私は怖かったが、同時に安心もしていた。");
   });

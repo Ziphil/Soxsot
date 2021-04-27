@@ -12,6 +12,7 @@ export abstract class Saver extends EventEmitter {
 
   protected readonly dictionary: Dictionary;
   protected readonly path: string;
+  public minProgressInterval: number = 100;
   private lastProgressDate: Date | null = null;
 
   protected constructor(dictionary: Dictionary, path: string | null) {
@@ -58,7 +59,7 @@ export abstract class Saver extends EventEmitter {
     if (event === "progress") {
       let date = new Date();
       let lastDate = this.lastProgressDate;
-      if (lastDate === null || date.getTime() - lastDate.getTime() >= 100) {
+      if (lastDate === null || date.getTime() - lastDate.getTime() >= this.minProgressInterval) {
         let result = super.emit(event, ...args);
         this.lastProgressDate = date;
         return result;
@@ -81,5 +82,4 @@ export type SaverEvent = {
   end: [],
   error: [error: Error]
 };
-
 export type SaverEventListeners = {[E in keyof SaverEvent as `on${Capitalize<E>}`]?: (...args: SaverEvent[E]) => void};

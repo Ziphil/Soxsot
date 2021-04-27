@@ -86,7 +86,7 @@ describe("load/save directory format", () => {
     expect.assertions(15);
     expect(dictionary.path).toBe("testdic");
     expect(words.length).toBe(4);
-    expect(words.map((word) => word.uniqueName)).toEqual(expect.arrayContaining(["ter", "sôd", "sakil", "xoq"]));
+    expect(words.map((word) => word.uniqueName)).toIncludeSameMembers(["ter", "sôd", "sakil", "xoq"]);
     expect(settings.version).toBe("S");
     expect(settings.alphabetRule).toBe("sztdkgfvpbcqxjlrnmyhaâáàeêéèiîíìoôòuûù");
     expect(settings.revisions.length).toBe(3);
@@ -96,9 +96,9 @@ describe("load/save directory format", () => {
     expect(settings.revisions[2]?.date).toBe(1205);
     expect(settings.revisions[2]?.beforeName).toBe("'s");
     expect(settings.revisions[2]?.afterName).toBe("'c");
-    expect(markers.get("xoq")).toEqual(expect.arrayContaining(["pentagon", "circle", "square"]));
-    expect(markers.get("sôd")).toEqual(expect.arrayContaining(["up"]));
-    expect(markers.get("sakil")).toEqual(expect.arrayContaining(["hexagon", "diamond", "heart", "trapezoid", "cross"]));
+    expect(markers.get("xoq")).toIncludeSameMembers(["pentagon", "circle", "square"]);
+    expect(markers.get("sôd")).toIncludeSameMembers(["up"]);
+    expect(markers.get("sakil")).toIncludeSameMembers(["hexagon", "diamond", "heart", "trapezoid", "cross"]);
   };
   test("load via promise", async () => {
     let loader = new DirectoryLoader("testdic");

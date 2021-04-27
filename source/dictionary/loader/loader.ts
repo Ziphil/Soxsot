@@ -11,6 +11,7 @@ import {
 export abstract class Loader extends EventEmitter {
 
   protected readonly path: string;
+  public minProgressInterval: number = 100;
   private lastProgressDate: Date | null = null;
 
   protected constructor(path: string) {
@@ -51,7 +52,7 @@ export abstract class Loader extends EventEmitter {
     if (event === "progress") {
       let date = new Date();
       let lastDate = this.lastProgressDate;
-      if (lastDate === null || date.getTime() - lastDate.getTime() >= 100) {
+      if (lastDate === null || date.getTime() - lastDate.getTime() >= this.minProgressInterval) {
         let result = super.emit(event, ...args);
         this.lastProgressDate = date;
         return result;
@@ -74,5 +75,4 @@ export type LoaderEvent = {
   end: [dictionary: Dictionary],
   error: [error: Error]
 };
-
 export type LoaderEventListeners = {[E in keyof LoaderEvent as `on${Capitalize<E>}`]?: (...args: LoaderEvent[E]) => void};
