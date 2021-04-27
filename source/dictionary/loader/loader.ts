@@ -74,5 +74,4 @@ export type LoaderEvent = {
   end: [dictionary: Dictionary],
   error: [error: Error]
 };
-
 export type LoaderEventListeners = {[E in keyof LoaderEvent as `on${Capitalize<E>}`]?: (...args: LoaderEvent[E]) => void};
