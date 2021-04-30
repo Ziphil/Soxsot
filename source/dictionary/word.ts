@@ -17,7 +17,7 @@ import {
 } from "./parser";
 
 
-export class Word implements PlainWord {
+export class Word {
 
   public dictionary?: Dictionary;
   public uid: string;
@@ -50,6 +50,7 @@ export class Word implements PlainWord {
     let date = plain.date;
     let contents = plain.contents;
     let word = new Word(uniqueName, date, contents);
+    word.setUid(plain.uid);
     return word;
   }
 
@@ -66,6 +67,10 @@ export class Word implements PlainWord {
   public setDictionary(dictionary: Dictionary): void {
     this.dictionary = dictionary;
     this.updateComparisonString();
+  }
+
+  protected setUid(uid: string): void {
+    this.uid = uid;
   }
 
   public copy(): Word {

@@ -39,18 +39,12 @@ import {
 } from "./suggester";
 
 
-export class InflectionSuggester extends Suggester {
+export class StableInflectionSuggester extends Suggester {
 
-  private search: string;
-  private normalizedSearch: string;
-  private ignoreOptions: IgnoreOptions;
   private candidates: Array<Candidate>;
 
   public constructor(search: string, ignoreOptions: IgnoreOptions) {
-    super();
-    this.search = search;
-    this.normalizedSearch = StringNormalizer.normalize(search, ignoreOptions);
-    this.ignoreOptions = ignoreOptions;
+    super(search, ignoreOptions);
     this.candidates = [];
   }
 
@@ -156,13 +150,13 @@ export class InflectionSuggester extends Suggester {
 
   private createSuggestion(word: Word, candidate: Candidate): Suggestion {
     if (candidate.sort === "verbal") {
-      return new VerbalInflectionSuggestion(word.name, candidate.data[1], candidate.data[2], candidate.data[3]);
+      return new VerbalStableInflectionSuggestion(word.name, candidate.data[1], candidate.data[2], candidate.data[3]);
     } else if (candidate.sort === "nominal") {
-      return new NominalInflectionSuggestion(word.name);
+      return new NominalStableInflectionSuggestion(word.name);
     } else if (candidate.sort === "adverbial") {
-      return new AdverbialInflectionSuggestion(word.name, candidate.data[1]);
+      return new AdverbialStableInflectionSuggestion(word.name, candidate.data[1]);
     } else if (candidate.sort === "particle") {
-      return new ParticleInflectionSuggestion(word.name);
+      return new ParticleStableInflectionSuggestion(word.name);
     } else {
       throw new Error("cannot happen");
     }
@@ -171,20 +165,20 @@ export class InflectionSuggester extends Suggester {
 }
 
 
-export abstract class InflectionSuggestion<K extends InflectionSuggestionKind> extends Suggestion<K> {
+export abstract class StableInflectionSuggestion<K extends StableInflectionSuggestionKind> extends Suggestion<K> {
 
   public constructor(kind: K, name: string) {
     super(kind, [name]);
   }
 
   public getKindName(language: string): string | undefined {
-    return ObjectUtil.get(INFLECTION_SUGGESTION_KIND_DATA[this.kind].names, language);
+    return ObjectUtil.get(STABLE_INFLECTION_SUGGESTION_KIND_DATA[this.kind].names, language);
   }
 
 }
 
 
-export class VerbalInflectionSuggestion extends InflectionSuggestion<"verbalInflection"> {
+export class VerbalStableInflectionSuggestion extends StableInflectionSuggestion<"verbalInflection"> {
 
   public readonly category: VerbalInflectionCategory;
   public readonly feature: VerbFeature | null;
@@ -214,7 +208,7 @@ export class VerbalInflectionSuggestion extends InflectionSuggestion<"verbalInfl
 }
 
 
-export class NominalInflectionSuggestion extends InflectionSuggestion<"nominalInflection"> {
+export class NominalStableInflectionSuggestion extends StableInflectionSuggestion<"nominalInflection"> {
 
   public readonly category: "noun";
   public readonly negative: true;
@@ -237,7 +231,7 @@ export class NominalInflectionSuggestion extends InflectionSuggestion<"nominalIn
 }
 
 
-export class AdverbialInflectionSuggestion extends InflectionSuggestion<"adverbialInflection"> {
+export class AdverbialStableInflectionSuggestion extends StableInflectionSuggestion<"adverbialInflection"> {
 
   public readonly category: AdverbialInflectionCategory;
   public readonly negative: boolean;
@@ -260,7 +254,7 @@ export class AdverbialInflectionSuggestion extends InflectionSuggestion<"adverbi
 }
 
 
-export class ParticleInflectionSuggestion extends InflectionSuggestion<"particleInflection"> {
+export class ParticleStableInflectionSuggestion extends StableInflectionSuggestion<"particleInflection"> {
 
   public readonly type: ParticleInflectionType;
 
@@ -278,19 +272,18 @@ export class ParticleInflectionSuggestion extends InflectionSuggestion<"particle
 }
 
 
-export const INFLECTION_SUGGESTION_KIND_DATA = {
+export const STABLE_INFLECTION_SUGGESTION_KIND_DATA = {
   verbalInflection: {names: {ja: "動辞の語形変化", en: "Inflection of verbal"}},
   nominalInflection: {names: {ja: "名辞の語形変化", en: "Inflection of nominal"}},
   adverbialInflection: {names: {ja: "副辞の語形変化", en: "Inflection of adverbial"}},
   particleInflection: {names: {ja: "助接辞の語形変化", en: "Inflection of particle"}}
 } as const;
-
-export type InflectionSuggestionKind = keyof typeof INFLECTION_SUGGESTION_KIND_DATA;
+export type StableInflectionSuggestionKind = keyof typeof STABLE_INFLECTION_SUGGESTION_KIND_DATA;
 
 type CandidateData = {
-  verbal: Readonly<ConstructorParameters<typeof VerbalInflectionSuggestion>>,
-  nominal: Readonly<ConstructorParameters<typeof NominalInflectionSuggestion>>,
-  adverbial: Readonly<ConstructorParameters<typeof AdverbialInflectionSuggestion>>,
-  particle: Readonly<ConstructorParameters<typeof ParticleInflectionSuggestion>>
+  verbal: Readonly<ConstructorParameters<typeof VerbalStableInflectionSuggestion>>,
+  nominal: Readonly<ConstructorParameters<typeof NominalStableInflectionSuggestion>>,
+  adverbial: Readonly<ConstructorParameters<typeof AdverbialStableInflectionSuggestion>>,
+  particle: Readonly<ConstructorParameters<typeof ParticleStableInflectionSuggestion>>
 };
 type Candidate = {[K in keyof CandidateData]: {sort: K, data: CandidateData[K]}}[keyof CandidateData];

@@ -6,7 +6,7 @@ import {
 } from "../util/string-normalizer";
 
 
-export class Revisions extends Array<Revision> implements PlainRevisions {
+export class Revisions extends Array<Revision> {
 
   public constructor(...args: any) {
     super(...args);
@@ -14,19 +14,13 @@ export class Revisions extends Array<Revision> implements PlainRevisions {
   }
 
   public static fromPlain(plain: PlainRevisions): Revisions {
-    let rawRevisions = plain.map((plainRevision) => {
-      let date = plainRevision.date;
-      let beforeName = plainRevision.beforeName;
-      let afterName = plainRevision.afterName;
-      let revision = new Revision(date, beforeName, afterName);
-      return revision;
-    });
+    let rawRevisions = plain.map((plainRevision) => Revision.fromPlain(plainRevision));
     let revisions = new Revisions(...rawRevisions);
     return revisions;
   }
 
   public toPlain(): PlainRevisions {
-    return this;
+    return this.map((revision) => revision.toPlain());
   }
 
   public resolve(name: string, ignoreOptions?: IgnoreOptions): Array<string> {
