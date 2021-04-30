@@ -50,6 +50,7 @@ export class Word {
     let date = plain.date;
     let contents = plain.contents;
     let word = new Word(uniqueName, date, contents);
+    word.setUid(plain.uid);
     return word;
   }
 
@@ -66,6 +67,10 @@ export class Word {
   public setDictionary(dictionary: Dictionary): void {
     this.dictionary = dictionary;
     this.updateComparisonString();
+  }
+
+  protected setUid(uid: string): void {
+    this.uid = uid;
   }
 
   public copy(): Word {

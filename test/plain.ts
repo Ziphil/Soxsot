@@ -73,6 +73,7 @@ describe("plain objects", () => {
       let restoredWord = restoredDictionary.words[i];
       expect(restoredWord).toBeInstanceOf(Word);
       expect(restoredWord.dictionary === restoredDictionary).toBe(true);
+      expect(restoredWord.uid).toBe(word.uid);
       expect(restoredWord.uniqueName).toBe(word.uniqueName);
       expect(restoredWord.date).toBe(word.date);
       expect(restoredWord.contents).toEqual(word.contents);
