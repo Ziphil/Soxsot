@@ -22,13 +22,8 @@ import {
 
 export class RevisionSuggester extends Suggester {
 
-  private search: string;
-  private ignoreOptions: IgnoreOptions;
-
   public constructor(search: string, ignoreOptions: IgnoreOptions) {
-    super();
-    this.search = search;
-    this.ignoreOptions = ignoreOptions;
+    super(search, ignoreOptions);
   }
 
   public prepare(): void {

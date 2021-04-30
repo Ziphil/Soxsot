@@ -41,16 +41,10 @@ import {
 
 export class InflectionSuggester extends Suggester {
 
-  private search: string;
-  private normalizedSearch: string;
-  private ignoreOptions: IgnoreOptions;
   private candidates: Array<Candidate>;
 
   public constructor(search: string, ignoreOptions: IgnoreOptions) {
-    super();
-    this.search = search;
-    this.normalizedSearch = StringNormalizer.normalize(search, ignoreOptions);
-    this.ignoreOptions = ignoreOptions;
+    super(search, ignoreOptions);
     this.candidates = [];
   }
 
