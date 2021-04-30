@@ -6,7 +6,7 @@ import {
 } from "./revision";
 
 
-export class DictionarySettings implements PlainDictionarySettings {
+export class DictionarySettings {
 
   public version: string;
   public alphabetRule: string;

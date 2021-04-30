@@ -23,7 +23,7 @@ import {
 } from "./word";
 
 
-export class Dictionary implements PlainDictionary {
+export class Dictionary {
 
   public words: Array<Word>;
   public settings: DictionarySettings;

@@ -17,7 +17,7 @@ import {
 } from "./parser";
 
 
-export class Word implements PlainWord {
+export class Word {
 
   public dictionary?: Dictionary;
   public uid: string;
