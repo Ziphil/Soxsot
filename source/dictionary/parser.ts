@@ -23,6 +23,9 @@ import {
   Part
 } from "./part";
 import {
+  PronouncerCreator
+} from "./pronouncer/pronouncer-creator";
+import {
   Relation
 } from "./relation";
 import {
@@ -56,9 +59,11 @@ export class Parser<S> {
   // 与えられた単語データをパースして、ParsedWord オブジェクトとして返します。
   // パースした全てのデータではなく一部の項目の内容のみが必要な場合は、lookup から始まるメソッドを使用した方が軽量です。
   public parse(word: Word): ParsedWord<S> {
+    let pronouncer = PronouncerCreator.createByVersion(word.dictionary?.settings.version ?? "");
     let name = word.name;
     let uniqueName = word.uniqueName;
     let date = word.date;
+    let pronunciation = pronouncer?.convert(name) ?? null;
     let parts = {} as Writable<Parts<S>>;
     for (let [language, content] of Object.entries(word.contents)) {
       if (content !== undefined) {
@@ -66,7 +71,7 @@ export class Parser<S> {
         parts[language] = part;
       }
     }
-    let parsedWord = new ParsedWord(name, uniqueName, date, null, parts);
+    let parsedWord = new ParsedWord(name, uniqueName, date, pronunciation, parts);
     return parsedWord;
   }
 
