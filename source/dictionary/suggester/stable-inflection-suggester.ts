@@ -284,7 +284,6 @@ export const INFLECTION_SUGGESTION_KIND_DATA = {
   adverbialInflection: {names: {ja: "副辞の語形変化", en: "Inflection of adverbial"}},
   particleInflection: {names: {ja: "助接辞の語形変化", en: "Inflection of particle"}}
 } as const;
-
 export type InflectionSuggestionKind = keyof typeof INFLECTION_SUGGESTION_KIND_DATA;
 
 type CandidateData = {

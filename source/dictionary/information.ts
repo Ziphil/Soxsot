@@ -100,6 +100,5 @@ export const INFORMATION_KIND_DATA = {
   phrase: {tag: "P", names: {ja: "成句", en: "Phrase"}},
   example: {tag: "S", names: {ja: "例文", en: "Example"}}
 } as const;
-
 export type InformationKind = keyof typeof INFORMATION_KIND_DATA;
 export type NormalInformationKind = Exclude<InformationKind, "phrase" | "example">;
