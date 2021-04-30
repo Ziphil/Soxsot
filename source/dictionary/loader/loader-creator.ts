@@ -26,14 +26,14 @@ export class LoaderCreator {
     }
   }
 
-  public static createByExtension(path: string): Loader | null {
+  public static createByExtension(path: string): Loader | undefined {
     let extension = extname(path);
     if (extension === "") {
       return new DirectoryLoader(path);
     } else if (extension === "xdn") {
       return new SingleLoader(path);
     } else {
-      return null;
+      return undefined;
     }
   }
 

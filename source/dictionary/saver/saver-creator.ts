@@ -34,7 +34,7 @@ export class SaverCreator {
     }
   }
 
-  public static createByExtension(dictionary: Dictionary, path: string): Saver | null {
+  public static createByExtension(dictionary: Dictionary, path: string): Saver | undefined {
     let extension = extname(path);
     if (extension === "") {
       return new DirectorySaver(dictionary, path);
@@ -43,7 +43,7 @@ export class SaverCreator {
     } else if (extension === "xdc") {
       return new OldShaleianSaver(dictionary, path);
     } else {
-      return null;
+      return undefined;
     }
   }
 
