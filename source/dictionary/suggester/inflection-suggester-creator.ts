@@ -4,7 +4,7 @@ import {
   IgnoreOptions
 } from "../../util/string-normalizer";
 import {
-  InflectionSuggester as StableInflectionSuggester
+  StableInflectionSuggester
 } from "./stable-inflection-suggester";
 import {
   Suggester
