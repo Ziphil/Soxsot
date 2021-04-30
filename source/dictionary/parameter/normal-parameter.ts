@@ -8,11 +8,11 @@ import {
   Dictionary
 } from "../dictionary";
 import {
+  InflectionSuggesterCreator
+} from "../suggester/inflection-suggester-creator";
+import {
   RevisionSuggester
 } from "../suggester/revision-suggester";
-import {
-  InflectionSuggester
-} from "../suggester/stable-inflection-suggester";
 import {
   Suggester
 } from "../suggester/suggester";
@@ -74,9 +74,11 @@ export class NormalParameter extends Parameter {
     let type = this.type;
     let suggesters = [];
     if ((mode === "name" || mode === "both") && (type === "exact" || type === "prefix")) {
-      suggesters.push(new RevisionSuggester(this.search, this.ignoreOptions));
-      if (dictionary.settings.version === "S") {
-        suggesters.push(new InflectionSuggester(this.search, this.ignoreOptions));
+      let revisionSuggester = new RevisionSuggester(this.search, this.ignoreOptions);
+      let inflectionSuggester = InflectionSuggesterCreator.createByVersion(dictionary.settings.version, this.search, this.ignoreOptions);
+      suggesters.push(revisionSuggester);
+      if (inflectionSuggester !== undefined) {
+        suggesters.push(inflectionSuggester);
       }
     }
     return suggesters;
