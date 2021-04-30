@@ -66,7 +66,7 @@ export class Parser<S> {
         parts[language] = part;
       }
     }
-    let parsedWord = new ParsedWord(name, uniqueName, date, parts);
+    let parsedWord = new ParsedWord(name, uniqueName, date, null, parts);
     return parsedWord;
   }
 
