@@ -1,23 +1,23 @@
 //
 
 import {
-  PlainDictionarySettings
+  DictionarySettings
 } from "../dictionary-settings";
 import {
-  PlainMarkers
+  Markers
 } from "../marker";
 import {
-  PlainRevision,
-  PlainRevisions
+  Revision,
+  Revisions
 } from "../revision";
 import {
-  PlainWord
+  Word
 } from "../word";
 
 
 export class Serializer {
 
-  public serializeWord(word: PlainWord): string {
+  public serializeWord(word: Word): string {
     let string = "";
     string += `* @${word.date} ${word.uniqueName}\n`;
     string += "\n";
@@ -36,7 +36,7 @@ export class Serializer {
     return string;
   }
 
-  public serializeDictionarySettings(settings: PlainDictionarySettings, skipHeader: {root?: boolean} = {}): string {
+  public serializeDictionarySettings(settings: DictionarySettings, skipHeader: {root?: boolean} = {}): string {
     let string = "";
     if (!skipHeader.root) {
       string += "**\n";
@@ -68,7 +68,7 @@ export class Serializer {
     return string;
   }
 
-  public serializeRevisions(revisions: PlainRevisions, skipHeader: {part?: boolean} = {}): string {
+  public serializeRevisions(revisions: Revisions, skipHeader: {part?: boolean} = {}): string {
     let string = "";
     if (!skipHeader.part) {
       string += "!REVISION\n";
@@ -79,7 +79,7 @@ export class Serializer {
     return string;
   }
 
-  public serializeRevision(revision: PlainRevision): string {
+  public serializeRevision(revision: Revision): string {
     let line = "";
     line += "- ";
     if (revision.date !== null) {
@@ -89,7 +89,7 @@ export class Serializer {
     return line;
   }
 
-  public serializeMarkers(markers: PlainMarkers, skipHeader: {root?: boolean, part?: boolean} = {}): string {
+  public serializeMarkers(markers: Markers, skipHeader: {root?: boolean, part?: boolean} = {}): string {
     let string = "";
     if (!skipHeader.root) {
       string += "**\n";
