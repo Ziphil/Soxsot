@@ -48,6 +48,9 @@ export const CATEGORY_DATA = {
     names: {ja: "副詞", en: "Adverb"},
     abbreviations: {ja: "副", en: "B"}
   },
+  nounAdverb: {
+    names: {ja: "名詞修飾副詞", en: "Noun-modifying adverb"}
+  },
   preposition: {
     names: {ja: "助詞", en: "Preposition"},
     abbreviations: {ja: "助", en: "P"}
@@ -142,10 +145,16 @@ export const TRANSITIVITY_DATA = {
     names: {ja: "他動", en: "Transitive"}
   }
 } as const;
-export const NEGATIVE_DATA = {
-  names: {ja: "否定", en: "Negative"},
-  prefix: "du"
-};
+export const POLARITY_DATA = {
+  positive: {
+    names: {ja: "肯定", en: "Positive"},
+    prefix: ""
+  },
+  negative: {
+    names: {ja: "否定", en: "Negative"},
+    prefix: "du"
+  }
+} as const;
 
 export type Sort = keyof typeof SORT_DATA;
 export type Category = keyof typeof CATEGORY_DATA;

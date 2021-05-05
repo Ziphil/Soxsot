@@ -11,9 +11,13 @@ export class ObjectUtil {
     return Object.entries(object) as any;
   }
 
-  public static get<T extends object, K extends string>(object: T, key: K): T[keyof T] | undefined {
-    let anyObject = object as any;
-    return anyObject[key];
+  public static get<T extends object, K extends string>(object: T | undefined, key: K): T[keyof T] | undefined {
+    if (object !== undefined) {
+      let anyObject = object as any;
+      return anyObject[key];
+    } else {
+      return undefined;
+    }
   }
 
 }

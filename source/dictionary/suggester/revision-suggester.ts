@@ -50,15 +50,15 @@ export class RevisionSuggester extends Suggester {
 export class RevisionSuggestion extends Suggestion<"revision"> {
 
   public constructor(names: ReadonlyArray<string>) {
-    super("revision", names);
+    super("revision", [], names);
   }
 
   public getKindName(language: string): string | undefined {
     return ObjectUtil.get(REVISION_SUGGESTION_NAMES, language);
   }
 
-  public getKeywords(language: string): Array<string | undefined> {
-    return [];
+  protected getDescriptionName(kind: string, type: string, language: string): string | undefined {
+    return undefined;
   }
 
 }
