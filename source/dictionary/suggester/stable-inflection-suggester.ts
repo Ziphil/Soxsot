@@ -48,6 +48,7 @@ export class StableInflectionSuggester extends Suggester {
 
   public prepare(): void {
     this.prepareVerbalVerb();
+    this.prepareVerbalNoun();
     this.prepareVerbalOthers();
     this.prepareNominal();
     this.prepareAdverbial();
@@ -56,7 +57,6 @@ export class StableInflectionSuggester extends Suggester {
 
   private prepareVerbalVerb(): void {
     let normalizedSearch = this.normalizedSearch;
-    let category = "verb" as const;
     for (let [tense, tenseData] of ObjectUtil.entries(TENSE_DATA)) {
       for (let [aspect, aspectData] of ObjectUtil.entries(ASPECT_DATA)) {
         for (let [transitivity, transitivityData] of ObjectUtil.entries(TRANSITIVITY_DATA)) {
@@ -67,7 +67,7 @@ export class StableInflectionSuggester extends Suggester {
               let regexp = new RegExp(`^${prefix}|${suffix}$`, "g");
               let name = normalizedSearch.replace(regexp, "");
               let descriptions = [
-                {kind: "category", type: category},
+                {kind: "category", type: "verb"},
                 {kind: "tense", type: tense},
                 {kind: "aspect", type: aspect},
                 {kind: "transitivity", type: transitivity},
@@ -78,6 +78,20 @@ export class StableInflectionSuggester extends Suggester {
           }
         }
       }
+    }
+  }
+
+  private prepareVerbalNoun(): void {
+    let normalizedSearch = this.normalizedSearch;
+    let prefix = POLARITY_DATA.negative.prefix;
+    if (normalizedSearch.startsWith(prefix)) {
+      let regexp = new RegExp(`^${prefix}`, "g");
+      let name = normalizedSearch.replace(regexp, "");
+      let descriptions = [
+        {kind: "category", type: "noun"},
+        {kind: "polarity", type: "negative"}
+      ];
+      this.candidates.push(["verbal", "verbalInflection", descriptions, name]);
     }
   }
 
