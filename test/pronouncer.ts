@@ -9,6 +9,9 @@ describe("pronouncer (version S)", () => {
   test("general", () => {
     let pronouncer = new StablePronouncer();
     expect(pronouncer.convert("belom")).toBe("belɔm");
+    expect(pronouncer.convert("gudit")).toBe("ɡudit");
+    expect(pronouncer.convert("páv")).toBe("pav");
+    expect(pronouncer.convert("lofyet")).toBe("lɔfjet");
     expect(pronouncer.convert("zîdtolék")).toBe("zidtɔlek");
     expect(pronouncer.convert("xár")).toBe("ʃaɹ");
     expect(pronouncer.convert("nozej")).toBe("nɔzeʒ");
@@ -52,5 +55,11 @@ describe("pronouncer (version S)", () => {
     expect(pronouncer.convert("hâlqeh")).toBe("haɾd͡ze");
     expect(pronouncer.convert("cifèkkis")).toBe("t͡sifekis");
     expect(pronouncer.convert("fecaqqix")).toBe("fet͡sad͡ziʃ");
+  });
+  test("extra punctuations", () => {
+    let pronouncer = new StablePronouncer();
+    expect(pronouncer.convert("s'")).toBe("s");
+    expect(pronouncer.convert("zîd+")).toBe("zid");
+    expect(pronouncer.convert("+qix")).toBe("ðiʃ");
   });
 });
