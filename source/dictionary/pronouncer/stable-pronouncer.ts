@@ -16,7 +16,7 @@ export class StablePronouncer extends Pronouncer {
     this.light = configs?.light ?? true;
   }
 
-  public convert(name: string): string {
+  public convert(name: string): string | null {
     if (name === "kin") {
       return "kiɴ";
     } else if (name === "'n") {
@@ -74,12 +74,16 @@ export class StablePronouncer extends Pronouncer {
       if (!this.showSyllables) {
         syllableName = syllableName.replace(/\./g, "");
       }
-      return syllableName;
+      if (!syllableName.includes("<") && !syllableName.includes(">")) {
+        return syllableName;
+      } else {
+        return null;
+      }
     }
   }
 
   private static divideSyllables(name: string): string {
-    let dividedName = name.replace(/('|-)/g, "");
+    let dividedName = name.replace(/('|-|\+|~)/g, "");
     dividedName = dividedName.split("").reverse().map((char) => `<${char}>`).join("");
     dividedName = dividedName.replace(/((<[sztdkgfvpbcqxjrlmnhy]>)?<[aeiouâêîôûáéíóúàèìòù]>(<[sztdkgfvpbcqxjrlmnhy]>)?)/g, "$1.");
     let regexp = /(<.>|\.)/g;
