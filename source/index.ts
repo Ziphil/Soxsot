@@ -21,4 +21,4 @@ export * from "./dictionary/suggestion";
 export * from "./dictionary/word";
 
 
-export const VERSION = "0.3.1";
+export const VERSION = "0.3.2";
