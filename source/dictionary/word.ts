@@ -73,6 +73,10 @@ export class Word {
     this.uid = uid;
   }
 
+  public reissueUid(): void {
+    this.uid = uuid();
+  }
+
   public copy(): Word {
     this.ensureDictionary();
     let word = new Word(this.uniqueName, this.date, this.contents);
@@ -80,6 +84,8 @@ export class Word {
     return word;
   }
 
+  // この単語オブジェクトの内容を与えられたデータで上書きします。
+  // ただし、UID は上書きされません。
   public edit(newWord: PlainWord, skipValidate?: boolean): void {
     let errorType = (skipValidate) ? null : this.validateEdit(newWord);
     if (errorType === null) {
