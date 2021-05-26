@@ -4,7 +4,7 @@
 
 ![](https://img.shields.io/github/package-json/v/Ziphil/Soxsot)
 ![](https://img.shields.io/github/commit-activity/y/Ziphil/Soxsot?label=commits)
-![](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FZiphil%2FSoxsot%2Fbadge%3Fref%3Ddevelop&label=test&style=flat&logo=none)
+![](https://img.shields.io/github/workflow/status/Ziphil/Soxsot/test?label=test)
 ![](https://img.shields.io/codecov/c/github/Ziphil/Soxsot)
 
 
@@ -71,7 +71,7 @@ Classes related to dictionary data itself, such as `Dictionary` and `Word`, have
 Therefore, when you send objects of these classes using IPC/HTTP communication, if you do not modify them and serialise them as-is, unnecessary data will be included.
 To prevent this, each such class provides the `toPlain` method to create plain objects without internal data, and the `fromPlain` static method to reconvert them to the class objects.
 
-`Dictionary` や `Word` などの辞書データ本体に関するクラスは、内部処理用のメソッドをいくつかもっています。
+`Dictionary` や `Word` などの辞書データ本体に関するクラスは、内部処理用のプロパティをいくつかもっています。
 そのため、IPC/HTTP 通信を使ってこれらのクラスのオブジェクトを送信するときに、そのオブジェクトに手を加えずにそのままシリアライズすると、不必要なデータが含まれることになります。
 これを防ぐため、そのようなクラスには、内部データを含まないプレーンオブジェクトを作る `toPlain` メソッドと、それらをクラスのオブジェクトに戻す `fromPlain` 静的メソッドが定義されています。
 
