@@ -8,17 +8,8 @@ import {
   StringNormalizer
 } from "../../util/string-normalizer";
 import {
-  ADVERBIAL_INFLECTION_CATEGORY_DATA,
-  ASPECT_DATA,
-  CATEGORY_DATA,
-  NOMINAL_INFLECTION_CATEGORY_DATA,
-  PARTICLE_INFLECTION_TYPE_DATA,
-  POLARITY_DATA,
-  SORT_DATA,
-  Sort,
-  TENSE_DATA,
-  TRANSITIVITY_DATA,
-  VERBAL_INFLECTION_CATEGORY_DATA
+  STABLE_DATA,
+  StableSort
 } from "../data/stable-data";
 import {
   Dictionary
@@ -40,7 +31,7 @@ import {
 
 export class StableInflectionSuggester extends Suggester {
 
-  private candidates: Array<[Sort, ...ConstructorParameters<typeof StableInflectionSuggestion>]>;
+  private candidates: Array<[StableSort, ...ConstructorParameters<typeof StableInflectionSuggestion>]>;
 
   public constructor(search: string, ignoreOptions: IgnoreOptions) {
     super(search, ignoreOptions);
@@ -59,10 +50,10 @@ export class StableInflectionSuggester extends Suggester {
 
   private prepareVerbalVerb(): void {
     let normalizedSearch = this.normalizedSearch;
-    for (let [tense, tenseData] of ObjectUtil.entries(TENSE_DATA)) {
-      for (let [aspect, aspectData] of ObjectUtil.entries(ASPECT_DATA)) {
-        for (let [transitivity, transitivityData] of ObjectUtil.entries(TRANSITIVITY_DATA)) {
-          for (let [polarity, polarityData] of ObjectUtil.entries(POLARITY_DATA)) {
+    for (let [tense, tenseData] of ObjectUtil.entries(STABLE_DATA.tense)) {
+      for (let [aspect, aspectData] of ObjectUtil.entries(STABLE_DATA.aspect)) {
+        for (let [transitivity, transitivityData] of ObjectUtil.entries(STABLE_DATA.transitivity)) {
+          for (let [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
             let suffix = tenseData.suffix + aspectData.suffix[transitivity];
             let prefix = polarityData.prefix;
             if (normalizedSearch.startsWith(prefix) && normalizedSearch.endsWith(suffix)) {
@@ -85,7 +76,7 @@ export class StableInflectionSuggester extends Suggester {
 
   private prepareVerbalNoun(): void {
     let normalizedSearch = this.normalizedSearch;
-    let prefix = POLARITY_DATA.negative.prefix;
+    let prefix = STABLE_DATA.polarity.negative.prefix;
     if (normalizedSearch.startsWith(prefix)) {
       let regexp = new RegExp(`^${prefix}`, "g");
       let name = normalizedSearch.replace(regexp, "");
@@ -99,10 +90,9 @@ export class StableInflectionSuggester extends Suggester {
 
   private prepareVerbalOthers(): void {
     let normalizedSearch = this.normalizedSearch;
-    let categories = ["adjective", "adverb", "nounAdverb"] as const;
-    for (let category of categories) {
-      for (let [polarity, polarityData] of ObjectUtil.entries(POLARITY_DATA)) {
-        let categoryPrefix = VERBAL_INFLECTION_CATEGORY_DATA[category].prefix;
+    for (let [category, categoryData] of ObjectUtil.entries(STABLE_DATA.verbalInflectionCategory)) {
+      for (let [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
+        let categoryPrefix = categoryData.prefix;
         let polarityPrefix = polarityData.prefix;
         let prefix = categoryPrefix + polarityPrefix;
         if (normalizedSearch.startsWith(prefix)) {
@@ -120,8 +110,8 @@ export class StableInflectionSuggester extends Suggester {
 
   private prepareNominalAdjective(): void {
     let normalizedSearch = this.normalizedSearch;
-    for (let [polarity, polarityData] of ObjectUtil.entries(POLARITY_DATA)) {
-      let categoryPrefix = NOMINAL_INFLECTION_CATEGORY_DATA.adjective.prefix;
+    for (let [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
+      let categoryPrefix = STABLE_DATA.nominalInflectionCategory.adjective.prefix;
       let polarityPrefix = polarityData.prefix;
       let prefix = categoryPrefix + polarityPrefix;
       if (normalizedSearch.startsWith(prefix)) {
@@ -138,7 +128,7 @@ export class StableInflectionSuggester extends Suggester {
 
   private prepareNominalNoun(): void {
     let normalizedSearch = this.normalizedSearch;
-    let prefix = POLARITY_DATA.negative.prefix;
+    let prefix = STABLE_DATA.polarity.negative.prefix;
     if (normalizedSearch.startsWith(prefix)) {
       let regexp = new RegExp(`^${prefix}`, "g");
       let name = normalizedSearch.replace(regexp, "");
@@ -152,8 +142,8 @@ export class StableInflectionSuggester extends Suggester {
 
   private prepareAdverbial(): void {
     let normalizedSearch = this.normalizedSearch;
-    for (let [polarity, polarityData] of ObjectUtil.entries(POLARITY_DATA)) {
-      let categoryPrefix = ADVERBIAL_INFLECTION_CATEGORY_DATA.adverb.prefix;
+    for (let [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
+      let categoryPrefix = STABLE_DATA.adverbialInflectionCategory.adverb.prefix;
       let polarityPrefix = polarityData.prefix;
       let prefix = categoryPrefix + polarityPrefix;
       if (normalizedSearch.startsWith(prefix)) {
@@ -170,7 +160,7 @@ export class StableInflectionSuggester extends Suggester {
 
   private prepareParticle(): void {
     let normalizedSearch = this.normalizedSearch;
-    let prefix = PARTICLE_INFLECTION_TYPE_DATA.nonverb.prefix;
+    let prefix = STABLE_DATA.particleInflectionType.nonverb.prefix;
     if (normalizedSearch.startsWith(prefix)) {
       let regexp = new RegExp(`^${prefix}`, "g");
       let name = normalizedSearch.replace(regexp, "");
@@ -191,7 +181,7 @@ export class StableInflectionSuggester extends Suggester {
     for (let candidate of this.candidates) {
       let [sort, kind, descriptions, name] = candidate;
       let wordSort = Parser.createKeep().lookupSort(word, "ja");
-      let desiredSort = SORT_DATA[sort].abbreviations["ja"];
+      let desiredSort = STABLE_DATA.sort[sort].abbreviations["ja"];
       if (normalizedName === name && wordSort?.startsWith(desiredSort)) {
         let suggestion = new StableInflectionSuggestion(kind, descriptions, word.name);
         suggestions.push(suggestion);
@@ -215,17 +205,17 @@ export class StableInflectionSuggestion<K extends StableInflectionSuggestionKind
 
   public getDescriptionName(kind: string, type: string, language: string): string | undefined {
     if (kind === "category") {
-      return ObjectUtil.get(ObjectUtil.get(CATEGORY_DATA, type)?.names, language);
+      return ObjectUtil.get(ObjectUtil.get(STABLE_DATA.category, type)?.names, language);
     } else if (kind === "polarity") {
-      return ObjectUtil.get(ObjectUtil.get(POLARITY_DATA, type)?.names, language);
+      return ObjectUtil.get(ObjectUtil.get(STABLE_DATA.polarity, type)?.names, language);
     } else if (kind === "tense") {
-      return ObjectUtil.get(ObjectUtil.get(TENSE_DATA, type)?.names, language);
+      return ObjectUtil.get(ObjectUtil.get(STABLE_DATA.tense, type)?.names, language);
     } else if (kind === "aspect") {
-      return ObjectUtil.get(ObjectUtil.get(ASPECT_DATA, type)?.names, language);
+      return ObjectUtil.get(ObjectUtil.get(STABLE_DATA.aspect, type)?.names, language);
     } else if (kind === "transitivity") {
-      return ObjectUtil.get(ObjectUtil.get(TRANSITIVITY_DATA, type)?.names, language);
+      return ObjectUtil.get(ObjectUtil.get(STABLE_DATA.transitivity, type)?.names, language);
     } else if (kind === "form") {
-      return ObjectUtil.get(ObjectUtil.get(PARTICLE_INFLECTION_TYPE_DATA, type)?.names, language);
+      return ObjectUtil.get(ObjectUtil.get(STABLE_DATA.particleInflectionType, type)?.names, language);
     } else {
       return undefined;
     }
