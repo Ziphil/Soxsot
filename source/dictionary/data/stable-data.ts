@@ -81,6 +81,12 @@ export const VERBAL_INFLECTION_CATEGORY_DATA = {
     prefix: "io"
   }
 };
+export const NOMINAL_INFLECTION_CATEGORY_DATA = {
+  adjective: {
+    ...CATEGORY_DATA.adjective,
+    prefix: "a"
+  }
+};
 export const ADVERBIAL_INFLECTION_CATEGORY_DATA = {
   adverb: {
     ...CATEGORY_DATA.adverb,

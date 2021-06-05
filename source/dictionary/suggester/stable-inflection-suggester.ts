@@ -11,6 +11,7 @@ import {
   ADVERBIAL_INFLECTION_CATEGORY_DATA,
   ASPECT_DATA,
   CATEGORY_DATA,
+  NOMINAL_INFLECTION_CATEGORY_DATA,
   PARTICLE_INFLECTION_TYPE_DATA,
   POLARITY_DATA,
   SORT_DATA,
@@ -50,7 +51,8 @@ export class StableInflectionSuggester extends Suggester {
     this.prepareVerbalVerb();
     this.prepareVerbalNoun();
     this.prepareVerbalOthers();
-    this.prepareNominal();
+    this.prepareNominalAdjective();
+    this.prepareNominalNoun();
     this.prepareAdverbial();
     this.prepareParticle();
   }
@@ -116,7 +118,25 @@ export class StableInflectionSuggester extends Suggester {
     }
   }
 
-  private prepareNominal(): void {
+  private prepareNominalAdjective(): void {
+    let normalizedSearch = this.normalizedSearch;
+    for (let [polarity, polarityData] of ObjectUtil.entries(POLARITY_DATA)) {
+      let categoryPrefix = NOMINAL_INFLECTION_CATEGORY_DATA.adjective.prefix;
+      let polarityPrefix = polarityData.prefix;
+      let prefix = categoryPrefix + polarityPrefix;
+      if (normalizedSearch.startsWith(prefix)) {
+        let regexp = new RegExp(`^${prefix}`, "g");
+        let name = normalizedSearch.replace(regexp, "");
+        let descriptions = [
+          {kind: "category", type: "adjective"},
+          {kind: "polarity", type: polarity}
+        ];
+        this.candidates.push(["nominal", "nominalInflection", descriptions, name]);
+      }
+    }
+  }
+
+  private prepareNominalNoun(): void {
     let normalizedSearch = this.normalizedSearch;
     let prefix = POLARITY_DATA.negative.prefix;
     if (normalizedSearch.startsWith(prefix)) {
