@@ -1,6 +1,9 @@
 //
 
 import {
+  Writable
+} from "ts-essentials";
+import {
   DictionarySettings,
   PlainDictionarySettings
 } from "./dictionary-settings";
@@ -25,12 +28,12 @@ import {
 
 export class Dictionary {
 
-  public words: Array<Word>;
-  public settings: DictionarySettings;
-  public markers: Markers;
-  public path: string | null;
+  public readonly words: ReadonlyArray<Word>;
+  public readonly settings: DictionarySettings;
+  public readonly markers: Markers;
+  public readonly path: string | null;
 
-  public constructor(words: Array<Word>, settings: DictionarySettings, markers: Markers, path: string | null) {
+  public constructor(words: ReadonlyArray<Word>, settings: DictionarySettings, markers: Markers, path: string | null) {
     this.words = words;
     this.settings = settings;
     this.markers = markers;
@@ -97,7 +100,7 @@ export class Dictionary {
       let newRealWord = Word.fromPlain(newWord);
       newRealWord.setDictionary(this);
       newRealWord.reissueUid();
-      this.words.push(newRealWord);
+      this.writableWords.push(newRealWord);
     } else {
       throw new ValidationError(errorType);
     }
@@ -119,7 +122,7 @@ export class Dictionary {
         let newRealWord = Word.fromPlain(newWord);
         newRealWord.setDictionary(this);
         newRealWord.reissueUid();
-        this.words.push(newRealWord);
+        this.writableWords.push(newRealWord);
       }
     } else {
       throw new ValidationError(errorType);
@@ -129,7 +132,7 @@ export class Dictionary {
   public deleteWord(uid: string): void {
     let oldWordIndex = this.words.findIndex((word) => word.uid === uid);
     if (oldWordIndex >= 0) {
-      this.words.splice(oldWordIndex, 1);
+      this.writableWords.splice(oldWordIndex, 1);
     }
   }
 
@@ -156,7 +159,15 @@ export class Dictionary {
 
   public changeSettings(newSettings: PlainDictionarySettings): void {
     let newRealSettings = DictionarySettings.fromPlain(newSettings);
-    this.settings = newRealSettings;
+    this.writable.settings = newRealSettings;
+  }
+
+  private get writable(): Writable<this> {
+    return this;
+  }
+
+  private get writableWords(): Array<Word> {
+    return this.words as any;
   }
 
 }

@@ -28,11 +28,11 @@ import {
 
 export class NormalParameter extends Parameter {
 
-  public search: string;
-  public mode: WordMode;
-  public type: WordType;
-  public language: string;
-  public ignoreOptions: IgnoreOptions;
+  public readonly search: string;
+  public readonly mode: WordMode;
+  public readonly type: WordType;
+  public readonly language: string;
+  public readonly ignoreOptions: IgnoreOptions;
 
   public constructor(search: string, mode: WordMode, type: WordType, language: string, ignoreOptions?: IgnoreOptions) {
     super();

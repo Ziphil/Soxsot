@@ -48,7 +48,7 @@ export class SingleSaver extends Saver {
     this.writeOthers(dictionary);
   }
 
-  private writeWords(words: Array<Word>): void {
+  private writeWords(words: ReadonlyArray<Word>): void {
     for (let word of words) {
       this.writeWord(word);
     }

@@ -16,8 +16,8 @@ import {
 
 export abstract class Parameter {
 
-  public abstract language: string;
-  private suggesters?: Array<Suggester>;
+  public abstract readonly language: string;
+  private suggesters?: ReadonlyArray<Suggester>;
 
   protected abstract createSuggesters(dictionary: Dictionary): Array<Suggester>;
 
@@ -50,7 +50,7 @@ export abstract class Parameter {
     return suggestions;
   }
 
-  protected static createCandidates(word: Word, mode: WordMode, language: string): Array<string> {
+  protected static createCandidates(word: Word, mode: WordMode, language: string): ReadonlyArray<string> {
     if (mode === "name") {
       return [word.name];
     } else if (mode === "equivalent") {

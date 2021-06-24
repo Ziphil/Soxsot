@@ -62,7 +62,7 @@ export class OldShaleianSaver extends Saver {
     this.writeSettings(dictionary.settings);
   }
 
-  private writeWords(words: Array<Word>): void {
+  private writeWords(words: ReadonlyArray<Word>): void {
     for (let word of words) {
       let parsedWord = this.parser.parse(word);
       this.writeWord(parsedWord);
