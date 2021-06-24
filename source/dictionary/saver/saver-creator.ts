@@ -22,33 +22,31 @@ import {
 
 export class SaverCreator {
 
-  public static createByKind(kind: SaverKind, dictionary: Dictionary, path: string): Saver {
-    if (kind === "directory") {
-      return new DirectorySaver(dictionary, path);
-    } else if (kind === "single") {
-      return new SingleSaver(dictionary, path);
-    } else if (kind === "oldShaleian") {
-      return new OldShaleianSaver(dictionary, path);
-    } else {
-      throw new Error("cannot happen");
-    }
+  public static createByKind<K extends SaverKind>(kind: K, ...args: ConstructorParameters<SaverClass<K>>): InstanceType<SaverClass<K>> {
+    let Saver = SAVER_DATA[kind].clazz as any;
+    let loader = new Saver(...args);
+    return loader;
   }
 
   public static createByExtension(dictionary: Dictionary, path: string): Saver | undefined {
     let extension = extname(path);
-    if (extension === "") {
-      return new DirectorySaver(dictionary, path);
-    } else if (extension === "xdn") {
-      return new SingleSaver(dictionary, path);
-    } else if (extension === "xdc") {
-      return new OldShaleianSaver(dictionary, path);
-    } else {
-      return undefined;
+    for (let [kind, data] of Object.entries(SAVER_DATA)) {
+      if (data.extension === extension) {
+        let Saver = data.clazz;
+        let saver = new Saver(dictionary, path);
+        return saver;
+      }
     }
+    return undefined;
   }
 
 }
 
 
-export const SAVER_KIND = ["directory", "single", "oldShaleian"] as const;
-export type SaverKind = (typeof SAVER_KIND)[number];
+export const SAVER_DATA = {
+  directory: {clazz: DirectorySaver, extension: ""},
+  single: {clazz: SingleSaver, extension: ""},
+  oldShaleian: {clazz: OldShaleianSaver, extension: ""}
+};
+export type SaverKind = keyof typeof SAVER_DATA;
+export type SaverClass<K extends SaverKind> = (typeof SAVER_DATA)[K]["clazz"];

@@ -16,29 +16,30 @@ import {
 
 export class LoaderCreator {
 
-  public static createByKind(kind: LoaderKind, path: string): Loader {
-    if (kind === "directory") {
-      return new DirectoryLoader(path);
-    } else if (kind === "single") {
-      return new SingleLoader(path);
-    } else {
-      throw new Error("cannot happen");
-    }
+  public static createByKind<K extends LoaderKind>(kind: K, ...args: ConstructorParameters<LoaderClass<K>>): InstanceType<LoaderClass<K>> {
+    let Loader = LOADER_DATA[kind].clazz as any;
+    let loader = new Loader(...args);
+    return loader;
   }
 
   public static createByExtension(path: string): Loader | undefined {
     let extension = extname(path);
-    if (extension === "") {
-      return new DirectoryLoader(path);
-    } else if (extension === "xdn") {
-      return new SingleLoader(path);
-    } else {
-      return undefined;
+    for (let [kind, data] of Object.entries(LOADER_DATA)) {
+      if (data.extension === extension) {
+        let Loader = data.clazz;
+        let loader = new Loader(path);
+        return loader;
+      }
     }
+    return undefined;
   }
 
 }
 
 
-export const LOADER_KIND = ["directory", "single"] as const;
-export type LoaderKind = (typeof LOADER_KIND)[number];
+export const LOADER_DATA = {
+  directory: {clazz: DirectoryLoader, extension: ""},
+  single: {clazz: SingleLoader, extension: "xdn"}
+};
+export type LoaderKind = keyof typeof LOADER_DATA;
+export type LoaderClass<K extends LoaderKind> = (typeof LOADER_DATA)[K]["clazz"];
