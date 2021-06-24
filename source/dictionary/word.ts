@@ -1,6 +1,9 @@
 //
 
 import {
+  Writable
+} from "ts-essentials";
+import {
   v1 as uuid
 } from "uuid";
 import {
@@ -19,14 +22,14 @@ import {
 
 export class Word {
 
-  public dictionary?: Dictionary;
-  public uid: string;
-  public name!: string;
-  public uniqueName: string;
-  public date: number;
-  public equivalentNames!: EquivalentNames;
-  public contents: Contents;
-  public comparisonString!: string;
+  public readonly dictionary?: Dictionary;
+  public readonly uid: string;
+  public readonly name!: string;
+  public readonly uniqueName: string;
+  public readonly date: number;
+  public readonly contents: Contents;
+  public readonly equivalentNames!: EquivalentNames;
+  private comparisonString!: string;
 
   public constructor(uniqueName: string, date: number, contents: Contents) {
     this.uid = uuid();
@@ -50,7 +53,7 @@ export class Word {
     let date = plain.date;
     let contents = plain.contents;
     let word = new Word(uniqueName, date, contents);
-    word.setUid(plain.uid);
+    word.writable.uid = plain.uid;
     return word;
   }
 
@@ -65,16 +68,12 @@ export class Word {
   // この単語オブジェクトが属する辞書オブジェクトを設定します。
   // ローダーなどを通さずに手動で単語オブジェクトを生成した際は、必ずこのメソッドを使って辞書オブジェクトを設定してください。
   public setDictionary(dictionary: Dictionary): void {
-    this.dictionary = dictionary;
+    this.writable.dictionary = dictionary;
     this.updateComparisonString();
   }
 
-  protected setUid(uid: string): void {
-    this.uid = uid;
-  }
-
   public reissueUid(): void {
-    this.uid = uuid();
+    this.writable.uid = uuid();
   }
 
   public copy(): Word {
@@ -89,9 +88,9 @@ export class Word {
   public edit(newWord: PlainWord, skipValidate?: boolean): void {
     let errorType = (skipValidate) ? null : this.validateEdit(newWord);
     if (errorType === null) {
-      this.uniqueName = newWord.uniqueName;
-      this.date = newWord.date;
-      this.contents = Object.fromEntries(Object.entries(newWord.contents).map(([language, content]) => [language, content?.trim()]));
+      this.writable.uniqueName = newWord.uniqueName;
+      this.writable.date = newWord.date;
+      this.writable.contents = Object.fromEntries(Object.entries(newWord.contents).map(([language, content]) => [language, content?.trim()]));
       this.update(true);
     } else {
       throw new ValidationError(errorType);
@@ -127,16 +126,16 @@ export class Word {
 
   private updateName(): void {
     let name = this.uniqueName.replace(/~/g, "");
-    this.name = name;
+    this.writable.name = name;
   }
 
   private updateEquivalentNames(): void {
-    let equivalentNames = {} as EquivalentNames;
+    let equivalentNames = {} as Writable<EquivalentNames>;
     let parser = Parser.createSimple();
     for (let [language] of Object.entries(this.contents)) {
       equivalentNames[language] = [...(parser.lookupEquivalentNames(this, language) ?? []), ...(parser.lookupPhraseEquivalentNames(this, language) ?? [])];
     }
-    this.equivalentNames = equivalentNames;
+    this.writable.equivalentNames = equivalentNames;
   }
 
   private updateComparisonString(): void {
@@ -203,6 +202,10 @@ export class Word {
     return uniqueName.match(/^(\+)?((?:\p{L}|-|')+?)(\+)?(~*)$/u) !== null;
   }
 
+  private get writable(): Writable<this> {
+    return this;
+  }
+
 }
 
 
@@ -211,10 +214,11 @@ export interface PlainWord {
   uid: string;
   uniqueName: string;
   date: number;
-  contents: Contents;
+  contents: PlainContents;
 
 }
 
 
-export type EquivalentNames = {[language: string]: Array<string> | undefined};
-export type Contents = {[language: string]: string | undefined};
+export type EquivalentNames = {readonly [language: string]: ReadonlyArray<string> | undefined};
+export type Contents = {readonly [language: string]: string | undefined};
+export type PlainContents = Writable<Contents>;

@@ -10,11 +10,10 @@ import {
 
 export class SearchResult {
 
-  public static sizePerPage: number = 30;
-
   public readonly words: ReadonlyArray<Word>;
   public readonly suggestions: ReadonlyArray<Suggestion>;
   public readonly elapsedTime: number;
+  public sizePerPage: number = 30;
 
   public constructor(words: ReadonlyArray<Word>, suggestions: ReadonlyArray<Suggestion>, elapsedTime: number) {
     this.words = words;
@@ -45,8 +44,7 @@ export class SearchResult {
   }
 
   public sliceWords(page: number) {
-    let sizePerPage = SearchResult.sizePerPage;
-    let words = this.words.slice(page * sizePerPage, page * sizePerPage + sizePerPage);
+    let words = this.words.slice(page * this.sizePerPage, page * this.sizePerPage + this.sizePerPage);
     return words;
   }
 
@@ -55,8 +53,7 @@ export class SearchResult {
   }
 
   public get maxPage() {
-    let sizePerPage = SearchResult.sizePerPage;
-    return Math.max(Math.ceil(this.words.length / sizePerPage) - 1, 0);
+    return Math.max(Math.ceil(this.words.length / this.sizePerPage) - 1, 0);
   }
 
 }

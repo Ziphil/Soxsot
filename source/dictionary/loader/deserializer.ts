@@ -16,7 +16,7 @@ import {
   Revisions
 } from "../revision";
 import {
-  Contents,
+  PlainContents,
   Word
 } from "../word";
 
@@ -29,7 +29,7 @@ export class Deserializer {
     if (match) {
       let uniqueName = match[2];
       let date = parseInt(match[1], 10);
-      let contents = {} as Contents;
+      let contents = {} as PlainContents;
       let before = true;
       let currentLanguage = "";
       let currentContent = "";

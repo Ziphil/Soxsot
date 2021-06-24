@@ -80,7 +80,7 @@ export class DirectorySaver extends Saver {
     await Promise.all([wordsPromise, settingsPromise, markersPromise]);
   }
 
-  private async saveWords(words: Array<Word>): Promise<void> {
+  private async saveWords(words: ReadonlyArray<Word>): Promise<void> {
     let promises = words.map((word) => {
       let wordPath = joinPath(this.path, this.resolver.resolveWordBaseName(word.uniqueName) + ".xdnw");
       return this.saveWord(word, wordPath);

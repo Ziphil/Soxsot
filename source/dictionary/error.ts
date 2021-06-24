@@ -3,7 +3,7 @@
 
 export class ParseError extends Error {
 
-  public type: string;
+  public readonly type: string;
 
   public constructor(type: string, message: string = "") {
     super(message);
@@ -17,7 +17,7 @@ export class ParseError extends Error {
 
 export class ValidationError extends Error {
 
-  public type: string;
+  public readonly type: string;
 
   public constructor(type: string, message: string = "") {
     super(message);
