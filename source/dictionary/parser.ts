@@ -219,10 +219,12 @@ export class Parser<S> {
     let content = word.contents[language];
     if (content !== undefined) {
       let names = [];
-      let regexp = (onlyVisible) ? /^=\s*(?:<(.*?)>\s*)?(?:\((.*?)\)\s*)?(.*)$/mg : /^=(\?)?\s*(?:<(.*?)>\s*)?(?:\((.*?)\)\s*)?(.*)$/mg;
+      let regexp = /^=(\?)?\s*(?:<(.*?)>\s*)?(?:\((.*?)\)\s*)?(.*)$/mg;
       let match;
       while (match = regexp.exec(content)) {
-        names.push(...match[4].split(/\s*,\s*/).map((rawName) => this.markupParser.parse(rawName)));
+        if (!onlyVisible || !match[1]) {
+          names.push(...match[4].split(/\s*,\s*/).map((rawName) => this.markupParser.parse(rawName)));
+        }
       }
       return names;
     } else {
@@ -234,10 +236,12 @@ export class Parser<S> {
     let content = word.contents[language];
     if (content !== undefined) {
       let names = [];
-      let regexp = (onlyVisible) ? /^(P):\s*(?:@(\d+)\s*)?(.*?)\s*→\s*(.*?)(?:\s*\|\s*(.*))?$/mg : /^(P)(\?)?:\s*(?:@(\d+)\s*)?(.*?)\s*→\s*(.*?)(?:\s*\|\s*(.*))?$/mg;
+      let regexp = /^(P)(\?)?:\s*(?:@(\d+)\s*)?(.*?)\s*→\s*(.*?)(?:\s*\|\s*(.*))?$/mg;
       let match;
       while (match = regexp.exec(content)) {
-        names.push(...match[5].split(/\s*,\s*/).map((rawName) => this.markupParser.parse(rawName)));
+        if (!onlyVisible || !match[1]) {
+          names.push(...match[5].split(/\s*,\s*/).map((rawName) => this.markupParser.parse(rawName)));
+        }
       }
       return names;
     } else {
