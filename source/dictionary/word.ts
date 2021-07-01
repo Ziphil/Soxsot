@@ -1,6 +1,9 @@
 //
 
 import {
+  NewHairianDate
+} from "talqis";
+import {
   Writable
 } from "ts-essentials";
 import {
@@ -41,8 +44,7 @@ export class Word {
 
   public static createEmpty(): Word {
     let name = "";
-    let rawDate = new Date();
-    let date = Math.floor((rawDate.getTime() - 1327179600000) / 86400000);
+    let date = NewHairianDate.current().getHairia(true);
     let contents = {ja: "+ <>\n= <>\n\nM:"};
     let word = new Word(name, date, contents);
     return word;
@@ -74,6 +76,11 @@ export class Word {
 
   public reissueUid(): void {
     this.writable.uid = uuid();
+  }
+
+  public refreshDate(): void {
+    let date = NewHairianDate.current().getHairia(true);
+    this.writable.date = date;
   }
 
   public copy(): Word {
