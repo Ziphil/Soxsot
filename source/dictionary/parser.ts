@@ -405,6 +405,19 @@ export class MarkupParser<S, E> {
         string += char;
       }
     }
+    if (this.resolver.modifyPunctuations) {
+      string = string.replace(/、/g, "、 ");
+      string = string.replace(/。/g, "。 ");
+      string = string.replace(/「/g, " 「");
+      string = string.replace(/」/g, "」 ");
+      string = string.replace(/『/g, " 『");
+      string = string.replace(/』/g, "』 ");
+      string = string.replace(/〈/g, " 〈");
+      string = string.replace(/〉/g, "〉 ");
+      string = string.replace(/(、|。)\s+(」|』)/g, "$1$2");
+      string = string.replace(/(」|』|〉)\s+(、|。|,|\.)/g, "$1$2");
+      string = string.replace(/(\(|「|『)\s+(「|『)/g, "$1$2");
+    }
     return string;
   }
 
@@ -480,6 +493,7 @@ export class MarkupResolver<S, E> {
   public readonly resolveHairia: HairiaResolver<E>;
   public readonly resolveEscape: EscapeResolver;
   public readonly join: Joiner<S, E>;
+  public readonly modifyPunctuations: boolean;
 
   public constructor(spec: MarkupResolverSpec<S, E>) {
     this.resolveLink = spec.resolveLink;
@@ -489,6 +503,7 @@ export class MarkupResolver<S, E> {
     this.resolveHairia = spec.resolveHairia ?? MarkupResolver.createNoopHairiaResolver();
     this.resolveEscape = spec.resolveEscape ?? MarkupResolver.createNoopEscapeResolver();
     this.join = spec.join;
+    this.modifyPunctuations = spec.modifyPunctuations ?? false;
   }
 
   private static createNoopEscapeResolver(): EscapeResolver {
@@ -557,7 +572,8 @@ type MarkupResolverSpec<S, E> = {
   resolveSlash: SlashResolver<E>,
   resolveHairia?: HairiaResolver<E>,
   resolveEscape?: EscapeResolver,
-  join: Joiner<S, E>
+  join: Joiner<S, E>,
+  modifyPunctuations?: boolean
 };
 
 type LinkResolver<E> = (name: string, children: Array<E | string>) => E | string;
