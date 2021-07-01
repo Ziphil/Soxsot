@@ -273,6 +273,7 @@ export class MarkupParser<S, E> {
     let children = [];
     while (true) {
       let char = this.source.charAt(this.pointer);
+      let remaining = this.source.substring(this.pointer);
       if (char === "{") {
         let element = this.consumeBrace();
         children.push(element);
@@ -281,6 +282,9 @@ export class MarkupParser<S, E> {
         children.push(element);
       } else if (char === "/") {
         let [, element] = this.consumeSlash();
+        children.push(element);
+      } else if (remaining.match(/^H(\d+)/)) {
+        let element = this.consumeHairia();
         children.push(element);
       } else if (char === "") {
         break;
@@ -293,7 +297,7 @@ export class MarkupParser<S, E> {
     return node;
   }
 
-  private consumeBrace(): E {
+  private consumeBrace(): E | string {
     this.pointer ++;
     let children = this.consumeBraceChildren();
     let element = this.resolver.resolveBrace(children);
@@ -301,7 +305,7 @@ export class MarkupParser<S, E> {
     return element;
   }
 
-  private consumeBracket(): E {
+  private consumeBracket(): E | string {
     this.pointer ++;
     let children = this.consumeBracketChildren();
     let element = this.resolver.resolveBracket(children);
@@ -309,12 +313,29 @@ export class MarkupParser<S, E> {
     return element;
   }
 
-  private consumeSlash(): [string, E] {
+  private consumeSlash(): [string, E | string] {
     this.pointer ++;
     let string = this.consumeSlashString();
     let element = this.resolver.resolveSlash(string);
     this.pointer ++;
     return [string, element];
+  }
+
+  private consumeHairia(): E | string {
+    this.pointer ++;
+    let hairiaString = "";
+    while (true) {
+      let char = this.source.charAt(this.pointer);
+      if (char.match(/^\d$/)) {
+        this.pointer ++;
+        hairiaString += char;
+      } else {
+        break;
+      }
+    }
+    let hairia = parseInt(hairiaString, 10);
+    let element = this.resolver.resolveHairia(hairia);
+    return element;
   }
 
   private consumeBraceChildren(): Array<E | string> {
@@ -372,7 +393,10 @@ export class MarkupParser<S, E> {
     let string = "";
     while (true) {
       let char = this.source.charAt(this.pointer);
+      let remaining = this.source.substring(this.pointer);
       if (char === "{" || char === "[" || char === "/" || char === "") {
+        break;
+      } else if (remaining.match(/^H(\d+)/)) {
         break;
       } else if (char === "`") {
         string += this.consumeEscape();
@@ -380,6 +404,19 @@ export class MarkupParser<S, E> {
         this.pointer ++;
         string += char;
       }
+    }
+    if (this.resolver.modifyPunctuations) {
+      string = string.replace(/、/g, "、 ");
+      string = string.replace(/。/g, "。 ");
+      string = string.replace(/「/g, " 「");
+      string = string.replace(/」/g, "」 ");
+      string = string.replace(/『/g, " 『");
+      string = string.replace(/』/g, "』 ");
+      string = string.replace(/〈/g, " 〈");
+      string = string.replace(/〉/g, "〉 ");
+      string = string.replace(/(、|。)\s+(」|』)/g, "$1$2");
+      string = string.replace(/(」|』|〉)\s+(、|。|,|\.)/g, "$1$2");
+      string = string.replace(/(\(|「|『)\s+(「|『)/g, "$1$2");
     }
     return string;
   }
@@ -453,21 +490,32 @@ export class MarkupResolver<S, E> {
   public readonly resolveBracket: BracketResolver<E>;
   public readonly resolveBrace: BracketResolver<E>;
   public readonly resolveSlash: SlashResolver<E>;
+  public readonly resolveHairia: HairiaResolver<E>;
   public readonly resolveEscape: EscapeResolver;
   public readonly join: Joiner<S, E>;
+  public readonly modifyPunctuations: boolean;
 
   public constructor(spec: MarkupResolverSpec<S, E>) {
     this.resolveLink = spec.resolveLink;
     this.resolveBracket = spec.resolveBracket;
     this.resolveBrace = spec.resolveBrace ?? spec.resolveBracket;
     this.resolveSlash = spec.resolveSlash;
+    this.resolveHairia = spec.resolveHairia ?? MarkupResolver.createNoopHairiaResolver();
     this.resolveEscape = spec.resolveEscape ?? MarkupResolver.createNoopEscapeResolver();
     this.join = spec.join;
+    this.modifyPunctuations = spec.modifyPunctuations ?? false;
   }
 
   private static createNoopEscapeResolver(): EscapeResolver {
     let resolve = function (char: string): string {
       return char;
+    };
+    return resolve;
+  }
+
+  private static createNoopHairiaResolver<E>(): HairiaResolver<E> {
+    let resolve = function (hairia: number): string {
+      return "H" + hairia.toString();
     };
     return resolve;
   }
@@ -522,12 +570,15 @@ type MarkupResolverSpec<S, E> = {
   resolveBracket: BracketResolver<E>,
   resolveBrace?: BracketResolver<E>,
   resolveSlash: SlashResolver<E>,
+  resolveHairia?: HairiaResolver<E>,
   resolveEscape?: EscapeResolver,
-  join: Joiner<S, E>
+  join: Joiner<S, E>,
+  modifyPunctuations?: boolean
 };
 
-type LinkResolver<E> = (name: string, children: Array<E | string>) => E;
-type BracketResolver<E> = (children: Array<E | string>) => E;
-type SlashResolver<E> = (string: string) => E;
+type LinkResolver<E> = (name: string, children: Array<E | string>) => E | string;
+type BracketResolver<E> = (children: Array<E | string>) => E | string;
+type SlashResolver<E> = (string: string) => E | string;
+type HairiaResolver<E> = (hairia: number) => E | string;
 type EscapeResolver = (char: string) => string;
 type Joiner<S, E> = (nodes: Array<E | string>) => S;
