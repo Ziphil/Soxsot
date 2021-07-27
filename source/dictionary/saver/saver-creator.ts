@@ -24,8 +24,8 @@ export class SaverCreator {
 
   public static createByKind<K extends SaverKind>(kind: K, ...args: ConstructorParameters<SaverClass<K>>): InstanceType<SaverClass<K>> {
     let Saver = SAVER_DATA[kind].clazz as any;
-    let loader = new Saver(...args);
-    return loader;
+    let saver = new Saver(...args);
+    return saver;
   }
 
   public static createByExtension(dictionary: Dictionary, path: string): Saver | undefined {
@@ -45,8 +45,8 @@ export class SaverCreator {
 
 export const SAVER_DATA = {
   directory: {clazz: DirectorySaver, extension: ""},
-  single: {clazz: SingleSaver, extension: ""},
-  oldShaleian: {clazz: OldShaleianSaver, extension: ""}
+  single: {clazz: SingleSaver, extension: "xdn"},
+  oldShaleian: {clazz: OldShaleianSaver, extension: "xdc"}
 };
 export type SaverKind = keyof typeof SAVER_DATA;
 export type SaverClass<K extends SaverKind> = (typeof SAVER_DATA)[K]["clazz"];
