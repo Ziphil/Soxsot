@@ -58,6 +58,7 @@ export class OldShaleianSaver extends Saver {
 
   private writeDictionary(): void {
     let dictionary = this.dictionary;
+    this.size = this.dictionary.words.length;
     this.writeWords(dictionary.words);
     this.writeSettings(dictionary.settings);
   }
