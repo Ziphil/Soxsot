@@ -34,4 +34,9 @@ export class MutationManager<N> {
     }
   }
 
+  public reset(): void {
+    this.changedNames.clear();
+    this.deletedNames.clear();
+  }
+
 }
