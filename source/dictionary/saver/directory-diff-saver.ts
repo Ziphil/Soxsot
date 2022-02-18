@@ -35,8 +35,6 @@ export class DirectoryDiffSaver extends Saver {
   private readonly resolver: FileNameResolver;
   private size: number = 0;
   private count: number = 0;
-  private deleteSize: number = 0;
-  private deleteCount: number = 0;
 
   public constructor(dictionary: Dictionary, resolver?: FileNameResolver) {
     super(dictionary, null);
@@ -55,24 +53,39 @@ export class DirectoryDiffSaver extends Saver {
 
   private async saveDictionary(): Promise<void> {
     let dictionary = this.dictionary;
-    await fs.mkdir(this.path, {recursive: true});
-    let wordsPromise = this.saveWords(dictionary.words);
+    let mutationManager = dictionary.mutationManager;
+    this.size = mutationManager.changedNames.size + mutationManager.deletedNames.size;
+    let wordsPromise = this.saveWords(dictionary);
     let settingsPromise = this.saveSettings(dictionary.settings);
     let markersPromise = this.saveMarkers(dictionary.markers);
     await Promise.all([wordsPromise, settingsPromise, markersPromise]);
   }
 
-  private async saveWords(words: ReadonlyArray<Word>): Promise<void> {
-    let promises = words.map((word) => {
-      let wordPath = joinPath(this.path, this.resolver.resolveWordBaseName(word.uniqueName) + ".xdnw");
-      return this.saveWord(word, wordPath);
+  private async saveWords(dictionary: Dictionary): Promise<void> {
+    let mutationManager = dictionary.mutationManager;
+    let changePromises = [...mutationManager.changedNames.values()].map((uniqueName) => {
+      let wordPath = joinPath(this.path, this.resolver.resolveWordBaseName(uniqueName) + ".xdnw");
+      let word = dictionary.findByUniqueName(uniqueName);
+      if (word !== undefined) {
+        return this.changeWord(word, wordPath);
+      }
     });
-    await Promise.all(promises);
+    let deletePromises = [...mutationManager.deletedNames.values()].map((uniqueName) => {
+      let wordPath = joinPath(this.path, this.resolver.resolveWordBaseName(uniqueName) + ".xdnw");
+      return this.deleteWord(wordPath);
+    });
+    await Promise.all([...changePromises, ...deletePromises]);
   }
 
-  private async saveWord(word: Word, path: string): Promise<void> {
+  private async changeWord(word: Word, path: string): Promise<void> {
     let string = this.serializer.serializeWord(word);
     await fs.writeFile(path, string, {encoding: "utf-8"});
+    this.count ++;
+    this.emitProgress();
+  }
+
+  private async deleteWord(path: string): Promise<void> {
+    await fs.unlink(path).catch(() => null);
     this.count ++;
     this.emitProgress();
   }
@@ -92,7 +105,7 @@ export class DirectoryDiffSaver extends Saver {
   }
 
   private emitProgress(): void {
-    this.emit("progress", this.count + this.deleteCount, this.size + this.deleteSize);
+    this.emit("progress", this.count, this.size);
   }
 
 }
