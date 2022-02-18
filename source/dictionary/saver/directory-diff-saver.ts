@@ -36,10 +36,13 @@ export class DirectoryDiffSaver extends Saver {
   private size: number = 0;
   private count: number = 0;
 
-  public constructor(dictionary: Dictionary, resolver?: FileNameResolver) {
-    super(dictionary, null);
+  public constructor(dictionary: Dictionary, path: string | null, resolver?: FileNameResolver) {
+    super(dictionary, path);
     this.serializer = new Serializer();
     this.resolver = resolver ?? FileNameResolver.createDefault();
+    if (path !== null) {
+      throw new Error("cannot save incrementally in different location");
+    }
   }
 
   public start(): void {

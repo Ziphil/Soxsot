@@ -7,6 +7,9 @@ import {
   Dictionary
 } from "../dictionary";
 import {
+  DirectoryDiffSaver
+} from "./directory-diff-saver";
+import {
   DirectorySaver
 } from "./directory-saver";
 import {
@@ -45,6 +48,7 @@ export class SaverCreator {
 
 export const SAVER_DATA = {
   directory: {clazz: DirectorySaver, extension: ""},
+  directoryDiff: {clazz: DirectoryDiffSaver, extension: ""},
   single: {clazz: SingleSaver, extension: "xdn"},
   oldShaleian: {clazz: OldShaleianSaver, extension: "xdc"}
 };
