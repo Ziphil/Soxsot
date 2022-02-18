@@ -54,9 +54,10 @@ export class DirectorySaver extends Saver {
   }
 
   private async deleteFiles(): Promise<void> {
+    let dictionary = this.dictionary;
     let paths = await fs.readdir(this.path);
     let fileLocalPaths = paths.filter((path) => path.endsWith(".xdnw") || path.endsWith(".xdns"));
-    this.size = this.dictionary.words.length;
+    this.size = dictionary.words.length;
     this.deleteSize = fileLocalPaths.length;
     let promises = fileLocalPaths.map((fileLocalPath) => {
       let filePath = joinPath(this.path, fileLocalPath);
