@@ -4,6 +4,9 @@ import {
   Writable
 } from "ts-essentials";
 import {
+  MutationManager
+} from "../util/mutation-manager";
+import {
   DictionarySettings,
   PlainDictionarySettings
 } from "./dictionary-settings";
@@ -32,12 +35,14 @@ export class Dictionary {
   public readonly settings: DictionarySettings;
   public readonly markers: Markers;
   public readonly path: string | null;
+  public readonly mutationManager: MutationManager<string>;
 
   public constructor(words: ReadonlyArray<Word>, settings: DictionarySettings, markers: Markers, path: string | null) {
     this.words = words;
     this.settings = settings;
     this.markers = markers;
     this.path = path;
+    this.mutationManager = new MutationManager();
     for (let word of words) {
       word.setDictionary(this);
     }
@@ -101,6 +106,7 @@ export class Dictionary {
       newRealWord.setDictionary(this);
       newRealWord.reissueUid();
       this.writableWords.push(newRealWord);
+      this.mutationManager.change(newWord.uniqueName);
     } else {
       throw new ValidationError(errorType);
     }
@@ -117,12 +123,14 @@ export class Dictionary {
         let oldWord = this.words.find((word) => word.uid === uid);
         if (oldWord !== undefined) {
           oldWord.edit(newWord);
+          this.mutationManager.rename(oldWord.uniqueName, newWord.uniqueName);
         }
       } else {
         let newRealWord = Word.fromPlain(newWord);
         newRealWord.setDictionary(this);
         newRealWord.reissueUid();
         this.writableWords.push(newRealWord);
+        this.mutationManager.change(newWord.uniqueName);
       }
     } else {
       throw new ValidationError(errorType);
@@ -132,7 +140,9 @@ export class Dictionary {
   public deleteWord(uid: string): void {
     let oldWordIndex = this.words.findIndex((word) => word.uid === uid);
     if (oldWordIndex >= 0) {
+      let oldWord = this.words[oldWordIndex];
       this.writableWords.splice(oldWordIndex, 1);
+      this.mutationManager.delete(oldWord.uniqueName);
     }
   }
 
