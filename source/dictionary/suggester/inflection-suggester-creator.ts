@@ -13,9 +13,9 @@ import {
 
 export class InflectionSuggesterCreator {
 
-  public static createByVersion(version: string, search: string, ignoreOptions: IgnoreOptions): Suggester | undefined {
+  public static createByVersion(version: string, text: string, ignoreOptions: IgnoreOptions): Suggester | undefined {
     if (version === "S") {
-      return new StableInflectionSuggester(search, ignoreOptions);
+      return new StableInflectionSuggester(text, ignoreOptions);
     } else {
       return undefined;
     }

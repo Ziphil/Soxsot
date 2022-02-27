@@ -33,8 +33,8 @@ export class StableInflectionSuggester extends Suggester {
 
   private candidates: Array<[StableSort, ...ConstructorParameters<typeof StableInflectionSuggestion>]>;
 
-  public constructor(search: string, ignoreOptions: IgnoreOptions) {
-    super(search, ignoreOptions);
+  public constructor(text: string, ignoreOptions: IgnoreOptions) {
+    super(text, ignoreOptions);
     this.candidates = [];
   }
 
@@ -49,16 +49,16 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   private prepareVerbalVerb(): void {
-    let normalizedSearch = this.normalizedSearch;
+    let normalizedText = this.normalizedText;
     for (let [tense, tenseData] of ObjectUtil.entries(STABLE_DATA.tense)) {
       for (let [aspect, aspectData] of ObjectUtil.entries(STABLE_DATA.aspect)) {
         for (let [transitivity, transitivityData] of ObjectUtil.entries(STABLE_DATA.transitivity)) {
           for (let [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
             let suffix = tenseData.suffix + aspectData.suffix[transitivity];
             let prefix = polarityData.prefix;
-            if (normalizedSearch.startsWith(prefix) && normalizedSearch.endsWith(suffix)) {
+            if (normalizedText.startsWith(prefix) && normalizedText.endsWith(suffix)) {
               let regexp = new RegExp(`^${prefix}|${suffix}$`, "g");
-              let name = normalizedSearch.replace(regexp, "");
+              let name = normalizedText.replace(regexp, "");
               let descriptions = [
                 {kind: "category", type: "verb"},
                 {kind: "tense", type: tense},
@@ -75,11 +75,11 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   private prepareVerbalNoun(): void {
-    let normalizedSearch = this.normalizedSearch;
+    let normalizedText = this.normalizedText;
     let prefix = STABLE_DATA.polarity.negative.prefix;
-    if (normalizedSearch.startsWith(prefix)) {
+    if (normalizedText.startsWith(prefix)) {
       let regexp = new RegExp(`^${prefix}`, "g");
-      let name = normalizedSearch.replace(regexp, "");
+      let name = normalizedText.replace(regexp, "");
       let descriptions = [
         {kind: "category", type: "noun"},
         {kind: "polarity", type: "negative"}
@@ -89,15 +89,15 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   private prepareVerbalOthers(): void {
-    let normalizedSearch = this.normalizedSearch;
+    let normalizedText = this.normalizedText;
     for (let [category, categoryData] of ObjectUtil.entries(STABLE_DATA.verbalInflectionCategory)) {
       for (let [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
         let categoryPrefix = categoryData.prefix;
         let polarityPrefix = polarityData.prefix;
         let prefix = categoryPrefix + polarityPrefix;
-        if (normalizedSearch.startsWith(prefix)) {
+        if (normalizedText.startsWith(prefix)) {
           let regexp = new RegExp(`^${prefix}`, "g");
-          let name = normalizedSearch.replace(regexp, "");
+          let name = normalizedText.replace(regexp, "");
           let descriptions = [
             {kind: "category", type: category},
             {kind: "polarity", type: polarity}
@@ -109,14 +109,14 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   private prepareNominalAdjective(): void {
-    let normalizedSearch = this.normalizedSearch;
+    let normalizedText = this.normalizedText;
     for (let [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
       let categoryPrefix = STABLE_DATA.nominalInflectionCategory.adjective.prefix;
       let polarityPrefix = polarityData.prefix;
       let prefix = categoryPrefix + polarityPrefix;
-      if (normalizedSearch.startsWith(prefix)) {
+      if (normalizedText.startsWith(prefix)) {
         let regexp = new RegExp(`^${prefix}`, "g");
-        let name = normalizedSearch.replace(regexp, "");
+        let name = normalizedText.replace(regexp, "");
         let descriptions = [
           {kind: "category", type: "adjective"},
           {kind: "polarity", type: polarity}
@@ -127,11 +127,11 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   private prepareNominalNoun(): void {
-    let normalizedSearch = this.normalizedSearch;
+    let normalizedText = this.normalizedText;
     let prefix = STABLE_DATA.polarity.negative.prefix;
-    if (normalizedSearch.startsWith(prefix)) {
+    if (normalizedText.startsWith(prefix)) {
       let regexp = new RegExp(`^${prefix}`, "g");
-      let name = normalizedSearch.replace(regexp, "");
+      let name = normalizedText.replace(regexp, "");
       let descriptions = [
         {kind: "category", type: "noun"},
         {kind: "polarity", type: "negative"}
@@ -141,14 +141,14 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   private prepareAdverbial(): void {
-    let normalizedSearch = this.normalizedSearch;
+    let normalizedText = this.normalizedText;
     for (let [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
       let categoryPrefix = STABLE_DATA.adverbialInflectionCategory.adverb.prefix;
       let polarityPrefix = polarityData.prefix;
       let prefix = categoryPrefix + polarityPrefix;
-      if (normalizedSearch.startsWith(prefix)) {
+      if (normalizedText.startsWith(prefix)) {
         let regexp = new RegExp(`^${prefix}`, "g");
-        let name = normalizedSearch.replace(regexp, "");
+        let name = normalizedText.replace(regexp, "");
         let descriptions = [
           {kind: "category", type: "adverb"},
           {kind: "polarity", type: polarity}
@@ -159,11 +159,11 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   private prepareParticle(): void {
-    let normalizedSearch = this.normalizedSearch;
+    let normalizedText = this.normalizedText;
     let prefix = STABLE_DATA.particleInflectionType.nonverb.prefix;
-    if (normalizedSearch.startsWith(prefix)) {
+    if (normalizedText.startsWith(prefix)) {
       let regexp = new RegExp(`^${prefix}`, "g");
-      let name = normalizedSearch.replace(regexp, "");
+      let name = normalizedText.replace(regexp, "");
       let descriptions = [
         {kind: "form", type: "nonverb"}
       ];

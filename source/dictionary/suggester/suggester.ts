@@ -17,13 +17,13 @@ import {
 
 export abstract class Suggester {
 
-  protected search: string;
-  protected normalizedSearch: string;
+  protected text: string;
+  protected normalizedText: string;
   protected ignoreOptions: IgnoreOptions;
 
-  public constructor(search: string, ignoreOptions: IgnoreOptions) {
-    this.search = search;
-    this.normalizedSearch = StringNormalizer.normalize(search, ignoreOptions);
+  public constructor(text: string, ignoreOptions: IgnoreOptions) {
+    this.text = text;
+    this.normalizedText = StringNormalizer.normalize(text, ignoreOptions);
     this.ignoreOptions = ignoreOptions;
   }
 

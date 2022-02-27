@@ -66,34 +66,34 @@ export abstract class Parameter {
 
   protected static createMatcher(type: string): Matcher {
     if (type === "exact") {
-      let matcher = function (search: string, candidate: string): boolean {
-        return candidate === search;
+      let matcher = function (text: string, candidate: string): boolean {
+        return candidate === text;
       };
       return matcher;
     } else if (type === "prefix") {
-      let matcher = function (search: string, candidate: string): boolean {
-        return candidate.startsWith(search);
+      let matcher = function (text: string, candidate: string): boolean {
+        return candidate.startsWith(text);
       };
       return matcher;
     } else if (type === "suffix") {
-      let matcher = function (search: string, candidate: string): boolean {
-        return candidate.endsWith(search);
+      let matcher = function (text: string, candidate: string): boolean {
+        return candidate.endsWith(text);
       };
       return matcher;
     } else if (type === "part") {
-      let matcher = function (search: string, candidate: string): boolean {
-        return candidate.includes(search);
+      let matcher = function (text: string, candidate: string): boolean {
+        return candidate.includes(text);
       };
       return matcher;
     } else if (type === "pair") {
-      let matcher = function (search: string, candidate: string): boolean {
+      let matcher = function (text: string, candidate: string): boolean {
         try {
-          if (search.length <= 10) {
+          if (text.length <= 10) {
             let predicate = false;
-            for (let i = 0 ; i < search.length ; i ++) {
-              let beforeSearch = search.substring(0, i);
-              let afterSearch = search.substring(i + 1);
-              let regexp = new RegExp("^" + beforeSearch + "." + afterSearch + "$");
+            for (let i = 0 ; i < text.length ; i ++) {
+              let beforeText = text.substring(0, i);
+              let afterText = text.substring(i + 1);
+              let regexp = new RegExp("^" + beforeText + "." + afterText + "$");
               if (candidate.match(regexp) !== null) {
                 predicate = true;
                 break;
@@ -109,9 +109,9 @@ export abstract class Parameter {
       };
       return matcher;
     } else if (type === "regular") {
-      let matcher = function (search: string, candidate: string): boolean {
+      let matcher = function (text: string, candidate: string): boolean {
         try {
-          let regexp = new RegExp(search, "m");
+          let regexp = new RegExp(text, "m");
           return candidate.match(regexp) !== null;
         } catch (error) {
           return false;
@@ -132,4 +132,4 @@ export type WordMode = (typeof WORD_MODES)[number];
 export const WORD_TYPES = ["exact", "prefix", "suffix", "part", "pair", "regular"] as const;
 export type WordType = (typeof WORD_TYPES)[number];
 
-export type Matcher = (search: string, candidate: string) => boolean;
+export type Matcher = (text: string, candidate: string) => boolean;
