@@ -12,21 +12,21 @@ function checkManager<T>(manager: MutationManager<T>, expectedChangedNames: Arra
 
 describe("mutation manager", () => {
   test("test 1", () => {
-    let manager = new MutationManager<string>();
+    const manager = new MutationManager<string>();
     manager.change("A");
     manager.change("B");
     manager.delete("C");
     checkManager(manager, ["A", "B"], ["C"]);
   });
   test("test 2", () => {
-    let manager = new MutationManager<string>();
+    const manager = new MutationManager<string>();
     manager.rename("A", "B");
     manager.change("C");
     manager.change("B");
     checkManager(manager, ["B", "C"], ["A"]);
   });
   test("test 3", () => {
-    let manager = new MutationManager<string>();
+    const manager = new MutationManager<string>();
     manager.rename("A", "B");
     manager.rename("B", "C");
     manager.rename("X", "Y");
@@ -34,7 +34,7 @@ describe("mutation manager", () => {
     checkManager(manager, ["C", "X", "Y"], ["A", "B"]);
   });
   test("test 4", () => {
-    let manager = new MutationManager<string>();
+    const manager = new MutationManager<string>();
     manager.change("A");
     manager.change("B");
     manager.delete("A");

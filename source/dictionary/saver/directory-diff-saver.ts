@@ -46,7 +46,7 @@ export class DirectoryDiffSaver extends Saver {
   }
 
   public start(): void {
-    let promise = Promise.resolve().then(this.saveDictionary.bind(this));
+    const promise = Promise.resolve().then(this.saveDictionary.bind(this));
     promise.then(() => {
       this.emit("end");
     }).catch((error) => {
@@ -55,33 +55,35 @@ export class DirectoryDiffSaver extends Saver {
   }
 
   private async saveDictionary(): Promise<void> {
-    let dictionary = this.dictionary;
-    let mutationManager = dictionary.mutationManager;
+    const dictionary = this.dictionary;
+    const mutationManager = dictionary.mutationManager;
     this.size = mutationManager.changedNames.size + mutationManager.deletedNames.size;
-    let wordsPromise = this.saveWords(dictionary);
-    let settingsPromise = this.saveSettings(dictionary.settings);
-    let markersPromise = this.saveMarkers(dictionary.markers);
+    const wordsPromise = this.saveWords(dictionary);
+    const settingsPromise = this.saveSettings(dictionary.settings);
+    const markersPromise = this.saveMarkers(dictionary.markers);
     await Promise.all([wordsPromise, settingsPromise, markersPromise]);
   }
 
   private async saveWords(dictionary: Dictionary): Promise<void> {
-    let mutationManager = dictionary.mutationManager;
-    let changePromises = [...mutationManager.changedNames.values()].map((uniqueName) => {
-      let wordPath = joinPath(this.path, this.resolver.resolveWordBaseName(uniqueName) + ".xdnw");
-      let word = dictionary.findByUniqueName(uniqueName);
+    const mutationManager = dictionary.mutationManager;
+    const changePromises = [...mutationManager.changedNames.values()].map((uniqueName) => {
+      const wordPath = joinPath(this.path, this.resolver.resolveWordBaseName(uniqueName) + ".xdnw");
+      const word = dictionary.findByUniqueName(uniqueName);
       if (word !== undefined) {
         return this.changeWord(word, wordPath);
+      } else {
+        return undefined;
       }
     });
-    let deletePromises = [...mutationManager.deletedNames.values()].map((uniqueName) => {
-      let wordPath = joinPath(this.path, this.resolver.resolveWordBaseName(uniqueName) + ".xdnw");
+    const deletePromises = [...mutationManager.deletedNames.values()].map((uniqueName) => {
+      const wordPath = joinPath(this.path, this.resolver.resolveWordBaseName(uniqueName) + ".xdnw");
       return this.deleteWord(wordPath);
     });
     await Promise.all([...changePromises, ...deletePromises]);
   }
 
   private async changeWord(word: Word, path: string): Promise<void> {
-    let string = this.serializer.serializeWord(word);
+    const string = this.serializer.serializeWord(word);
     await fs.writeFile(path, string, {encoding: "utf-8"});
     this.count ++;
     this.emitProgress();
@@ -94,15 +96,15 @@ export class DirectoryDiffSaver extends Saver {
   }
 
   private async saveSettings(settings: DictionarySettings): Promise<void> {
-    let path = joinPath(this.path, this.resolver.settingsBaseName + ".xdns");
-    let string = this.serializer.serializeDictionarySettings(settings);
+    const path = joinPath(this.path, this.resolver.settingsBaseName + ".xdns");
+    const string = this.serializer.serializeDictionarySettings(settings);
     await fs.writeFile(path, string, {encoding: "utf-8"});
     this.emitProgress();
   }
 
   private async saveMarkers(markers: Markers): Promise<void> {
-    let path = joinPath(this.path, this.resolver.markersBaseName + ".xdns");
-    let string = this.serializer.serializeMarkers(markers);
+    const path = joinPath(this.path, this.resolver.markersBaseName + ".xdns");
+    const string = this.serializer.serializeMarkers(markers);
     await fs.writeFile(path, string, {encoding: "utf-8"});
     this.emitProgress();
   }

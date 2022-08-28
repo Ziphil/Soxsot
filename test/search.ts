@@ -38,33 +38,33 @@ describe("search from names", () => {
     });
   });
   afterAll(mock.restore);
-  let getDictionary = async function (): Promise<Dictionary> {
-    let loader = new SingleLoader("testdic.xdn");
-    let dictionary = await loader.asPromise();
+  const getDictionary = async function (): Promise<Dictionary> {
+    const loader = new SingleLoader("testdic.xdn");
+    const dictionary = await loader.asPromise();
     return dictionary;
   };
   test("prefix search with default ignore option", async () => {
-    let dictionary = await getDictionary();
-    let parameter = new NormalParameter("sat", "name", "prefix", "ja");
-    let result = dictionary.search(parameter);
+    const dictionary = await getDictionary();
+    const parameter = new NormalParameter("sat", "name", "prefix", "ja");
+    const result = dictionary.search(parameter);
     expect(result.words.map((word) => word.uniqueName)).toIncludeSameMembers(["sat", "satlos", "sâtix", "sát"]);
   });
   test("suffix search with default ignore option", async () => {
-    let dictionary = await getDictionary();
-    let parameter = new NormalParameter("os", "name", "suffix", "ja");
-    let result = dictionary.search(parameter);
+    const dictionary = await getDictionary();
+    const parameter = new NormalParameter("os", "name", "suffix", "ja");
+    const result = dictionary.search(parameter);
     expect(result.words.map((word) => word.uniqueName)).toIncludeSameMembers(["satlos", "tufos", "denòs"]);
   });
   test("prefix search with custom ignore option", async () => {
-    let dictionary = await getDictionary();
-    let parameter = new NormalParameter("sat", "name", "prefix", "ja", {case: true, diacritic: false});
-    let result = dictionary.search(parameter);
+    const dictionary = await getDictionary();
+    const parameter = new NormalParameter("sat", "name", "prefix", "ja", {case: true, diacritic: false});
+    const result = dictionary.search(parameter);
     expect(result.words.map((word) => word.uniqueName)).toIncludeSameMembers(["sat", "satlos"]);
   });
   test("suffix search with custom ignore option", async () => {
-    let dictionary = await getDictionary();
-    let parameter = new NormalParameter("os", "name", "suffix", "ja", {case: true, diacritic: false});
-    let result = dictionary.search(parameter);
+    const dictionary = await getDictionary();
+    const parameter = new NormalParameter("os", "name", "suffix", "ja", {case: true, diacritic: false});
+    const result = dictionary.search(parameter);
     expect(result.words.map((word) => word.uniqueName)).toIncludeSameMembers(["satlos", "tufos"]);
   });
 });
@@ -87,28 +87,28 @@ describe("search from equivalents", () => {
     });
   });
   afterAll(mock.restore);
-  let getDictionary = async function (): Promise<Dictionary> {
-    let loader = new SingleLoader("testdic.xdn");
-    let dictionary = await loader.asPromise();
+  const getDictionary = async function (): Promise<Dictionary> {
+    const loader = new SingleLoader("testdic.xdn");
+    const dictionary = await loader.asPromise();
     return dictionary;
   };
   test("prefix search", async () => {
-    let dictionary = await getDictionary();
-    let parameter = new NormalParameter("かき", "equivalent", "prefix", "ja");
-    let result = dictionary.search(parameter);
+    const dictionary = await getDictionary();
+    const parameter = new NormalParameter("かき", "equivalent", "prefix", "ja");
+    const result = dictionary.search(parameter);
     expect(result.words.map((word) => word.uniqueName)).toIncludeSameMembers(["sat"]);
   });
   test("prefix search from hidden equivalents", async () => {
-    let dictionary = await getDictionary();
-    let parameter = new NormalParameter("なに", "equivalent", "prefix", "ja");
-    let result = dictionary.search(parameter);
+    const dictionary = await getDictionary();
+    const parameter = new NormalParameter("なに", "equivalent", "prefix", "ja");
+    const result = dictionary.search(parameter);
     expect(result.words.map((word) => word.uniqueName)).toIncludeSameMembers(["sat"]);
   });
   test("markup", async () => {
-    let dictionary = await getDictionary();
-    let parameters = [new NormalParameter("salos a cal", "equivalent", "exact", "ja"), new NormalParameter("Sot a T", "equivalent", "exact", "ja")];
-    for (let parameter of parameters) {
-      let result = dictionary.search(parameter);
+    const dictionary = await getDictionary();
+    const parameters = [new NormalParameter("salos a cal", "equivalent", "exact", "ja"), new NormalParameter("Sot a T", "equivalent", "exact", "ja")];
+    for (const parameter of parameters) {
+      const result = dictionary.search(parameter);
       expect(result.words.map((word) => word.uniqueName)).toIncludeSameMembers(["s'"]);
     }
   });

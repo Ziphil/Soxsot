@@ -54,13 +54,13 @@ export class SingleLoader extends Loader {
     let before = true;
     let currentType = "word";
     let currentString = "";
-    let words = new Array<Word>();
+    const words = new Array<Word>();
     let settings = DictionarySettings.createEmpty();
     let markers = Markers.createEmpty();
-    let outerThis = this;
-    let setVariable = function (type: string, string: string) {
+    const outerThis = this;
+    const setVariable = function (type: string, string: string): void {
       if (currentType === "word") {
-        let word = outerThis.deserializer.deserializeWord(currentString);
+        const word = outerThis.deserializer.deserializeWord(currentString);
         words.push(word);
       } else if (currentType === "others") {
         [settings, markers] = outerThis.deserializer.deserializeOthers(currentString);
@@ -68,8 +68,8 @@ export class SingleLoader extends Loader {
     };
     this.interface.on("line", (line) => {
       try {
-        let nameMatch = line.match(/^\*\s*@(\d+)\s*(.+)/);
-        let othersMatch = line.match(/^\*\*/);
+        const nameMatch = line.match(/^\*\s*@(\d+)\s*(.+)/);
+        const othersMatch = line.match(/^\*\*/);
         if (nameMatch || othersMatch) {
           if (!before) {
             setVariable(currentType, currentString);
@@ -88,7 +88,7 @@ export class SingleLoader extends Loader {
         if (!before) {
           setVariable(currentType, currentString);
         }
-        let dictionary = new Dictionary(words, settings, markers, this.path);
+        const dictionary = new Dictionary(words, settings, markers, this.path);
         this.emit("end", dictionary);
       } catch (error) {
         this.emit("error", error);

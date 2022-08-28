@@ -69,10 +69,10 @@ export class Section<S> {
   }
 
   public getFields(onlyVisible?: boolean): ReadonlyArray<Field<S>> {
-    let equivalents = this.getEquivalents(onlyVisible);
-    let informations = this.getInformations(onlyVisible);
-    let relations = this.relations;
-    let fields = [...equivalents, ...informations, ...relations];
+    const equivalents = this.getEquivalents(onlyVisible);
+    const informations = this.getInformations(onlyVisible);
+    const relations = this.relations;
+    const fields = [...equivalents, ...informations, ...relations];
     return fields;
   }
 

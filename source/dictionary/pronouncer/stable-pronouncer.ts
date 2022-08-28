@@ -86,8 +86,8 @@ export class StablePronouncer extends Pronouncer {
     let dividedName = name.replace(/('|-|\+|~)/g, "");
     dividedName = dividedName.split("").reverse().map((char) => `<${char}>`).join("");
     dividedName = dividedName.replace(/((<[sztdkgfvpbcqxjrlmnhy]>)?<[aeiouâêîôûáéíóúàèìòù]>(<[sztdkgfvpbcqxjrlmnhy]>)?)/g, "$1.");
-    let regexp = /(<.>|\.)/g;
-    let array = [];
+    const regexp = /(<.>|\.)/g;
+    const array = [];
     let match;
     while ((match = regexp.exec(dividedName)) !== null) {
       array.push(match[1]);

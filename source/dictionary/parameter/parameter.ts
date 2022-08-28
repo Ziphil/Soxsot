@@ -23,15 +23,15 @@ export abstract class Parameter {
 
   public prepare(dictionary: Dictionary): void {
     this.suggesters = this.createSuggesters(dictionary);
-    for (let suggester of this.suggesters) {
+    for (const suggester of this.suggesters) {
       suggester.prepare();
     }
   }
 
   public presuggest(dictionary: Dictionary): Array<Suggestion> {
-    let suggestions = [];
+    const suggestions = [];
     if (this.suggesters !== undefined) {
-      for (let suggester of this.suggesters) {
+      for (const suggester of this.suggesters) {
         suggestions.push(...suggester.presuggest(dictionary));
       }
     }
@@ -41,9 +41,9 @@ export abstract class Parameter {
   public abstract match(word: Word): boolean;
 
   public suggest(word: Word, dictionary: Dictionary): Array<Suggestion> {
-    let suggestions = [];
+    const suggestions = [];
     if (this.suggesters !== undefined) {
-      for (let suggester of this.suggesters) {
+      for (const suggester of this.suggesters) {
         suggestions.push(...suggester.suggest(word, dictionary));
       }
     }
@@ -66,34 +66,34 @@ export abstract class Parameter {
 
   protected static createMatcher(type: string): Matcher {
     if (type === "exact") {
-      let matcher = function (text: string, candidate: string): boolean {
+      const matcher = function (text: string, candidate: string): boolean {
         return candidate === text;
       };
       return matcher;
     } else if (type === "prefix") {
-      let matcher = function (text: string, candidate: string): boolean {
+      const matcher = function (text: string, candidate: string): boolean {
         return candidate.startsWith(text);
       };
       return matcher;
     } else if (type === "suffix") {
-      let matcher = function (text: string, candidate: string): boolean {
+      const matcher = function (text: string, candidate: string): boolean {
         return candidate.endsWith(text);
       };
       return matcher;
     } else if (type === "part") {
-      let matcher = function (text: string, candidate: string): boolean {
+      const matcher = function (text: string, candidate: string): boolean {
         return candidate.includes(text);
       };
       return matcher;
     } else if (type === "pair") {
-      let matcher = function (text: string, candidate: string): boolean {
+      const matcher = function (text: string, candidate: string): boolean {
         try {
           if (text.length <= 10) {
             let predicate = false;
             for (let i = 0 ; i < text.length ; i ++) {
-              let beforeText = text.substring(0, i);
-              let afterText = text.substring(i + 1);
-              let regexp = new RegExp("^" + beforeText + "." + afterText + "$");
+              const beforeText = text.substring(0, i);
+              const afterText = text.substring(i + 1);
+              const regexp = new RegExp("^" + beforeText + "." + afterText + "$");
               if (candidate.match(regexp) !== null) {
                 predicate = true;
                 break;
@@ -109,9 +109,9 @@ export abstract class Parameter {
       };
       return matcher;
     } else if (type === "regular") {
-      let matcher = function (text: string, candidate: string): boolean {
+      const matcher = function (text: string, candidate: string): boolean {
         try {
-          let regexp = new RegExp(text, "m");
+          const regexp = new RegExp(text, "m");
           return candidate.match(regexp) !== null;
         } catch (error) {
           return false;

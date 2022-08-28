@@ -44,24 +44,24 @@ export class NormalParameter extends Parameter {
   }
 
   public static createEmpty(language: string): NormalParameter {
-    let parameter = new NormalParameter("", "both", "prefix", language);
+    const parameter = new NormalParameter("", "both", "prefix", language);
     return parameter;
   }
 
   public match(word: Word): boolean {
-    let candidates = Parameter.createCandidates(word, this.mode, this.language);
-    let matcher = Parameter.createMatcher(this.type);
-    let normalizedText = StringNormalizer.normalize(this.text, this.ignoreOptions);
-    let predicate = candidates.some((candidate) => {
-      let normalizedCandidate = StringNormalizer.normalize(candidate, this.ignoreOptions);
+    const candidates = Parameter.createCandidates(word, this.mode, this.language);
+    const matcher = Parameter.createMatcher(this.type);
+    const normalizedText = StringNormalizer.normalize(this.text, this.ignoreOptions);
+    const predicate = candidates.some((candidate) => {
+      const normalizedCandidate = StringNormalizer.normalize(candidate, this.ignoreOptions);
       return matcher(normalizedText, normalizedCandidate);
     });
     return predicate;
   }
 
   private getDefaultIgnoreOptions(): IgnoreOptions {
-    let mode = this.mode;
-    let type = this.type;
+    const mode = this.mode;
+    const type = this.type;
     if ((mode === "name" || mode === "both") && (type !== "pair" && type !== "regular")) {
       return {case: false, diacritic: true};
     } else {
@@ -70,12 +70,12 @@ export class NormalParameter extends Parameter {
   }
 
   protected createSuggesters(dictionary: Dictionary): Array<Suggester> {
-    let mode = this.mode;
-    let type = this.type;
-    let suggesters = [];
+    const mode = this.mode;
+    const type = this.type;
+    const suggesters = [];
     if ((mode === "name" || mode === "both") && (type === "exact" || type === "prefix")) {
-      let revisionSuggester = new RevisionSuggester(this.text, this.ignoreOptions);
-      let inflectionSuggester = InflectionSuggesterCreator.createByVersion(dictionary.settings.version, this.text, this.ignoreOptions);
+      const revisionSuggester = new RevisionSuggester(this.text, this.ignoreOptions);
+      const inflectionSuggester = InflectionSuggesterCreator.createByVersion(dictionary.settings.version, this.text, this.ignoreOptions);
       suggesters.push(revisionSuggester);
       if (inflectionSuggester !== undefined) {
         suggesters.push(inflectionSuggester);

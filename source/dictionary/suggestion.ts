@@ -18,7 +18,7 @@ export abstract class Suggestion<K extends string = string> {
   protected abstract getDescriptionName(kind: string, type: string, language: string): string | undefined;
 
   public getDescriptionNames(language: string): Array<string | undefined> {
-    let names = this.descriptions.map((description) => this.getDescriptionName(description.kind, description.type, language));
+    const names = this.descriptions.map((description) => this.getDescriptionName(description.kind, description.type, language));
     return names;
   }
 

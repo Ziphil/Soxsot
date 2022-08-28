@@ -14,8 +14,8 @@ export class FileNameResolver {
   }
 
   public static createDefault(): FileNameResolver {
-    let resolveWordBaseName = function (uniqueName: string): string {
-      let match = uniqueName.match(/^(\+)?(.+?)(\+)?(~*)$/);
+    const resolveWordBaseName = function (uniqueName: string): string {
+      const match = uniqueName.match(/^(\+)?(.+?)(\+)?(~*)$/);
       if (match) {
         let modifier = "";
         if (match[1]) {
@@ -30,15 +30,15 @@ export class FileNameResolver {
         if (modifier.length > 0) {
           modifier = "_" + modifier;
         }
-        let fileName = match[2] + modifier;
+        const fileName = match[2] + modifier;
         return fileName;
       } else {
         throw new Error("cannot happen");
       }
     };
-    let settingsBaseName = "#SETTINGS";
-    let markersBaseName = "#MARKERS";
-    let resolver = new FileNameResolver(resolveWordBaseName, settingsBaseName, markersBaseName);
+    const settingsBaseName = "#SETTINGS";
+    const markersBaseName = "#MARKERS";
+    const resolver = new FileNameResolver(resolveWordBaseName, settingsBaseName, markersBaseName);
     return resolver;
   }
 

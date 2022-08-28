@@ -49,17 +49,17 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   private prepareVerbalVerb(): void {
-    let normalizedText = this.normalizedText;
-    for (let [tense, tenseData] of ObjectUtil.entries(STABLE_DATA.tense)) {
-      for (let [aspect, aspectData] of ObjectUtil.entries(STABLE_DATA.aspect)) {
-        for (let [transitivity, transitivityData] of ObjectUtil.entries(STABLE_DATA.transitivity)) {
-          for (let [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
-            let suffix = tenseData.suffix + aspectData.suffix[transitivity];
-            let prefix = polarityData.prefix;
+    const normalizedText = this.normalizedText;
+    for (const [tense, tenseData] of ObjectUtil.entries(STABLE_DATA.tense)) {
+      for (const [aspect, aspectData] of ObjectUtil.entries(STABLE_DATA.aspect)) {
+        for (const [transitivity, transitivityData] of ObjectUtil.entries(STABLE_DATA.transitivity)) {
+          for (const [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
+            const suffix = tenseData.suffix + aspectData.suffix[transitivity];
+            const prefix = polarityData.prefix;
             if (normalizedText.startsWith(prefix) && normalizedText.endsWith(suffix)) {
-              let regexp = new RegExp(`^${prefix}|${suffix}$`, "g");
-              let name = normalizedText.replace(regexp, "");
-              let descriptions = [
+              const regexp = new RegExp(`^${prefix}|${suffix}$`, "g");
+              const name = normalizedText.replace(regexp, "");
+              const descriptions = [
                 {kind: "category", type: "verb"},
                 {kind: "tense", type: tense},
                 {kind: "aspect", type: aspect},
@@ -75,12 +75,12 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   private prepareVerbalNoun(): void {
-    let normalizedText = this.normalizedText;
-    let prefix = STABLE_DATA.polarity.negative.prefix;
+    const normalizedText = this.normalizedText;
+    const prefix = STABLE_DATA.polarity.negative.prefix;
     if (normalizedText.startsWith(prefix)) {
-      let regexp = new RegExp(`^${prefix}`, "g");
-      let name = normalizedText.replace(regexp, "");
-      let descriptions = [
+      const regexp = new RegExp(`^${prefix}`, "g");
+      const name = normalizedText.replace(regexp, "");
+      const descriptions = [
         {kind: "category", type: "noun"},
         {kind: "polarity", type: "negative"}
       ];
@@ -89,16 +89,16 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   private prepareVerbalOthers(): void {
-    let normalizedText = this.normalizedText;
-    for (let [category, categoryData] of ObjectUtil.entries(STABLE_DATA.verbalInflectionCategory)) {
-      for (let [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
-        let categoryPrefix = categoryData.prefix;
-        let polarityPrefix = polarityData.prefix;
-        let prefix = categoryPrefix + polarityPrefix;
+    const normalizedText = this.normalizedText;
+    for (const [category, categoryData] of ObjectUtil.entries(STABLE_DATA.verbalInflectionCategory)) {
+      for (const [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
+        const categoryPrefix = categoryData.prefix;
+        const polarityPrefix = polarityData.prefix;
+        const prefix = categoryPrefix + polarityPrefix;
         if (normalizedText.startsWith(prefix)) {
-          let regexp = new RegExp(`^${prefix}`, "g");
-          let name = normalizedText.replace(regexp, "");
-          let descriptions = [
+          const regexp = new RegExp(`^${prefix}`, "g");
+          const name = normalizedText.replace(regexp, "");
+          const descriptions = [
             {kind: "category", type: category},
             {kind: "polarity", type: polarity}
           ];
@@ -109,15 +109,15 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   private prepareNominalAdjective(): void {
-    let normalizedText = this.normalizedText;
-    for (let [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
-      let categoryPrefix = STABLE_DATA.nominalInflectionCategory.adjective.prefix;
-      let polarityPrefix = polarityData.prefix;
-      let prefix = categoryPrefix + polarityPrefix;
+    const normalizedText = this.normalizedText;
+    for (const [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
+      const categoryPrefix = STABLE_DATA.nominalInflectionCategory.adjective.prefix;
+      const polarityPrefix = polarityData.prefix;
+      const prefix = categoryPrefix + polarityPrefix;
       if (normalizedText.startsWith(prefix)) {
-        let regexp = new RegExp(`^${prefix}`, "g");
-        let name = normalizedText.replace(regexp, "");
-        let descriptions = [
+        const regexp = new RegExp(`^${prefix}`, "g");
+        const name = normalizedText.replace(regexp, "");
+        const descriptions = [
           {kind: "category", type: "adjective"},
           {kind: "polarity", type: polarity}
         ];
@@ -127,12 +127,12 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   private prepareNominalNoun(): void {
-    let normalizedText = this.normalizedText;
-    let prefix = STABLE_DATA.polarity.negative.prefix;
+    const normalizedText = this.normalizedText;
+    const prefix = STABLE_DATA.polarity.negative.prefix;
     if (normalizedText.startsWith(prefix)) {
-      let regexp = new RegExp(`^${prefix}`, "g");
-      let name = normalizedText.replace(regexp, "");
-      let descriptions = [
+      const regexp = new RegExp(`^${prefix}`, "g");
+      const name = normalizedText.replace(regexp, "");
+      const descriptions = [
         {kind: "category", type: "noun"},
         {kind: "polarity", type: "negative"}
       ];
@@ -141,15 +141,15 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   private prepareAdverbial(): void {
-    let normalizedText = this.normalizedText;
-    for (let [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
-      let categoryPrefix = STABLE_DATA.adverbialInflectionCategory.adverb.prefix;
-      let polarityPrefix = polarityData.prefix;
-      let prefix = categoryPrefix + polarityPrefix;
+    const normalizedText = this.normalizedText;
+    for (const [polarity, polarityData] of ObjectUtil.entries(STABLE_DATA.polarity)) {
+      const categoryPrefix = STABLE_DATA.adverbialInflectionCategory.adverb.prefix;
+      const polarityPrefix = polarityData.prefix;
+      const prefix = categoryPrefix + polarityPrefix;
       if (normalizedText.startsWith(prefix)) {
-        let regexp = new RegExp(`^${prefix}`, "g");
-        let name = normalizedText.replace(regexp, "");
-        let descriptions = [
+        const regexp = new RegExp(`^${prefix}`, "g");
+        const name = normalizedText.replace(regexp, "");
+        const descriptions = [
           {kind: "category", type: "adverb"},
           {kind: "polarity", type: polarity}
         ];
@@ -159,12 +159,12 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   private prepareParticle(): void {
-    let normalizedText = this.normalizedText;
-    let prefix = STABLE_DATA.particleInflectionType.nonverb.prefix;
+    const normalizedText = this.normalizedText;
+    const prefix = STABLE_DATA.particleInflectionType.nonverb.prefix;
     if (normalizedText.startsWith(prefix)) {
-      let regexp = new RegExp(`^${prefix}`, "g");
-      let name = normalizedText.replace(regexp, "");
-      let descriptions = [
+      const regexp = new RegExp(`^${prefix}`, "g");
+      const name = normalizedText.replace(regexp, "");
+      const descriptions = [
         {kind: "form", type: "nonverb"}
       ];
       this.candidates.push(["particle", "particleInflection", descriptions, name]);
@@ -176,14 +176,14 @@ export class StableInflectionSuggester extends Suggester {
   }
 
   public suggest(word: Word, dictionary: Dictionary): Array<Suggestion> {
-    let suggestions = [];
-    let normalizedName = StringNormalizer.normalize(word.name, this.ignoreOptions);
-    for (let candidate of this.candidates) {
-      let [sort, kind, descriptions, name] = candidate;
-      let wordSort = Parser.createKeep().lookupSort(word, "ja");
-      let desiredSort = STABLE_DATA.sort[sort].abbreviations["ja"];
+    const suggestions = [];
+    const normalizedName = StringNormalizer.normalize(word.name, this.ignoreOptions);
+    for (const candidate of this.candidates) {
+      const [sort, kind, descriptions, name] = candidate;
+      const wordSort = Parser.createKeep().lookupSort(word, "ja");
+      const desiredSort = STABLE_DATA.sort[sort].abbreviations["ja"];
       if (normalizedName === name && wordSort?.startsWith(desiredSort)) {
-        let suggestion = new StableInflectionSuggestion(kind, descriptions, word.name);
+        const suggestion = new StableInflectionSuggestion(kind, descriptions, word.name);
         suggestions.push(suggestion);
       }
     }

@@ -22,7 +22,7 @@ export class Serializer {
     string += `* @${word.date} ${word.uniqueName}\n`;
     string += "\n";
     let first = true;
-    for (let [language, content] of Object.entries(word.contents)) {
+    for (const [language, content] of Object.entries(word.contents)) {
       if (content !== undefined && content.trim() !== "") {
         if (!first) {
           string += "\n";
@@ -73,7 +73,7 @@ export class Serializer {
     if (!skipHeader.part) {
       string += "!REVISION\n";
     }
-    for (let revision of revisions) {
+    for (const revision of revisions) {
       string += this.serializeRevision(revision);
     }
     return string;
@@ -98,7 +98,7 @@ export class Serializer {
     if (!skipHeader.part) {
       string += "!MARKER\n";
     }
-    for (let [uniqueName, wordMarkers] of markers.entries()) {
+    for (const [uniqueName, wordMarkers] of markers.entries()) {
       string += `- ${uniqueName}: ${wordMarkers.join(", ")}\n`;
     }
     return string;

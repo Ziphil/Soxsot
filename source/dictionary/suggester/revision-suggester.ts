@@ -30,10 +30,10 @@ export class RevisionSuggester extends Suggester {
   }
 
   public presuggest(dictionary: Dictionary): Array<Suggestion> {
-    let revisions = dictionary.settings.revisions;
-    let names = revisions.resolve(this.text, this.ignoreOptions);
+    const revisions = dictionary.settings.revisions;
+    const names = revisions.resolve(this.text, this.ignoreOptions);
     if (names.length > 0) {
-      let suggestion = new RevisionSuggestion(names);
+      const suggestion = new RevisionSuggestion(names);
       return [suggestion];
     } else {
       return [];

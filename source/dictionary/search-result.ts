@@ -22,37 +22,37 @@ export class SearchResult {
   }
 
   public static createEmpty(): SearchResult {
-    let words = new Array<Word>();
-    let suggestions = new Array<never>();
-    let elapsedTime = 0;
-    let result = new SearchResult(words, suggestions, elapsedTime);
+    const words = new Array<Word>();
+    const suggestions = new Array<never>();
+    const elapsedTime = 0;
+    const result = new SearchResult(words, suggestions, elapsedTime);
     return result;
   }
 
   public static measure(search: () => [ReadonlyArray<Word>, ReadonlyArray<Suggestion>]): SearchResult {
-    let beforeDate = new Date();
-    let [words, suggestions] = search();
-    let afterDate = new Date();
-    let elapsedTime = afterDate.getTime() - beforeDate.getTime();
-    let result = new SearchResult(words, suggestions, elapsedTime);
+    const beforeDate = new Date();
+    const [words, suggestions] = search();
+    const afterDate = new Date();
+    const elapsedTime = afterDate.getTime() - beforeDate.getTime();
+    const result = new SearchResult(words, suggestions, elapsedTime);
     return result;
   }
 
   public copy(): SearchResult {
-    let result = new SearchResult(this.words, this.suggestions, this.elapsedTime);
+    const result = new SearchResult(this.words, this.suggestions, this.elapsedTime);
     return result;
   }
 
-  public sliceWords(page: number) {
-    let words = this.words.slice(page * this.sizePerPage, page * this.sizePerPage + this.sizePerPage);
+  public sliceWords(page: number): Array<Word> {
+    const words = this.words.slice(page * this.sizePerPage, page * this.sizePerPage + this.sizePerPage);
     return words;
   }
 
-  public get minPage() {
+  public get minPage(): number {
     return 0;
   }
 
-  public get maxPage() {
+  public get maxPage(): number {
     return Math.max(Math.ceil(this.words.length / this.sizePerPage) - 1, 0);
   }
 

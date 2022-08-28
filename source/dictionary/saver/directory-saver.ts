@@ -45,7 +45,7 @@ export class DirectorySaver extends Saver {
   }
 
   public start(): void {
-    let promise = Promise.resolve().then(this.deleteFiles.bind(this)).then(this.saveDictionary.bind(this));
+    const promise = Promise.resolve().then(this.deleteFiles.bind(this)).then(this.saveDictionary.bind(this));
     promise.then(() => {
       this.emit("end");
     }).catch((error) => {
@@ -54,13 +54,13 @@ export class DirectorySaver extends Saver {
   }
 
   private async deleteFiles(): Promise<void> {
-    let dictionary = this.dictionary;
-    let paths = await fs.readdir(this.path);
-    let fileLocalPaths = paths.filter((path) => path.endsWith(".xdnw") || path.endsWith(".xdns"));
+    const dictionary = this.dictionary;
+    const paths = await fs.readdir(this.path);
+    const fileLocalPaths = paths.filter((path) => path.endsWith(".xdnw") || path.endsWith(".xdns"));
     this.size = dictionary.words.length;
     this.deleteSize = fileLocalPaths.length;
-    let promises = fileLocalPaths.map((fileLocalPath) => {
-      let filePath = joinPath(this.path, fileLocalPath);
+    const promises = fileLocalPaths.map((fileLocalPath) => {
+      const filePath = joinPath(this.path, fileLocalPath);
       return this.deleteFile(filePath);
     });
     await Promise.all(promises);
@@ -73,39 +73,39 @@ export class DirectorySaver extends Saver {
   }
 
   private async saveDictionary(): Promise<void> {
-    let dictionary = this.dictionary;
+    const dictionary = this.dictionary;
     await fs.mkdir(this.path, {recursive: true});
-    let wordsPromise = this.saveWords(dictionary.words);
-    let settingsPromise = this.saveSettings(dictionary.settings);
-    let markersPromise = this.saveMarkers(dictionary.markers);
+    const wordsPromise = this.saveWords(dictionary.words);
+    const settingsPromise = this.saveSettings(dictionary.settings);
+    const markersPromise = this.saveMarkers(dictionary.markers);
     await Promise.all([wordsPromise, settingsPromise, markersPromise]);
   }
 
   private async saveWords(words: ReadonlyArray<Word>): Promise<void> {
-    let promises = words.map((word) => {
-      let wordPath = joinPath(this.path, this.resolver.resolveWordBaseName(word.uniqueName) + ".xdnw");
+    const promises = words.map((word) => {
+      const wordPath = joinPath(this.path, this.resolver.resolveWordBaseName(word.uniqueName) + ".xdnw");
       return this.saveWord(word, wordPath);
     });
     await Promise.all(promises);
   }
 
   private async saveWord(word: Word, path: string): Promise<void> {
-    let string = this.serializer.serializeWord(word);
+    const string = this.serializer.serializeWord(word);
     await fs.writeFile(path, string, {encoding: "utf-8"});
     this.count ++;
     this.emitProgress();
   }
 
   private async saveSettings(settings: DictionarySettings): Promise<void> {
-    let path = joinPath(this.path, this.resolver.settingsBaseName + ".xdns");
-    let string = this.serializer.serializeDictionarySettings(settings);
+    const path = joinPath(this.path, this.resolver.settingsBaseName + ".xdns");
+    const string = this.serializer.serializeDictionarySettings(settings);
     await fs.writeFile(path, string, {encoding: "utf-8"});
     this.emitProgress();
   }
 
   private async saveMarkers(markers: Markers): Promise<void> {
-    let path = joinPath(this.path, this.resolver.markersBaseName + ".xdns");
-    let string = this.serializer.serializeMarkers(markers);
+    const path = joinPath(this.path, this.resolver.markersBaseName + ".xdns");
+    const string = this.serializer.serializeMarkers(markers);
     await fs.writeFile(path, string, {encoding: "utf-8"});
     this.emitProgress();
   }

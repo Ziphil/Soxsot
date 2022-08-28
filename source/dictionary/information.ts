@@ -69,7 +69,7 @@ export class ExampleInformation<S> extends Information<S, "example"> {
 export class InformationKindUtil {
 
   public static fromTag(tag: string): InformationKind | undefined {
-    let entry = ObjectUtil.entries(INFORMATION_KIND_DATA).find(([kind, data]) => data.tag === tag);
+    const entry = ObjectUtil.entries(INFORMATION_KIND_DATA).find(([kind, data]) => data.tag === tag);
     if (entry !== undefined) {
       return entry[0];
     } else {
@@ -78,12 +78,12 @@ export class InformationKindUtil {
   }
 
   public static getTag(kind: InformationKind): string {
-    let tag = INFORMATION_KIND_DATA[kind].tag;
+    const tag = INFORMATION_KIND_DATA[kind].tag;
     return tag;
   }
 
   public static getName(kind: InformationKind, language: string): string | undefined {
-    let name = ObjectUtil.get(INFORMATION_KIND_DATA[kind].names, language);
+    const name = ObjectUtil.get(INFORMATION_KIND_DATA[kind].names, language);
     return name;
   }
 
