@@ -108,10 +108,10 @@
   },
   "transitivity": {
     "intransitive": {
-      "names": {"ja": "自動", "en": "Intransitive"}
+      "names": {"ja": "通常態", "en": "Normal"}
     },
     "transitive": {
-      "names": {"ja": "他動", "en": "Transitive"}
+      "names": {"ja": "補助態", "en": "Adjutative"}
     }
   },
   "polarity": {
