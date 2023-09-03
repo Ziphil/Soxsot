@@ -112,10 +112,10 @@ export class Dictionary {
     }
   }
 
-  // 指定された UID をもつ単語オブジェクトの内容を newWord として与えられたデータで上書きします。
-  // UID として null が指定された場合は、新規単語の作成と見なされ、既存の単語オブジェクトの変更は行われずに新たな単語オブジェクトが追加されます。
-  // なお、引数の newWord の UID は完全に無視されます。
-  // すなわち、既存単語の編集の場合は該当単語の UID は書き換えられず保たれ、新規単語の作成の場合はその単語の UID は新たに発行されます。
+  /** 指定された UID をもつ単語オブジェクトの内容を `newWord` として与えられたデータで上書きします。
+   * UID として `null` が指定された場合は、新規単語の作成と見なされ、既存の単語オブジェクトの変更は行われずに新たな単語オブジェクトが追加されます。
+   * なお、引数の `newWord` の UID は完全に無視されます。
+   * すなわち、既存単語の編集の場合は該当単語の UID は書き換えられず保たれ、新規単語の作成の場合はその単語の UID は新たに発行されます。*/
   public editWord(uid: string | null, newWord: PlainWord, skipValidate?: boolean): void {
     const errorType = (skipValidate) ? null : this.validateEditWord(uid, newWord);
     if (errorType === null) {

@@ -56,8 +56,8 @@ export class Parser<S> {
     return parser;
   }
 
-  // 与えられた単語データをパースして、ParsedWord オブジェクトとして返します。
-  // パースした全てのデータではなく一部の項目の内容のみが必要な場合は、lookup から始まるメソッドを使用した方が軽量です。
+  /** 与えられた単語データをパースして、`ParsedWord` オブジェクトとして返します。
+   * パースした全てのデータではなく一部の項目の内容のみが必要な場合は、`lookup` から始まるメソッドを使用した方が軽量です。*/
   public parse(word: Word): ParsedWord<S> {
     const pronouncer = PronouncerCreator.createByVersion(word.dictionary?.settings.version ?? "");
     const name = word.name;
@@ -520,7 +520,7 @@ export class MarkupResolver<S, E> {
     return resolve;
   }
 
-  // マークアップを全て取り除いてプレーンテキストにするリゾルバを作成します。
+  /** マークアップを全て取り除いてプレーンテキストにするリゾルバを作成します。 */
   public static createSimple(): MarkupResolver<string, string> {
     const resolveLink = function (name: string, children: Array<string>): string {
       return children.join("");
@@ -538,7 +538,7 @@ export class MarkupResolver<S, E> {
     return resolver;
   }
 
-  // マークアップの特殊文字などをそのまま残すリゾルバを作成します。
+  /** マークアップの特殊文字などをそのまま残すリゾルバを作成します。*/
   public static createKeep(): MarkupResolver<string, string> {
     const resolveLink = function (name: string, children: Array<string>): string {
       return children.join("");

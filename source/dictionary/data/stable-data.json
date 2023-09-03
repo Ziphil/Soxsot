@@ -1,20 +1,16 @@
 {
   "sort": {
-    "verbal": {
-      "names": {"ja": "動辞", "en": "Verbal"},
-      "abbreviations": {"ja": "動", "en": "V"}
-    },
     "nominal": {
       "names": {"ja": "名辞", "en": "Nominal"},
       "abbreviations": {"ja": "名", "en": "N"}
     },
+    "verbal": {
+      "names": {"ja": "動辞", "en": "Verbal"},
+      "abbreviations": {"ja": "動", "en": "V"}
+    },
     "adverbial": {
       "names": {"ja": "副辞", "en": "Adverbial"},
       "abbreviations": {"ja": "副", "en": "B"}
-    },
-    "functional": {
-      "names": {"ja": "機能辞", "en": "Functional"},
-      "abbreviations": {"ja": "機", "en": "F"}
     },
     "particle": {
       "names": {"ja": "助接辞", "en": "Particle"},
@@ -27,16 +23,20 @@
     "interjection": {
       "names": {"ja": "間投辞", "en": "Interjection"},
       "abbreviations": {"ja": "間", "en": "I"}
+    },
+    "functional": {
+      "names": {"ja": "機能辞", "en": "Functional"},
+      "abbreviations": {"ja": "機", "en": "F"}
     }
   },
   "category": {
-    "verb": {
-      "names": {"ja": "動詞", "en": "Verb"},
-      "abbreviations": {"ja": "動", "en": "V"}
-    },
     "noun": {
       "names": {"ja": "名詞", "en": "Noun"},
       "abbreviations": {"ja": "名", "en": "N"}
+    },
+    "verb": {
+      "names": {"ja": "動詞", "en": "Verb"},
+      "abbreviations": {"ja": "動", "en": "V"}
     },
     "adjective": {
       "names": {"ja": "形容詞", "en": "Adjective"},

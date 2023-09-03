@@ -67,8 +67,8 @@ export class Word {
     return {uid, uniqueName, date, contents};
   }
 
-  // この単語オブジェクトが属する辞書オブジェクトを設定します。
-  // ローダーなどを通さずに手動で単語オブジェクトを生成した際は、必ずこのメソッドを使って辞書オブジェクトを設定してください。
+  /** この単語オブジェクトが属する辞書オブジェクトを設定します。
+   * ローダーなどを通さずに手動で単語オブジェクトを生成した際は、必ずこのメソッドを使って辞書オブジェクトを設定してください。*/
   public setDictionary(dictionary: Dictionary): void {
     this.writable.dictionary = dictionary;
     this.updateComparisonString();
@@ -90,8 +90,8 @@ export class Word {
     return word;
   }
 
-  // この単語オブジェクトの内容を与えられたデータで上書きします。
-  // ただし、UID は上書きされません。
+  /** この単語オブジェクトの内容を与えられたデータで上書きします。
+   * ただし、UID は上書きされません。*/
   public edit(newWord: PlainWord, skipValidate?: boolean): void {
     const errorType = (skipValidate) ? null : this.validateEdit(newWord);
     if (errorType === null) {
