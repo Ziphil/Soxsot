@@ -240,10 +240,10 @@ export class ShalInflectionSuggestion<K extends ShalInflectionSuggestionKind> ex
 
 
 export const SHAL_INFLECTION_SUGGESTION_KIND_DATA = {
-  verbalInflection: {names: {ja: "動辞の語形変化", en: "Inflection of verbal"}},
-  nominalInflection: {names: {ja: "名辞の語形変化", en: "Inflection of nominal"}},
-  adpredicativeInflection: {names: {ja: "連述辞の語形変化", en: "Inflection of adpredicative"}},
-  specialInflection: {names: {ja: "特殊辞の語形変化", en: "Inflection of special"}},
-  particleInflection: {names: {ja: "助接辞の語形変化", en: "Inflection of particle"}}
+  verbalInflection: {names: {ja: "動辞の活用", en: "Inflection of verbal"}},
+  nominalInflection: {names: {ja: "名辞の活用", en: "Inflection of nominal"}},
+  adpredicativeInflection: {names: {ja: "連述辞の活用", en: "Inflection of adpredicative"}},
+  specialInflection: {names: {ja: "特殊辞の活用", en: "Inflection of special"}},
+  particleInflection: {names: {ja: "助接辞の活用", en: "Inflection of particle"}}
 } as const;
 export type ShalInflectionSuggestionKind = keyof typeof SHAL_INFLECTION_SUGGESTION_KIND_DATA;

@@ -58,9 +58,7 @@ describe("suggester (version 7)", () => {
         !ALPHABET
         - sztdkgfvpbcqxjlrnmyhaâáàeêéèiîíìoôòuûù
         !REVISION
-        - @1000 {sakal} → {sakil}
         !MARKER
-        - sakil: circle
       `
     });
   });
@@ -70,14 +68,44 @@ describe("suggester (version 7)", () => {
     const dictionary = await loader.asPromise();
     return dictionary;
   };
-  test("inflection of verbal as verb", async () => {
+  test("verbal as verb", async () => {
     const dictionary = await getDictionary();
-    checkSuggestion(dictionary, "vilises", "動辞の語形変化", ["動詞", "過去時制", "無相", "通常態", "肯定"]);
-    checkSuggestion(dictionary, "vilisic", "動辞の語形変化", ["動詞", "未来時制", "経過相", "通常態", "肯定"]);
-    checkSuggestion(dictionary, "vilisod", "動辞の語形変化", ["動詞", "通時時制", "継続相", "補助態", "肯定"]);
-    checkSuggestion(dictionary, "duvilisak", "動辞の語形変化", ["動詞", "現在時制", "完了相", "通常態", "否定"]);
-    checkSuggestion(dictionary, "duvilisiv", "動辞の語形変化", ["動詞", "未来時制", "開始相", "補助態", "否定"]);
+    checkSuggestion(dictionary, "vilises", "動辞の活用", ["動詞", "過去時制", "無相", "通常態", "肯定"]);
+    checkSuggestion(dictionary, "vilisic", "動辞の活用", ["動詞", "未来時制", "経過相", "通常態", "肯定"]);
+    checkSuggestion(dictionary, "vilisod", "動辞の活用", ["動詞", "通時時制", "継続相", "補助態", "肯定"]);
+    checkSuggestion(dictionary, "duvilisak", "動辞の活用", ["動詞", "現在時制", "完了相", "通常態", "否定"]);
+    checkSuggestion(dictionary, "duvilisiv", "動辞の活用", ["動詞", "未来時制", "開始相", "補助態", "否定"]);
     checkNoSuggestions(dictionary, "vilisep");
     checkNoSuggestions(dictionary, "duviliseb");
+  });
+  test("verbal as other categories", async () => {
+    const dictionary = await getDictionary();
+    checkSuggestion(dictionary, "amay", "動辞の活用", ["形容詞", "肯定"]);
+    checkSuggestion(dictionary, "adumay", "動辞の活用", ["形容詞", "否定"]);
+    checkSuggestion(dictionary, "olof", "動辞の活用", ["副詞", "肯定"]);
+    checkSuggestion(dictionary, "odulof", "動辞の活用", ["副詞", "否定"]);
+    checkSuggestion(dictionary, "iolof", "動辞の活用", ["非動詞修飾副詞", "肯定"]);
+    checkSuggestion(dictionary, "iodulof", "動辞の活用", ["非動詞修飾副詞", "否定"]);
+    checkSuggestion(dictionary, "duvilis", "動辞の活用", ["名詞", "否定"]);
+  });
+  test("nominal", async () => {
+    const dictionary = await getDictionary();
+    checkSuggestion(dictionary, "dusakil", "名辞の活用", ["名詞", "否定"]);
+    checkSuggestion(dictionary, "asakil", "名辞の活用", ["形容詞", "肯定"]);
+    checkSuggestion(dictionary, "adusakil", "名辞の活用", ["形容詞", "否定"]);
+  });
+  test("adpredicative", async () => {
+    const dictionary = await getDictionary();
+    checkSuggestion(dictionary, "ebam", "連述辞の活用", ["連述詞", "肯定"]);
+    checkSuggestion(dictionary, "edubam", "連述辞の活用", ["連述詞", "否定"]);
+    checkSuggestion(dictionary, "iebam", "連述辞の活用", ["非動詞修飾連述詞", "肯定"]);
+    checkSuggestion(dictionary, "iedubam", "連述辞の活用", ["非動詞修飾連述詞", "否定"]);
+  });
+  test("special", async () => {
+    const dictionary = await getDictionary();
+    checkSuggestion(dictionary, "etut", "特殊辞の活用", ["特殊詞", "肯定"]);
+    checkSuggestion(dictionary, "edutut", "特殊辞の活用", ["特殊詞", "否定"]);
+    checkNoSuggestions(dictionary, "ietut");
+    checkNoSuggestions(dictionary, "iedutut");
   });
 });
