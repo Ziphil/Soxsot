@@ -15,7 +15,7 @@
     "experimentalDecorators": true,
     "removeComments": true,
     "resolveJsonModule": true,
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
   },
   "include": [
     "source/**/*",

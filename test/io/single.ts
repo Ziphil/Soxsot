@@ -1,4 +1,4 @@
-//
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import {
   promises as fs
@@ -18,7 +18,7 @@ import {
 
 
 describe("load/save single file format", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1128 ter
@@ -67,7 +67,7 @@ describe("load/save single file format", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   const check = function (dictionary: Dictionary): void {
     const words = dictionary.words;
     const settings = dictionary.settings;
@@ -125,7 +125,7 @@ describe("load/save single file format", () => {
 });
 
 describe("single file format without system data (neither)", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1068 monaf
@@ -137,7 +137,7 @@ describe("single file format without system data (neither)", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   test("settings", async () => {
     const loader = new SingleLoader("testdic.xdn");
     const dictionary = await loader.asPromise();
@@ -157,7 +157,7 @@ describe("single file format without system data (neither)", () => {
 });
 
 describe("single file format without system data (no settings)", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1068 monaf
@@ -172,7 +172,7 @@ describe("single file format without system data (no settings)", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   test("settings", async () => {
     const loader = new SingleLoader("testdic.xdn");
     const dictionary = await loader.asPromise();
@@ -184,7 +184,7 @@ describe("single file format without system data (no settings)", () => {
 });
 
 describe("single file format without system data (no markers)", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1068 monaf
@@ -203,7 +203,7 @@ describe("single file format without system data (no markers)", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   test("markers", async () => {
     const loader = new SingleLoader("testdic.xdn");
     const dictionary = await loader.asPromise();
@@ -215,7 +215,7 @@ describe("single file format without system data (no markers)", () => {
 });
 
 describe("single file format with insufficient settings", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1068 monaf
@@ -234,7 +234,7 @@ describe("single file format with insufficient settings", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   test("test", async () => {
     const loader = new SingleLoader("testdic.xdn");
     await expect(loader.asPromise()).toReject();

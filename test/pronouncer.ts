@@ -5,7 +5,7 @@ import {
 } from "../source/dictionary/pronouncer/stable-pronouncer";
 
 
-describe("pronouncer (version S)", () => {
+describe("pronouncer (version 6)", () => {
   test("general", () => {
     const pronouncer = new StablePronouncer();
     expect(pronouncer.convert("belom")).toBe("belɔm");

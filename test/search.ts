@@ -1,4 +1,4 @@
-//
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import "jest-extended";
 import mock from "mock-fs";
@@ -13,7 +13,7 @@ import {
 
 
 describe("search from names", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1000 sat
@@ -37,7 +37,7 @@ describe("search from names", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   const getDictionary = async function (): Promise<Dictionary> {
     const loader = new SingleLoader("testdic.xdn");
     const dictionary = await loader.asPromise();
@@ -70,7 +70,7 @@ describe("search from names", () => {
 });
 
 describe("search from equivalents", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1000 sat
@@ -86,7 +86,7 @@ describe("search from equivalents", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   const getDictionary = async function (): Promise<Dictionary> {
     const loader = new SingleLoader("testdic.xdn");
     const dictionary = await loader.asPromise();

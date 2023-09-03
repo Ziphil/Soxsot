@@ -1,4 +1,4 @@
-//
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import {
   promises as fs
@@ -18,7 +18,7 @@ import {
 
 
 describe("load/save directory format", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic/ter.xdnw": dedent`
         * @1128 ter
@@ -78,7 +78,7 @@ describe("load/save directory format", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   const check = function (dictionary: Dictionary): void {
     const words = dictionary.words;
     const settings = dictionary.settings;
@@ -138,7 +138,7 @@ describe("load/save directory format", () => {
 });
 
 describe("directory format without system files", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic/monaf.xdnw": dedent`
         * @1068 monaf
@@ -150,7 +150,7 @@ describe("directory format without system files", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   test("settings", async () => {
     const loader = new DirectoryLoader("testdic");
     const dictionary = await loader.asPromise();
@@ -170,7 +170,7 @@ describe("directory format without system files", () => {
 });
 
 describe("directory format with insufficient settings", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic/monaf.xdnw": dedent`
         * @1068 monaf
@@ -189,7 +189,7 @@ describe("directory format with insufficient settings", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   test("test", async () => {
     const loader = new DirectoryLoader("testdic");
     await expect(loader.asPromise()).toReject();

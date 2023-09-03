@@ -1,4 +1,4 @@
-//
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import "jest-extended";
 import mock from "mock-fs";
@@ -62,7 +62,7 @@ describe("markup parser", () => {
 });
 
 describe("parser", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1036 lic+~~
@@ -117,7 +117,7 @@ describe("parser", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   const resolver = MarkupResolver.createKeep();
   const parser = new Parser(resolver);
   const getWord = async function (): Promise<[Word, ParsedWord<string>]> {

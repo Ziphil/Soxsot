@@ -1,10 +1,14 @@
-//
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import "jest-extended";
 import mock from "mock-fs";
 import dedent from "ts-dedent";
 import {
-  Dictionary, DictionarySettings, Markers, Revisions, Word
+  Dictionary,
+  DictionarySettings,
+  Markers,
+  Revisions,
+  Word
 } from "../source";
 import {
   SingleLoader
@@ -12,7 +16,7 @@ import {
 
 
 describe("plain objects", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1128 ter
@@ -61,7 +65,7 @@ describe("plain objects", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   test("idempotency", async () => {
     const loader = new SingleLoader("testdic.xdn");
     const dictionary = await loader.asPromise();
