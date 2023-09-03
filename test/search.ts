@@ -12,6 +12,12 @@ import {
 } from "../source/io";
 
 
+async function getDictionary(): Promise<Dictionary> {
+  const loader = new SingleLoader("testdic.xdn");
+  const dictionary = await loader.asPromise();
+  return dictionary;
+};
+
 describe("search from names", () => {
   beforeEach(() => {
     mock({
@@ -38,11 +44,6 @@ describe("search from names", () => {
     });
   });
   afterEach(mock.restore);
-  const getDictionary = async function (): Promise<Dictionary> {
-    const loader = new SingleLoader("testdic.xdn");
-    const dictionary = await loader.asPromise();
-    return dictionary;
-  };
   test("prefix search with default ignore option", async () => {
     const dictionary = await getDictionary();
     const parameter = new NormalParameter("sat", "name", "prefix", "ja");

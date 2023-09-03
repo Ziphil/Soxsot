@@ -12,6 +12,12 @@ import {
 } from "../source/io";
 
 
+async function getDictionary(): Promise<Dictionary> {
+  const loader = new SingleLoader("testdic.xdn");
+  const dictionary = await loader.asPromise();
+  return dictionary;
+};
+
 function checkSuggestion(dictionary: Dictionary, text: string, kindName: string, descriptionNames: Array<string>): void {
   const parameter = new NormalParameter(text, "name", "prefix", "ja");
   const result = dictionary.search(parameter);
@@ -63,11 +69,6 @@ describe("suggester (version 7)", () => {
     });
   });
   afterEach(mock.restore);
-  const getDictionary = async function (): Promise<Dictionary> {
-    const loader = new SingleLoader("testdic.xdn");
-    const dictionary = await loader.asPromise();
-    return dictionary;
-  };
   test("verbal as verb", async () => {
     const dictionary = await getDictionary();
     checkSuggestion(dictionary, "vilises", "動辞の活用", ["動詞", "過去時制", "無相", "通常態", "肯定"]);
