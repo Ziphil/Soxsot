@@ -43,32 +43,32 @@ export class Word {
   }
 
   public static createEmpty(): Word {
-    let name = "";
-    let date = NewHairianDate.current().getHairia(true);
-    let contents = {ja: "+ <>\n= <>\n\nM:"};
-    let word = new Word(name, date, contents);
+    const name = "";
+    const date = NewHairianDate.current().getHairia(true);
+    const contents = {ja: "+ <>\n= <>\n\nM:"};
+    const word = new Word(name, date, contents);
     return word;
   }
 
   public static fromPlain(plain: PlainWord): Word {
-    let uniqueName = plain.uniqueName;
-    let date = plain.date;
-    let contents = plain.contents;
-    let word = new Word(uniqueName, date, contents);
+    const uniqueName = plain.uniqueName;
+    const date = plain.date;
+    const contents = plain.contents;
+    const word = new Word(uniqueName, date, contents);
     word.writable.uid = plain.uid;
     return word;
   }
 
   public toPlain(): PlainWord {
-    let uid = this.uid;
-    let uniqueName = this.uniqueName;
-    let date = this.date;
-    let contents = this.contents;
+    const uid = this.uid;
+    const uniqueName = this.uniqueName;
+    const date = this.date;
+    const contents = this.contents;
     return {uid, uniqueName, date, contents};
   }
 
-  // この単語オブジェクトが属する辞書オブジェクトを設定します。
-  // ローダーなどを通さずに手動で単語オブジェクトを生成した際は、必ずこのメソッドを使って辞書オブジェクトを設定してください。
+  /** この単語オブジェクトが属する辞書オブジェクトを設定します。
+   * ローダーなどを通さずに手動で単語オブジェクトを生成した際は、必ずこのメソッドを使って辞書オブジェクトを設定してください。*/
   public setDictionary(dictionary: Dictionary): void {
     this.writable.dictionary = dictionary;
     this.updateComparisonString();
@@ -79,21 +79,21 @@ export class Word {
   }
 
   public refreshDate(): void {
-    let date = NewHairianDate.current().getHairia(true);
+    const date = NewHairianDate.current().getHairia(true);
     this.writable.date = date;
   }
 
   public copy(): Word {
     this.ensureDictionary();
-    let word = new Word(this.uniqueName, this.date, this.contents);
+    const word = new Word(this.uniqueName, this.date, this.contents);
     word.setDictionary(this.dictionary);
     return word;
   }
 
-  // この単語オブジェクトの内容を与えられたデータで上書きします。
-  // ただし、UID は上書きされません。
+  /** この単語オブジェクトの内容を与えられたデータで上書きします。
+   * ただし、UID は上書きされません。*/
   public edit(newWord: PlainWord, skipValidate?: boolean): void {
-    let errorType = (skipValidate) ? null : this.validateEdit(newWord);
+    const errorType = (skipValidate) ? null : this.validateEdit(newWord);
     if (errorType === null) {
       this.writable.uniqueName = newWord.uniqueName;
       this.writable.date = newWord.date;
@@ -114,7 +114,7 @@ export class Word {
 
   public get markers(): Array<Marker> {
     this.ensureDictionary();
-    let markers = this.dictionary.markers.get(this.uniqueName);
+    const markers = this.dictionary.markers.get(this.uniqueName);
     return markers;
   }
 
@@ -132,14 +132,14 @@ export class Word {
   }
 
   private updateName(): void {
-    let name = this.uniqueName.replace(/~/g, "");
+    const name = this.uniqueName.replace(/~/g, "");
     this.writable.name = name;
   }
 
   private updateEquivalentNames(): void {
-    let equivalentNames = {} as Writable<EquivalentNames>;
-    let parser = Parser.createSimple();
-    for (let [language] of Object.entries(this.contents)) {
+    const equivalentNames = {} as Writable<EquivalentNames>;
+    const parser = Parser.createSimple();
+    for (const [language] of Object.entries(this.contents)) {
       equivalentNames[language] = [...(parser.lookupEquivalentNames(this, language) ?? []), ...(parser.lookupPhraseEquivalentNames(this, language) ?? [])];
     }
     this.writable.equivalentNames = equivalentNames;
@@ -148,12 +148,12 @@ export class Word {
   private updateComparisonString(): void {
     this.ensureDictionary();
     let comparisonString = "";
-    let alphabetRule = this.dictionary.settings.alphabetRule;
-    let apostrophe = alphabetRule.includes("'");
+    const alphabetRule = this.dictionary.settings.alphabetRule;
+    const apostrophe = alphabetRule.includes("'");
     for (let i = 0 ; i < this.uniqueName.length ; i ++) {
-      let char = this.uniqueName.charAt(i);
+      const char = this.uniqueName.charAt(i);
       if ((apostrophe || char !== "'") && char !== "-" && char !== "+" && char !== "~") {
-        let position = alphabetRule.indexOf(char);
+        const position = alphabetRule.indexOf(char);
         if (position >= 0) {
           comparisonString += String.fromCodePoint(position + 200);
         } else {
@@ -161,7 +161,7 @@ export class Word {
         }
       }
     }
-    let match = this.uniqueName.match(/^(\+)?(')?(.+?)(')?(\+)?(~*)$/);
+    const match = this.uniqueName.match(/^(\+)?(')?(.+?)(')?(\+)?(~*)$/);
     if (match) {
       if (match[2]) {
         comparisonString += String.fromCodePoint(150);
@@ -191,9 +191,9 @@ export class Word {
   }
 
   public static sortWords(words: Array<Word>): Array<Word> {
-    let sortedWords = words.sort((firstWord, secondWord) => {
-      let firstComparisonString = firstWord.comparisonString;
-      let secondComparisonString = secondWord.comparisonString;
+    const sortedWords = words.sort((firstWord, secondWord) => {
+      const firstComparisonString = firstWord.comparisonString;
+      const secondComparisonString = secondWord.comparisonString;
       if (firstComparisonString < secondComparisonString) {
         return -1;
       } else if (firstComparisonString > secondComparisonString) {

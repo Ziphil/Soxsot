@@ -40,13 +40,13 @@ export class OldShaleianSaver extends Saver {
 
   public constructor(dictionary: Dictionary, path: string) {
     super(dictionary, path);
-    let resolver = OldShaleianSaver.createMarkupResolver();
+    const resolver = OldShaleianSaver.createMarkupResolver();
     this.stream = fs.createWriteStream(this.path, {encoding: "utf-8"});
     this.parser = new Parser(resolver);
   }
 
   public start(): void {
-    let promise = Promise.resolve().then(this.writeDictionary.bind(this));
+    const promise = Promise.resolve().then(this.writeDictionary.bind(this));
     promise.then(() => {
       this.stream.end(() => {
         this.emit("end");
@@ -57,14 +57,15 @@ export class OldShaleianSaver extends Saver {
   }
 
   private writeDictionary(): void {
-    let dictionary = this.dictionary;
+    const dictionary = this.dictionary;
+    this.size = this.dictionary.words.length;
     this.writeWords(dictionary.words);
     this.writeSettings(dictionary.settings);
   }
 
   private writeWords(words: ReadonlyArray<Word>): void {
-    for (let word of words) {
-      let parsedWord = this.parser.parse(word);
+    for (const word of words) {
+      const parsedWord = this.parser.parse(word);
       this.writeWord(parsedWord);
     }
   }
@@ -73,8 +74,8 @@ export class OldShaleianSaver extends Saver {
     this.stream.write(`* ${word.uniqueName}\n`);
     this.stream.write(`+ ${word.date} 〈${word.parts["ja"]?.sort}〉\n`);
     this.stream.write("\n");
-    for (let section of word.parts["ja"]?.sections ?? []) {
-      for (let equivalent of section.equivalents) {
+    for (const section of word.parts["ja"]?.sections ?? []) {
+      for (const equivalent of section.equivalents) {
         this.stream.write("=");
         if (equivalent.hidden) {
           this.stream.write(": ");
@@ -88,8 +89,8 @@ export class OldShaleianSaver extends Saver {
         this.stream.write(equivalent.names.join(", "));
         this.stream.write("\n");
       }
-      for (let information of section.informations) {
-        let tag = InformationKindUtil.getTag(information.kind);
+      for (const information of section.informations) {
+        const tag = InformationKindUtil.getTag(information.kind);
         this.stream.write(tag);
         if (information.kind === "history") {
           this.stream.write("~ ");
@@ -114,7 +115,7 @@ export class OldShaleianSaver extends Saver {
         }
         this.stream.write("\n");
       }
-      for (let relation of section.relations) {
+      for (const relation of section.relations) {
         this.stream.write("-");
         this.stream.write(`〈${relation.title}〉 `);
         this.stream.write(relation.entries.map((entry) => entry.name + ((entry.refer) ? "*" : "")).join(", "));
@@ -134,7 +135,7 @@ export class OldShaleianSaver extends Saver {
     this.stream.write(`- ${settings.version}\n`);
     this.stream.write("\n");
     this.stream.write("* META-CHANGE\n\n");
-    for (let revision of settings.revisions) {
+    for (const revision of settings.revisions) {
       this.stream.write("- ");
       this.stream.write(`${revision.date ?? "?"}: `);
       this.stream.write(`${revision.beforeName} → ${revision.afterName}`);
@@ -147,26 +148,26 @@ export class OldShaleianSaver extends Saver {
   }
 
   private static createMarkupResolver(): MarkupResolver<string, string> {
-    let resolveLink = function (name: string, children: Array<string>): string {
+    const resolveLink = function (name: string, children: Array<string>): string {
       return children.join("");
     };
-    let resolveBracket = function (children: Array<string>): string {
+    const resolveBracket = function (children: Array<string>): string {
       return "[" + children.join("") + "]";
     };
-    let resolveBrace = function (children: Array<string>): string {
+    const resolveBrace = function (children: Array<string>): string {
       return "{" + children.join("") + "}";
     };
-    let resolveSlash = function (string: string): string {
+    const resolveSlash = function (string: string): string {
       return "/" + string + "/";
     };
-    let resolveEscape = function (char: string): string {
+    const resolveEscape = function (char: string): string {
       char = char.replace(/\//g, "&#x2F;");
       return char;
     };
-    let join = function (nodes: Array<string>): string {
+    const join = function (nodes: Array<string>): string {
       return nodes.join("");
     };
-    let resolver = new MarkupResolver({resolveLink, resolveBracket, resolveBrace, resolveSlash, resolveEscape, join});
+    const resolver = new MarkupResolver({resolveLink, resolveBracket, resolveBrace, resolveSlash, resolveEscape, join});
     return resolver;
   }
 

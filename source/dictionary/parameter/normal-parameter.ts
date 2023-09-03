@@ -8,14 +8,10 @@ import {
   Dictionary
 } from "../dictionary";
 import {
-  InflectionSuggesterCreator
-} from "../suggester/inflection-suggester-creator";
-import {
-  RevisionSuggester
-} from "../suggester/revision-suggester";
-import {
+  InflectionSuggesterCreator,
+  RevisionSuggester,
   Suggester
-} from "../suggester/suggester";
+} from "../suggester";
 import {
   Word
 } from "../word";
@@ -28,15 +24,15 @@ import {
 
 export class NormalParameter extends Parameter {
 
-  public readonly search: string;
+  public readonly text: string;
   public readonly mode: WordMode;
   public readonly type: WordType;
   public readonly language: string;
   public readonly ignoreOptions: IgnoreOptions;
 
-  public constructor(search: string, mode: WordMode, type: WordType, language: string, ignoreOptions?: IgnoreOptions) {
+  public constructor(text: string, mode: WordMode, type: WordType, language: string, ignoreOptions?: IgnoreOptions) {
     super();
-    this.search = search;
+    this.text = text;
     this.mode = mode;
     this.type = type;
     this.language = language;
@@ -44,24 +40,24 @@ export class NormalParameter extends Parameter {
   }
 
   public static createEmpty(language: string): NormalParameter {
-    let parameter = new NormalParameter("", "both", "prefix", language);
+    const parameter = new NormalParameter("", "both", "prefix", language);
     return parameter;
   }
 
   public match(word: Word): boolean {
-    let candidates = Parameter.createCandidates(word, this.mode, this.language);
-    let matcher = Parameter.createMatcher(this.type);
-    let normalizedSearch = StringNormalizer.normalize(this.search, this.ignoreOptions);
-    let predicate = candidates.some((candidate) => {
-      let normalizedCandidate = StringNormalizer.normalize(candidate, this.ignoreOptions);
-      return matcher(normalizedSearch, normalizedCandidate);
+    const candidates = Parameter.createCandidates(word, this.mode, this.language);
+    const matcher = Parameter.createMatcher(this.type);
+    const normalizedText = StringNormalizer.normalize(this.text, this.ignoreOptions);
+    const predicate = candidates.some((candidate) => {
+      const normalizedCandidate = StringNormalizer.normalize(candidate, this.ignoreOptions);
+      return matcher(normalizedText, normalizedCandidate);
     });
     return predicate;
   }
 
   private getDefaultIgnoreOptions(): IgnoreOptions {
-    let mode = this.mode;
-    let type = this.type;
+    const mode = this.mode;
+    const type = this.type;
     if ((mode === "name" || mode === "both") && (type !== "pair" && type !== "regular")) {
       return {case: false, diacritic: true};
     } else {
@@ -70,12 +66,12 @@ export class NormalParameter extends Parameter {
   }
 
   protected createSuggesters(dictionary: Dictionary): Array<Suggester> {
-    let mode = this.mode;
-    let type = this.type;
-    let suggesters = [];
+    const mode = this.mode;
+    const type = this.type;
+    const suggesters = [];
     if ((mode === "name" || mode === "both") && (type === "exact" || type === "prefix")) {
-      let revisionSuggester = new RevisionSuggester(this.search, this.ignoreOptions);
-      let inflectionSuggester = InflectionSuggesterCreator.createByVersion(dictionary.settings.version, this.search, this.ignoreOptions);
+      const revisionSuggester = new RevisionSuggester(this.text, this.ignoreOptions);
+      const inflectionSuggester = InflectionSuggesterCreator.createByVersion(dictionary.settings.version, this.text, this.ignoreOptions);
       suggesters.push(revisionSuggester);
       if (inflectionSuggester !== undefined) {
         suggesters.push(inflectionSuggester);

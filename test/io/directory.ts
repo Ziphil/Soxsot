@@ -1,4 +1,4 @@
-//
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import {
   promises as fs
@@ -18,7 +18,7 @@ import {
 
 
 describe("load/save directory format", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic/ter.xdnw": dedent`
         * @1128 ter
@@ -78,11 +78,11 @@ describe("load/save directory format", () => {
       `
     });
   });
-  afterAll(mock.restore);
-  let check = function (dictionary: Dictionary): void {
-    let words = dictionary.words;
-    let settings = dictionary.settings;
-    let markers = dictionary.markers;
+  afterEach(mock.restore);
+  const check = function (dictionary: Dictionary): void {
+    const words = dictionary.words;
+    const settings = dictionary.settings;
+    const markers = dictionary.markers;
     expect.assertions(15);
     expect(dictionary.path).toBe("testdic");
     expect(words.length).toBe(4);
@@ -101,12 +101,12 @@ describe("load/save directory format", () => {
     expect(markers.get("sakil")).toIncludeSameMembers(["hexagon", "diamond", "heart", "trapezoid", "cross"]);
   };
   test("load via promise", async () => {
-    let loader = new DirectoryLoader("testdic");
-    let dictionary = await loader.asPromise();
+    const loader = new DirectoryLoader("testdic");
+    const dictionary = await loader.asPromise();
     check(dictionary);
   });
   test("load via event emitter", (done) => {
-    let loader = new DirectoryLoader("testdic");
+    const loader = new DirectoryLoader("testdic");
     loader.on("end", (dictionary) => {
       check(dictionary);
       done();
@@ -117,28 +117,28 @@ describe("load/save directory format", () => {
     loader.start();
   });
   test("idempotency (saving without any modification of the data should not change the file contents)", async () => {
-    let loadData = async function (): Promise<{[path: string]: string}> {
-      let paths = await fs.readdir("testdic");
-      let promises = paths.map((path) => fs.readFile("testdic/" + path, {encoding: "utf-8"}).then((data) => [path, data]));
-      let entries = await Promise.all(promises);
+    const loadData = async function (): Promise<{[path: string]: string}> {
+      const paths = await fs.readdir("testdic");
+      const promises = paths.map((path) => fs.readFile("testdic/" + path, {encoding: "utf-8"}).then((data) => [path, data]));
+      const entries = await Promise.all(promises);
       return Object.fromEntries(entries);
     };
-    let loadAndSaveDictionary = async function (): Promise<void> {
-      let loader = new DirectoryLoader("testdic");
-      let dictionary = await loader.asPromise();
-      let saver = new DirectorySaver(dictionary, "testdic");
+    const loadAndSaveDictionary = async function (): Promise<void> {
+      const loader = new DirectoryLoader("testdic");
+      const dictionary = await loader.asPromise();
+      const saver = new DirectorySaver(dictionary, "testdic");
       await saver.asPromise();
     };
     await loadAndSaveDictionary();
-    let firstData = await loadData();
+    const firstData = await loadData();
     await loadAndSaveDictionary();
-    let secondData = await loadData();
+    const secondData = await loadData();
     expect(firstData).toEqual(secondData);
   });
 });
 
 describe("directory format without system files", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic/monaf.xdnw": dedent`
         * @1068 monaf
@@ -150,27 +150,27 @@ describe("directory format without system files", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   test("settings", async () => {
-    let loader = new DirectoryLoader("testdic");
-    let dictionary = await loader.asPromise();
-    let settings = dictionary.settings;
-    let emptySettings = DictionarySettings.createEmpty();
+    const loader = new DirectoryLoader("testdic");
+    const dictionary = await loader.asPromise();
+    const settings = dictionary.settings;
+    const emptySettings = DictionarySettings.createEmpty();
     expect(settings).not.toBeNil();
     expect(settings).toEqual(emptySettings);
   });
   test("markers", async () => {
-    let loader = new DirectoryLoader("testdic");
-    let dictionary = await loader.asPromise();
-    let markers = dictionary.markers;
-    let emptyMarkers = Markers.createEmpty();
+    const loader = new DirectoryLoader("testdic");
+    const dictionary = await loader.asPromise();
+    const markers = dictionary.markers;
+    const emptyMarkers = Markers.createEmpty();
     expect(markers).not.toBeNil();
     expect(markers).toEqual(emptyMarkers);
   });
 });
 
 describe("directory format with insufficient settings", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic/monaf.xdnw": dedent`
         * @1068 monaf
@@ -189,9 +189,9 @@ describe("directory format with insufficient settings", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   test("test", async () => {
-    let loader = new DirectoryLoader("testdic");
+    const loader = new DirectoryLoader("testdic");
     await expect(loader.asPromise()).toReject();
   });
 });

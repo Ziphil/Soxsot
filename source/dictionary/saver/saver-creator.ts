@@ -7,6 +7,9 @@ import {
   Dictionary
 } from "../dictionary";
 import {
+  DirectoryDiffSaver
+} from "./directory-diff-saver";
+import {
   DirectorySaver
 } from "./directory-saver";
 import {
@@ -23,17 +26,17 @@ import {
 export class SaverCreator {
 
   public static createByKind<K extends SaverKind>(kind: K, ...args: ConstructorParameters<SaverClass<K>>): InstanceType<SaverClass<K>> {
-    let Saver = SAVER_DATA[kind].clazz as any;
-    let saver = new Saver(...args);
+    const Saver = SAVER_DATA[kind].clazz as any;
+    const saver = new Saver(...args);
     return saver;
   }
 
   public static createByExtension(dictionary: Dictionary, path: string): Saver | undefined {
-    let extension = extname(path);
-    for (let [kind, data] of Object.entries(SAVER_DATA)) {
+    const extension = extname(path);
+    for (const [kind, data] of Object.entries(SAVER_DATA)) {
       if (data.extension === extension) {
-        let Saver = data.clazz;
-        let saver = new Saver(dictionary, path);
+        const Saver = data.clazz;
+        const saver = new Saver(dictionary, path);
         return saver;
       }
     }
@@ -45,6 +48,7 @@ export class SaverCreator {
 
 export const SAVER_DATA = {
   directory: {clazz: DirectorySaver, extension: ""},
+  directoryDiff: {clazz: DirectoryDiffSaver, extension: ""},
   single: {clazz: SingleSaver, extension: "xdn"},
   oldShaleian: {clazz: OldShaleianSaver, extension: "xdc"}
 };

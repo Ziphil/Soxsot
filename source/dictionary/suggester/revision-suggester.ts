@@ -22,18 +22,18 @@ import {
 
 export class RevisionSuggester extends Suggester {
 
-  public constructor(search: string, ignoreOptions: IgnoreOptions) {
-    super(search, ignoreOptions);
+  public constructor(text: string, ignoreOptions: IgnoreOptions) {
+    super(text, ignoreOptions);
   }
 
   public prepare(): void {
   }
 
   public presuggest(dictionary: Dictionary): Array<Suggestion> {
-    let revisions = dictionary.settings.revisions;
-    let names = revisions.resolve(this.search, this.ignoreOptions);
+    const revisions = dictionary.settings.revisions;
+    const names = revisions.resolve(this.text, this.ignoreOptions);
     if (names.length > 0) {
-      let suggestion = new RevisionSuggestion(names);
+      const suggestion = new RevisionSuggestion(names);
       return [suggestion];
     } else {
       return [];

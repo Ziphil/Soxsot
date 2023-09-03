@@ -23,15 +23,15 @@ export abstract class Parameter {
 
   public prepare(dictionary: Dictionary): void {
     this.suggesters = this.createSuggesters(dictionary);
-    for (let suggester of this.suggesters) {
+    for (const suggester of this.suggesters) {
       suggester.prepare();
     }
   }
 
   public presuggest(dictionary: Dictionary): Array<Suggestion> {
-    let suggestions = [];
+    const suggestions = [];
     if (this.suggesters !== undefined) {
-      for (let suggester of this.suggesters) {
+      for (const suggester of this.suggesters) {
         suggestions.push(...suggester.presuggest(dictionary));
       }
     }
@@ -41,9 +41,9 @@ export abstract class Parameter {
   public abstract match(word: Word): boolean;
 
   public suggest(word: Word, dictionary: Dictionary): Array<Suggestion> {
-    let suggestions = [];
+    const suggestions = [];
     if (this.suggesters !== undefined) {
-      for (let suggester of this.suggesters) {
+      for (const suggester of this.suggesters) {
         suggestions.push(...suggester.suggest(word, dictionary));
       }
     }
@@ -66,34 +66,34 @@ export abstract class Parameter {
 
   protected static createMatcher(type: string): Matcher {
     if (type === "exact") {
-      let matcher = function (search: string, candidate: string): boolean {
-        return candidate === search;
+      const matcher = function (text: string, candidate: string): boolean {
+        return candidate === text;
       };
       return matcher;
     } else if (type === "prefix") {
-      let matcher = function (search: string, candidate: string): boolean {
-        return candidate.startsWith(search);
+      const matcher = function (text: string, candidate: string): boolean {
+        return candidate.startsWith(text);
       };
       return matcher;
     } else if (type === "suffix") {
-      let matcher = function (search: string, candidate: string): boolean {
-        return candidate.endsWith(search);
+      const matcher = function (text: string, candidate: string): boolean {
+        return candidate.endsWith(text);
       };
       return matcher;
     } else if (type === "part") {
-      let matcher = function (search: string, candidate: string): boolean {
-        return candidate.includes(search);
+      const matcher = function (text: string, candidate: string): boolean {
+        return candidate.includes(text);
       };
       return matcher;
     } else if (type === "pair") {
-      let matcher = function (search: string, candidate: string): boolean {
+      const matcher = function (text: string, candidate: string): boolean {
         try {
-          if (search.length <= 10) {
+          if (text.length <= 10) {
             let predicate = false;
-            for (let i = 0 ; i < search.length ; i ++) {
-              let beforeSearch = search.substring(0, i);
-              let afterSearch = search.substring(i + 1);
-              let regexp = new RegExp("^" + beforeSearch + "." + afterSearch + "$");
+            for (let i = 0 ; i < text.length ; i ++) {
+              const beforeText = text.substring(0, i);
+              const afterText = text.substring(i + 1);
+              const regexp = new RegExp("^" + beforeText + "." + afterText + "$");
               if (candidate.match(regexp) !== null) {
                 predicate = true;
                 break;
@@ -109,9 +109,9 @@ export abstract class Parameter {
       };
       return matcher;
     } else if (type === "regular") {
-      let matcher = function (search: string, candidate: string): boolean {
+      const matcher = function (text: string, candidate: string): boolean {
         try {
-          let regexp = new RegExp(search, "m");
+          const regexp = new RegExp(text, "m");
           return candidate.match(regexp) !== null;
         } catch (error) {
           return false;
@@ -132,4 +132,4 @@ export type WordMode = (typeof WORD_MODES)[number];
 export const WORD_TYPES = ["exact", "prefix", "suffix", "part", "pair", "regular"] as const;
 export type WordType = (typeof WORD_TYPES)[number];
 
-export type Matcher = (search: string, candidate: string) => boolean;
+export type Matcher = (text: string, candidate: string) => boolean;

@@ -24,7 +24,7 @@ import {
 } from "./part";
 import {
   PronouncerCreator
-} from "./pronouncer/pronouncer-creator";
+} from "./pronouncer";
 import {
   Relation
 } from "./relation";
@@ -45,49 +45,49 @@ export class Parser<S> {
   }
 
   public static createSimple(): Parser<string> {
-    let resolver = MarkupResolver.createSimple();
-    let parser = new Parser(resolver);
+    const resolver = MarkupResolver.createSimple();
+    const parser = new Parser(resolver);
     return parser;
   }
 
   public static createKeep(): Parser<string> {
-    let resolver = MarkupResolver.createKeep();
-    let parser = new Parser(resolver);
+    const resolver = MarkupResolver.createKeep();
+    const parser = new Parser(resolver);
     return parser;
   }
 
-  // 与えられた単語データをパースして、ParsedWord オブジェクトとして返します。
-  // パースした全てのデータではなく一部の項目の内容のみが必要な場合は、lookup から始まるメソッドを使用した方が軽量です。
+  /** 与えられた単語データをパースして、`ParsedWord` オブジェクトとして返します。
+   * パースした全てのデータではなく一部の項目の内容のみが必要な場合は、`lookup` から始まるメソッドを使用した方が軽量です。*/
   public parse(word: Word): ParsedWord<S> {
-    let pronouncer = PronouncerCreator.createByVersion(word.dictionary?.settings.version ?? "");
-    let name = word.name;
-    let uniqueName = word.uniqueName;
-    let date = word.date;
-    let pronunciation = pronouncer?.convert(name) ?? null;
-    let parts = {} as Writable<Parts<S>>;
-    for (let [language, content] of Object.entries(word.contents)) {
+    const pronouncer = PronouncerCreator.createByVersion(word.dictionary?.settings.version ?? "");
+    const name = word.name;
+    const uniqueName = word.uniqueName;
+    const date = word.date;
+    const pronunciation = pronouncer?.convert(name) ?? null;
+    const parts = {} as Writable<Parts<S>>;
+    for (const [language, content] of Object.entries(word.contents)) {
       if (content !== undefined) {
-        let part = this.parsePart(content);
+        const part = this.parsePart(content);
         parts[language] = part;
       }
     }
-    let parsedWord = new ParsedWord(name, uniqueName, date, pronunciation, parts);
+    const parsedWord = new ParsedWord(name, uniqueName, date, pronunciation, parts);
     return parsedWord;
   }
 
   private parsePart(content: string): Part<S> {
-    let lines = content.split(/\r\n|\r|\n/);
-    let sections = [];
+    const lines = content.split(/\r\n|\r|\n/);
+    const sections = [];
     let before = true;
     let currentSort = null as string | null;
     let currentEquivalents = [];
     let currentInformations = [];
     let currentRelations = [];
-    for (let line of lines) {
-      let sortMatch = line.match(/^\+\s*(?:<(.*?)>)/);
+    for (const line of lines) {
+      const sortMatch = line.match(/^\+\s*(?:<(.*?)>)/);
       if (sortMatch) {
         if (!before) {
-          let section = new Section(currentSort, currentEquivalents, currentInformations, currentRelations);
+          const section = new Section(currentSort, currentEquivalents, currentInformations, currentRelations);
           sections.push(section);
         }
         before = false;
@@ -96,7 +96,7 @@ export class Parser<S> {
         currentInformations = [];
         currentRelations = [];
       }
-      let field = this.parseField(line);
+      const field = this.parseField(line);
       if (field !== null) {
         if (field instanceof Equivalent) {
           currentEquivalents.push(field);
@@ -108,10 +108,10 @@ export class Parser<S> {
       }
     }
     if (!before) {
-      let section = new Section(currentSort, currentEquivalents, currentInformations, currentRelations);
+      const section = new Section(currentSort, currentEquivalents, currentInformations, currentRelations);
       sections.push(section);
     }
-    let part = new Part(sections);
+    const part = new Part(sections);
     return part;
   }
 
@@ -128,13 +128,13 @@ export class Parser<S> {
   }
 
   private parseEquivalent(line: string): Equivalent<S> | null {
-    let match = line.match(/^=(\?)?\s*(?:<(.*?)>\s*)?(?:\((.*?)\)\s*)?(.*)$/);
+    const match = line.match(/^=(\?)?\s*(?:<(.*?)>\s*)?(?:\((.*?)\)\s*)?(.*)$/);
     if (match) {
-      let hidden = match[1] !== undefined;
-      let category = (match[2] !== undefined && match[2] !== "") ? match[2] : null;
-      let frame = (match[3] !== undefined && match[3] !== "") ? this.markupParser.parse(match[3]) : null;
-      let names = match[4].split(/\s*,\s*/).map((rawName) => this.markupParser.parse(rawName));
-      let equivalent = new Equivalent(category, frame, names, hidden);
+      const hidden = match[1] !== undefined;
+      const category = (match[2] !== undefined && match[2] !== "") ? match[2] : null;
+      const frame = (match[3] !== undefined && match[3] !== "") ? this.markupParser.parse(match[3]) : null;
+      const names = match[4].split(/\s*,\s*/).map((rawName) => this.markupParser.parse(rawName));
+      const equivalent = new Equivalent(category, frame, names, hidden);
       return equivalent;
     } else {
       return null;
@@ -142,36 +142,36 @@ export class Parser<S> {
   }
 
   private parseInformation(line: string): Information<S> | null {
-    let match = line.match(/^(\w)(\?)?:\s*(?:@(\d+)\s*)?(.*)$/);
+    const match = line.match(/^(\w)(\?)?:\s*(?:@(\d+)\s*)?(.*)$/);
     if (match) {
-      let kind = InformationKindUtil.fromTag(match[1]);
-      let hidden = match[2] !== undefined;
-      let date = (match[3] !== undefined) ? parseInt(match[3], 10) : null;
-      let rawText = match[4];
+      const kind = InformationKindUtil.fromTag(match[1]);
+      const hidden = match[2] !== undefined;
+      const date = (match[3] !== undefined) ? parseInt(match[3], 10) : null;
+      const rawText = match[4];
       if (kind === "phrase") {
-        let textMatch = rawText.match(/^(.*?)\s*→\s*(.*?)(?:\s*\|\s*(.*))?$/);
+        const textMatch = rawText.match(/^(.*?)\s*→\s*(.*?)(?:\s*\|\s*(.*))?$/);
         if (textMatch) {
-          let expression = this.markupParser.parse(textMatch[1]);
-          let equivalents = textMatch[2].split(/\s*,\s*/).map((rawName) => this.markupParser.parse(rawName));
-          let text = (textMatch[3] !== undefined && textMatch[3] !== "") ? this.markupParser.parse(textMatch[3]) : null;
-          let information = new PhraseInformation(expression, equivalents, text, date, hidden);
+          const expression = this.markupParser.parse(textMatch[1]);
+          const equivalents = textMatch[2].split(/\s*,\s*/).map((rawName) => this.markupParser.parse(rawName));
+          const text = (textMatch[3] !== undefined && textMatch[3] !== "") ? this.markupParser.parse(textMatch[3]) : null;
+          const information = new PhraseInformation(expression, equivalents, text, date, hidden);
           return information;
         } else {
           return null;
         }
       } else if (kind === "example") {
-        let textMatch = rawText.match(/^(.*?)\s*→\s*(.*?)$/);
+        const textMatch = rawText.match(/^(.*?)\s*→\s*(.*?)$/);
         if (textMatch) {
-          let sentence = this.markupParser.parse(textMatch[1]);
-          let translation = this.markupParser.parse(textMatch[2]);
-          let information = new ExampleInformation(sentence, translation, date, hidden);
+          const sentence = this.markupParser.parse(textMatch[1]);
+          const translation = this.markupParser.parse(textMatch[2]);
+          const information = new ExampleInformation(sentence, translation, date, hidden);
           return information;
         } else {
           return null;
         }
       } else if (kind !== undefined) {
-        let text = this.markupParser.parse(rawText);
-        let information = new NormalInformation(kind, text, date, hidden);
+        const text = this.markupParser.parse(rawText);
+        const information = new NormalInformation(kind, text, date, hidden);
         return information;
       } else {
         return null;
@@ -182,19 +182,19 @@ export class Parser<S> {
   }
 
   private parseRelation(line: string): Relation<S> | null {
-    let match = line.match(/^\-\s*(?:<(.*?)>\s*)?(.*)$/);
+    const match = line.match(/^\-\s*(?:<(.*?)>\s*)?(.*)$/);
     if (match) {
-      let title = (match[1] !== undefined && match[1] !== "") ? match[1] : null;
-      let entries = match[2].split(/\s*,\s*/).map((rawName) => {
+      const title = (match[1] !== undefined && match[1] !== "") ? match[1] : null;
+      const entries = match[2].split(/\s*,\s*/).map((rawName) => {
         if (rawName.endsWith("*")) {
-          let name = this.markupParser.parse(rawName.substring(0, rawName.length - 1));
+          const name = this.markupParser.parse(rawName.substring(0, rawName.length - 1));
           return {name, refer: true};
         } else {
-          let name = this.markupParser.parse(rawName);
+          const name = this.markupParser.parse(rawName);
           return {name, refer: false};
         }
       });
-      let relation = new Relation(title, entries);
+      const relation = new Relation(title, entries);
       return relation;
     } else {
       return null;
@@ -202,9 +202,9 @@ export class Parser<S> {
   }
 
   public lookupSort(word: Word, language: string): string | null | undefined {
-    let content = word.contents[language];
+    const content = word.contents[language];
     if (content !== undefined) {
-      let match = content.match(/^\+\s*(?:<(.*?)>)/m);
+      const match = content.match(/^\+\s*(?:<(.*?)>)/m);
       if (match) {
         return match[1];
       } else {
@@ -216,10 +216,10 @@ export class Parser<S> {
   }
 
   public lookupEquivalentNames(word: Word, language: string, onlyVisible?: boolean): Array<S> | undefined {
-    let content = word.contents[language];
+    const content = word.contents[language];
     if (content !== undefined) {
-      let names = [];
-      let regexp = /^=(\?)?\s*(?:<(.*?)>\s*)?(?:\((.*?)\)\s*)?(.*)$/mg;
+      const names = [];
+      const regexp = /^=(\?)?\s*(?:<(.*?)>\s*)?(?:\((.*?)\)\s*)?(.*)$/mg;
       let match;
       while (match = regexp.exec(content)) {
         if (!onlyVisible || !match[1]) {
@@ -233,10 +233,10 @@ export class Parser<S> {
   }
 
   public lookupPhraseEquivalentNames(word: Word, language: string, onlyVisible?: boolean): Array<S> | undefined {
-    let content = word.contents[language];
+    const content = word.contents[language];
     if (content !== undefined) {
-      let names = [];
-      let regexp = /^(P)(\?)?:\s*(?:@(\d+)\s*)?(.*?)\s*→\s*(.*?)(?:\s*\|\s*(.*))?$/mg;
+      const names = [];
+      const regexp = /^(P)(\?)?:\s*(?:@(\d+)\s*)?(.*?)\s*→\s*(.*?)(?:\s*\|\s*(.*))?$/mg;
       let match;
       while (match = regexp.exec(content)) {
         if (!onlyVisible || !match[1]) {
@@ -265,58 +265,58 @@ export class MarkupParser<S, E> {
   public parse(source: string): S {
     this.source = source;
     this.pointer = 0;
-    let node = this.consume();
+    const node = this.consume();
     return node;
   }
 
   public consume(): S {
-    let children = [];
+    const children = [];
     while (true) {
-      let char = this.source.charAt(this.pointer);
-      let remaining = this.source.substring(this.pointer);
+      const char = this.source.charAt(this.pointer);
+      const remaining = this.source.substring(this.pointer);
       if (char === "{") {
-        let element = this.consumeBrace();
+        const element = this.consumeBrace();
         children.push(element);
       } else if (char === "[") {
-        let element = this.consumeBracket();
+        const element = this.consumeBracket();
         children.push(element);
       } else if (char === "/") {
-        let [, element] = this.consumeSlash();
+        const [, element] = this.consumeSlash();
         children.push(element);
       } else if (remaining.match(/^H(\d+)/)) {
-        let element = this.consumeHairia();
+        const element = this.consumeHairia();
         children.push(element);
       } else if (char === "") {
         break;
       } else {
-        let string = this.consumeString();
+        const string = this.consumeString();
         children.push(string);
       }
     }
-    let node = this.resolver.join(children);
+    const node = this.resolver.join(children);
     return node;
   }
 
   private consumeBrace(): E | string {
     this.pointer ++;
-    let children = this.consumeBraceChildren();
-    let element = this.resolver.resolveBrace(children);
+    const children = this.consumeBraceChildren();
+    const element = this.resolver.resolveBrace(children);
     this.pointer ++;
     return element;
   }
 
   private consumeBracket(): E | string {
     this.pointer ++;
-    let children = this.consumeBracketChildren();
-    let element = this.resolver.resolveBracket(children);
+    const children = this.consumeBracketChildren();
+    const element = this.resolver.resolveBracket(children);
     this.pointer ++;
     return element;
   }
 
   private consumeSlash(): [string, E | string] {
     this.pointer ++;
-    let string = this.consumeSlashString();
-    let element = this.resolver.resolveSlash(string);
+    const string = this.consumeSlashString();
+    const element = this.resolver.resolveSlash(string);
     this.pointer ++;
     return [string, element];
   }
@@ -325,7 +325,7 @@ export class MarkupParser<S, E> {
     this.pointer ++;
     let hairiaString = "";
     while (true) {
-      let char = this.source.charAt(this.pointer);
+      const char = this.source.charAt(this.pointer);
       if (char.match(/^\d$/)) {
         this.pointer ++;
         hairiaString += char;
@@ -333,17 +333,17 @@ export class MarkupParser<S, E> {
         break;
       }
     }
-    let hairia = parseInt(hairiaString, 10);
-    let element = this.resolver.resolveHairia(hairia);
+    const hairia = parseInt(hairiaString, 10);
+    const element = this.resolver.resolveHairia(hairia);
     return element;
   }
 
   private consumeBraceChildren(): Array<E | string> {
-    let children = [];
+    const children = [];
     let currentChildren = [];
     let currentName = "";
     while (true) {
-      let char = this.source.charAt(this.pointer);
+      const char = this.source.charAt(this.pointer);
       if (char === " " || char === "," || char === "." || char === "!" || char === "?") {
         if (currentChildren.length > 0) {
           children.push(this.resolver.resolveLink(currentName, currentChildren));
@@ -360,11 +360,11 @@ export class MarkupParser<S, E> {
         }
         break;
       } else if (char === "/") {
-        let [slashName, slashElement] = this.consumeSlash();
+        const [slashName, slashElement] = this.consumeSlash();
         currentChildren.push(slashElement);
         currentName += slashName;
       } else {
-        let string = this.consumeBraceString();
+        const string = this.consumeBraceString();
         currentChildren.push(string);
         currentName += string;
       }
@@ -373,16 +373,16 @@ export class MarkupParser<S, E> {
   }
 
   private consumeBracketChildren(): Array<E | string> {
-    let children = [];
+    const children = [];
     while (true) {
-      let char = this.source.charAt(this.pointer);
+      const char = this.source.charAt(this.pointer);
       if (char === "/") {
-        let [, slashElement] = this.consumeSlash();
+        const [, slashElement] = this.consumeSlash();
         children.push(slashElement);
       } else if (char === "]" || char === "") {
         break;
       } else {
-        let string = this.consumeBracketString();
+        const string = this.consumeBracketString();
         children.push(string);
       }
     }
@@ -392,8 +392,8 @@ export class MarkupParser<S, E> {
   private consumeString(): string {
     let string = "";
     while (true) {
-      let char = this.source.charAt(this.pointer);
-      let remaining = this.source.substring(this.pointer);
+      const char = this.source.charAt(this.pointer);
+      const remaining = this.source.substring(this.pointer);
       if (char === "{" || char === "[" || char === "/" || char === "") {
         break;
       } else if (remaining.match(/^H(\d+)/)) {
@@ -424,7 +424,7 @@ export class MarkupParser<S, E> {
   private consumeBraceString(): string {
     let string = "";
     while (true) {
-      let char = this.source.charAt(this.pointer);
+      const char = this.source.charAt(this.pointer);
       if (char === "}" || char === "/" || char === "" || char === " " || char === "," || char === "." || char === "!" || char === "?") {
         break;
       } else if (char === "`") {
@@ -440,7 +440,7 @@ export class MarkupParser<S, E> {
   private consumeBracketString(): string {
     let string = "";
     while (true) {
-      let char = this.source.charAt(this.pointer);
+      const char = this.source.charAt(this.pointer);
       if (char === "]" || char === "/" || char === "") {
         break;
       } else if (char === "`") {
@@ -456,7 +456,7 @@ export class MarkupParser<S, E> {
   private consumeSlashString(): string {
     let string = "";
     while (true) {
-      let char = this.source.charAt(this.pointer);
+      const char = this.source.charAt(this.pointer);
       if (char === "/" || char === "") {
         break;
       } else if (char === "`") {
@@ -471,9 +471,9 @@ export class MarkupParser<S, E> {
 
   private consumeEscape(): string {
     this.pointer ++;
-    let char = this.source.charAt(this.pointer);
+    const char = this.source.charAt(this.pointer);
     if (char !== "") {
-      let string = this.resolver.resolveEscape(char);
+      const string = this.resolver.resolveEscape(char);
       this.pointer ++;
       return string;
     } else {
@@ -507,58 +507,58 @@ export class MarkupResolver<S, E> {
   }
 
   private static createNoopEscapeResolver(): EscapeResolver {
-    let resolve = function (char: string): string {
+    const resolve = function (char: string): string {
       return char;
     };
     return resolve;
   }
 
   private static createNoopHairiaResolver<E>(): HairiaResolver<E> {
-    let resolve = function (hairia: number): string {
+    const resolve = function (hairia: number): string {
       return "H" + hairia.toString();
     };
     return resolve;
   }
 
-  // マークアップを全て取り除いてプレーンテキストにするリゾルバを作成します。
+  /** マークアップを全て取り除いてプレーンテキストにするリゾルバを作成します。 */
   public static createSimple(): MarkupResolver<string, string> {
-    let resolveLink = function (name: string, children: Array<string>): string {
+    const resolveLink = function (name: string, children: Array<string>): string {
       return children.join("");
     };
-    let resolveBracket = function (children: Array<string>): string {
+    const resolveBracket = function (children: Array<string>): string {
       return children.join("");
     };
-    let resolveSlash = function (string: string): string {
+    const resolveSlash = function (string: string): string {
       return string;
     };
-    let join = function (nodes: Array<string>): string {
+    const join = function (nodes: Array<string>): string {
       return nodes.join("");
     };
-    let resolver = new MarkupResolver({resolveLink, resolveBracket, resolveSlash, join});
+    const resolver = new MarkupResolver({resolveLink, resolveBracket, resolveSlash, join});
     return resolver;
   }
 
-  // マークアップの特殊文字などをそのまま残すリゾルバを作成します。
+  /** マークアップの特殊文字などをそのまま残すリゾルバを作成します。*/
   public static createKeep(): MarkupResolver<string, string> {
-    let resolveLink = function (name: string, children: Array<string>): string {
+    const resolveLink = function (name: string, children: Array<string>): string {
       return children.join("");
     };
-    let resolveBracket = function (children: Array<string>): string {
+    const resolveBracket = function (children: Array<string>): string {
       return "[" + children.join("") + "]";
     };
-    let resolveBrace = function (children: Array<string>): string {
+    const resolveBrace = function (children: Array<string>): string {
       return "{" + children.join("") + "}";
     };
-    let resolveSlash = function (string: string): string {
+    const resolveSlash = function (string: string): string {
       return "/" + string + "/";
     };
-    let resolveEscape = function (char: string): string {
+    const resolveEscape = function (char: string): string {
       return "`" + char;
     };
-    let join = function (nodes: Array<string>): string {
+    const join = function (nodes: Array<string>): string {
       return nodes.join("");
     };
-    let resolver = new MarkupResolver({resolveLink, resolveBracket, resolveBrace, resolveSlash, resolveEscape, join});
+    const resolver = new MarkupResolver({resolveLink, resolveBracket, resolveBrace, resolveSlash, resolveEscape, join});
     return resolver;
   }
 

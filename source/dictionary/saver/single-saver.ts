@@ -32,7 +32,7 @@ export class SingleSaver extends Saver {
   }
 
   public start(): void {
-    let promise = Promise.resolve().then(this.writeDictionary.bind(this));
+    const promise = Promise.resolve().then(this.writeDictionary.bind(this));
     promise.then(() => {
       this.stream.end(() => {
         this.emit("end");
@@ -43,13 +43,13 @@ export class SingleSaver extends Saver {
   }
 
   private writeDictionary(): void {
-    let dictionary = this.dictionary;
+    const dictionary = this.dictionary;
     this.writeWords(dictionary.words);
     this.writeOthers(dictionary);
   }
 
   private writeWords(words: ReadonlyArray<Word>): void {
-    for (let word of words) {
+    for (const word of words) {
       this.writeWord(word);
     }
   }

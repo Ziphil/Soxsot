@@ -5,7 +5,7 @@
 ![](https://img.shields.io/github/package-json/v/Ziphil/Soxsot)
 ![](https://img.shields.io/github/commit-activity/y/Ziphil/Soxsot?label=commits)
 ![](https://img.shields.io/github/workflow/status/Ziphil/Soxsot/test?label=test)
-![](https://img.shields.io/codecov/c/github/Ziphil/Soxsot)
+[![](https://img.shields.io/codecov/c/github/Ziphil/Soxsot)](https://app.codecov.io/gh/Ziphil/Soxsot)
 
 
 ## Overview

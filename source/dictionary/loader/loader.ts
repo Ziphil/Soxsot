@@ -20,7 +20,7 @@ export abstract class Loader extends EventEmitter {
   }
 
   public asPromise(listeners: LoaderEventListeners = {}): Promise<Dictionary> {
-    let promise = new Promise<Dictionary>((resolve, reject) => {
+    const promise = new Promise<Dictionary>((resolve, reject) => {
       if (listeners.onProgress) {
         this.on("progress", listeners.onProgress);
       }
@@ -43,24 +43,24 @@ export abstract class Loader extends EventEmitter {
 
   public on<E extends keyof LoaderEvent>(event: E, listener: (...args: LoaderEvent[E]) => void): this;
   public on(event: string | symbol, listener: (...args: any) => void): this {
-    let result = super.on(event, listener);
+    const result = super.on(event, listener);
     return result;
   }
 
   public emit<E extends keyof LoaderEvent>(event: E, ...args: LoaderEvent[E]): boolean;
   public emit(event: string | symbol, ...args: any): boolean {
     if (event === "progress") {
-      let date = new Date();
-      let lastDate = this.lastProgressDate;
+      const date = new Date();
+      const lastDate = this.lastProgressDate;
       if (lastDate === null || date.getTime() - lastDate.getTime() >= this.minProgressInterval) {
-        let result = super.emit(event, ...args);
+        const result = super.emit(event, ...args);
         this.lastProgressDate = date;
         return result;
       } else {
         return false;
       }
     } else {
-      let result = super.emit(event, ...args);
+      const result = super.emit(event, ...args);
       return result;
     }
   }

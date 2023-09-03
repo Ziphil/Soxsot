@@ -1,4 +1,4 @@
-//
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import {
   promises as fs
@@ -18,7 +18,7 @@ import {
 
 
 describe("load/save single file format", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1128 ter
@@ -67,11 +67,11 @@ describe("load/save single file format", () => {
       `
     });
   });
-  afterAll(mock.restore);
-  let check = function (dictionary: Dictionary): void {
-    let words = dictionary.words;
-    let settings = dictionary.settings;
-    let markers = dictionary.markers;
+  afterEach(mock.restore);
+  const check = function (dictionary: Dictionary): void {
+    const words = dictionary.words;
+    const settings = dictionary.settings;
+    const markers = dictionary.markers;
     expect.assertions(15);
     expect(dictionary.path).toBe("testdic.xdn");
     expect(words.length).toBe(4);
@@ -90,12 +90,12 @@ describe("load/save single file format", () => {
     expect(markers.get("sakil")).toIncludeSameMembers(["hexagon", "diamond", "heart", "trapezoid", "cross"]);
   };
   test("load via promise", async () => {
-    let loader = new SingleLoader("testdic.xdn");
-    let dictionary = await loader.asPromise();
+    const loader = new SingleLoader("testdic.xdn");
+    const dictionary = await loader.asPromise();
     check(dictionary);
   });
   test("load via event emitter", (done) => {
-    let loader = new SingleLoader("testdic.xdn");
+    const loader = new SingleLoader("testdic.xdn");
     loader.on("end", (dictionary) => {
       check(dictionary);
       done();
@@ -106,26 +106,26 @@ describe("load/save single file format", () => {
     loader.start();
   });
   test("idempotency", async () => {
-    let loadData = async function (): Promise<string> {
-      let data = await fs.readFile("testdic.xdn", {encoding: "utf-8"});
+    const loadData = async function (): Promise<string> {
+      const data = await fs.readFile("testdic.xdn", {encoding: "utf-8"});
       return data;
     };
-    let loadAndSaveDictionary = async function (): Promise<void> {
-      let loader = new SingleLoader("testdic.xdn");
-      let dictionary = await loader.asPromise();
-      let saver = new SingleSaver(dictionary, "testdic.xdn");
+    const loadAndSaveDictionary = async function (): Promise<void> {
+      const loader = new SingleLoader("testdic.xdn");
+      const dictionary = await loader.asPromise();
+      const saver = new SingleSaver(dictionary, "testdic.xdn");
       await saver.asPromise();
     };
     await loadAndSaveDictionary();
-    let firstData = await loadData();
+    const firstData = await loadData();
     await loadAndSaveDictionary();
-    let secondData = await loadData();
+    const secondData = await loadData();
     expect(firstData).toEqual(secondData);
   });
 });
 
 describe("single file format without system data (neither)", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1068 monaf
@@ -137,27 +137,27 @@ describe("single file format without system data (neither)", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   test("settings", async () => {
-    let loader = new SingleLoader("testdic.xdn");
-    let dictionary = await loader.asPromise();
-    let settings = dictionary.settings;
-    let emptySettings = DictionarySettings.createEmpty();
+    const loader = new SingleLoader("testdic.xdn");
+    const dictionary = await loader.asPromise();
+    const settings = dictionary.settings;
+    const emptySettings = DictionarySettings.createEmpty();
     expect(settings).not.toBeNil();
     expect(settings).toEqual(emptySettings);
   });
   test("markers", async () => {
-    let loader = new SingleLoader("testdic.xdn");
-    let dictionary = await loader.asPromise();
-    let markers = dictionary.markers;
-    let emptyMarkers = Markers.createEmpty();
+    const loader = new SingleLoader("testdic.xdn");
+    const dictionary = await loader.asPromise();
+    const markers = dictionary.markers;
+    const emptyMarkers = Markers.createEmpty();
     expect(markers).not.toBeNil();
     expect(markers).toEqual(emptyMarkers);
   });
 });
 
 describe("single file format without system data (no settings)", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1068 monaf
@@ -172,19 +172,19 @@ describe("single file format without system data (no settings)", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   test("settings", async () => {
-    let loader = new SingleLoader("testdic.xdn");
-    let dictionary = await loader.asPromise();
-    let settings = dictionary.settings;
-    let emptySettings = DictionarySettings.createEmpty();
+    const loader = new SingleLoader("testdic.xdn");
+    const dictionary = await loader.asPromise();
+    const settings = dictionary.settings;
+    const emptySettings = DictionarySettings.createEmpty();
     expect(settings).not.toBeNil();
     expect(settings).toEqual(emptySettings);
   });
 });
 
 describe("single file format without system data (no markers)", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1068 monaf
@@ -203,19 +203,19 @@ describe("single file format without system data (no markers)", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   test("markers", async () => {
-    let loader = new SingleLoader("testdic.xdn");
-    let dictionary = await loader.asPromise();
-    let markers = dictionary.markers;
-    let emptyMarkers = Markers.createEmpty();
+    const loader = new SingleLoader("testdic.xdn");
+    const dictionary = await loader.asPromise();
+    const markers = dictionary.markers;
+    const emptyMarkers = Markers.createEmpty();
     expect(markers).not.toBeNil();
     expect(markers).toEqual(emptyMarkers);
   });
 });
 
 describe("single file format with insufficient settings", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1068 monaf
@@ -234,9 +234,9 @@ describe("single file format with insufficient settings", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   test("test", async () => {
-    let loader = new SingleLoader("testdic.xdn");
+    const loader = new SingleLoader("testdic.xdn");
     await expect(loader.asPromise()).toReject();
   });
 });

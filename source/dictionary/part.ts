@@ -14,7 +14,7 @@ export class Part<S> {
   }
 
   public get sort(): string | null {
-    let section = this.sections[0];
+    const section = this.sections[0];
     if (section !== undefined) {
       return section.sort;
     } else {

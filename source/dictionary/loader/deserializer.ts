@@ -24,18 +24,18 @@ import {
 export class Deserializer {
 
   public deserializeWord(string: string): Word {
-    let lines = string.trim().split(/\r\n|\r|\n/);
-    let match = lines[0]?.match(/^\*\s*@(\d+)\s*(.+)/);
+    const lines = string.trim().split(/\r\n|\r|\n/);
+    const match = lines[0]?.match(/^\*\s*@(\d+)\s*(.+)/);
     if (match) {
-      let uniqueName = match[2];
-      let date = parseInt(match[1], 10);
-      let contents = {} as PlainContents;
+      const uniqueName = match[2];
+      const date = parseInt(match[1], 10);
+      const contents = {} as PlainContents;
       let before = true;
       let currentLanguage = "";
       let currentContent = "";
       for (let i = 1 ; i < lines.length ; i ++) {
-        let line = lines[i];
-        let languageMatch = line.match(/^!(\w{2})/);
+        const line = lines[i];
+        const languageMatch = line.match(/^!(\w{2})/);
         if (languageMatch) {
           if (!before) {
             contents[currentLanguage] = currentContent.trim();
@@ -50,7 +50,7 @@ export class Deserializer {
       if (!before) {
         contents[currentLanguage] = currentContent.trim();
       }
-      let word = new Word(uniqueName, date, contents);
+      const word = new Word(uniqueName, date, contents);
       return word;
     } else {
       throw new ParseError("noHeader", "no header");
@@ -58,7 +58,7 @@ export class Deserializer {
   }
 
   public deserializeOthers(string: string, skipHeader: {root?: boolean} = {}): [DictionarySettings, Markers] {
-    let lines = string.trim().split(/\r\n|\r|\n/);
+    const lines = string.trim().split(/\r\n|\r|\n/);
     let index = 0;
     if (!skipHeader.root) {
       index = this.skipOthersRootHeader(lines, index);
@@ -70,8 +70,8 @@ export class Deserializer {
     let before = true;
     let currentTag = "";
     let currentString = "";
-    let outerThis = this;
-    let setVariable = function (tag: string, string: string) {
+    const outerThis = this;
+    const setVariable = function (tag: string, string: string): void {
       if (tag === "VERSION") {
         version = outerThis.deserializeVersion(string);
       } else if (tag === "ALPHABET") {
@@ -83,8 +83,8 @@ export class Deserializer {
       }
     };
     while (index < lines.length) {
-      let line = lines[index ++];
-      let headerMatch = line.match(/^!(\w+)/);
+      const line = lines[index ++];
+      const headerMatch = line.match(/^!(\w+)/);
       if (headerMatch) {
         if (!before) {
           setVariable(currentTag, currentString);
@@ -98,7 +98,7 @@ export class Deserializer {
     if (!before) {
       setVariable(currentTag, currentString);
     }
-    let createDictionarySettings = function (version?: string, alphabetRule?: string, revisions?: Revisions): DictionarySettings {
+    const createDictionarySettings = function (version?: string, alphabetRule?: string, revisions?: Revisions): DictionarySettings {
       if (version === undefined && alphabetRule === undefined && revisions === undefined) {
         return DictionarySettings.createEmpty();
       } else {
@@ -109,25 +109,25 @@ export class Deserializer {
         }
       }
     };
-    let settings = createDictionarySettings(version, alphabetRule, revisions);
+    const settings = createDictionarySettings(version, alphabetRule, revisions);
     return [settings, markers];
   }
 
   public deserializeDictionarySettings(string: string): DictionarySettings {
-    let [settings, markers] = this.deserializeOthers(string);
+    const [settings, markers] = this.deserializeOthers(string);
     return settings;
   }
 
   public deserializeVersion(string: string, skipHeader: {part?: boolean} = {}): string {
-    let lines = string.trim().split(/\r\n|\r|\n/);
+    const lines = string.trim().split(/\r\n|\r|\n/);
     let index = 0;
     if (!skipHeader.part) {
       index = this.skipOthersPartHeader(lines, "VERSION", index);
     }
     while (index < lines.length) {
-      let line = lines[index ++];
+      const line = lines[index ++];
       if (line.trim() !== "") {
-        let match = line.match(/^\-\s*(.*)$/);
+        const match = line.match(/^\-\s*(.*)$/);
         if (match) {
           return match[1];
         } else {
@@ -139,15 +139,15 @@ export class Deserializer {
   }
 
   public deserializeAlphabetRule(string: string, skipHeader: {part?: boolean} = {}): string {
-    let lines = string.trim().split(/\r\n|\r|\n/);
+    const lines = string.trim().split(/\r\n|\r|\n/);
     let index = 0;
     if (!skipHeader.part) {
       index = this.skipOthersPartHeader(lines, "ALPHABET", index);
     }
     while (index < lines.length) {
-      let line = lines[index ++];
+      const line = lines[index ++];
       if (line.trim() !== "") {
-        let match = line.match(/^\-\s*(.*)$/);
+        const match = line.match(/^\-\s*(.*)$/);
         if (match) {
           return match[1];
         } else {
@@ -159,16 +159,16 @@ export class Deserializer {
   }
 
   public deserializeRevisions(string: string, skipHeader: {part?: boolean} = {}): Revisions {
-    let lines = string.trim().split(/\r\n|\r|\n/);
+    const lines = string.trim().split(/\r\n|\r|\n/);
     let index = 0;
     if (!skipHeader.part) {
       index = this.skipOthersPartHeader(lines, "REVISION", index);
     }
-    let revisions = new Revisions();
+    const revisions = new Revisions();
     while (index < lines.length) {
-      let line = lines[index ++];
+      const line = lines[index ++];
       if (line.trim() !== "") {
-        let revision = this.deserializeRevision(line.trim());
+        const revision = this.deserializeRevision(line.trim());
         revisions.push(revision);
       }
     }
@@ -176,12 +176,12 @@ export class Deserializer {
   }
 
   public deserializeRevision(line: string): Revision {
-    let match = line.match(/^\-\s*(?:@(\d+)\s*)?\{(.*?)\}\s*→\s*\{(.*?)\}\s*$/);
+    const match = line.match(/^\-\s*(?:@(\d+)\s*)?\{(.*?)\}\s*→\s*\{(.*?)\}\s*$/);
     if (match) {
-      let date = (match[1] !== undefined) ? parseInt(match[1], 10) : null;
-      let beforeName = match[2];
-      let afterName = match[3];
-      let revision = new Revision(date, beforeName, afterName);
+      const date = (match[1] !== undefined) ? parseInt(match[1], 10) : null;
+      const beforeName = match[2];
+      const afterName = match[3];
+      const revision = new Revision(date, beforeName, afterName);
       return revision;
     } else {
       throw new ParseError("invalidRevisionLine", `invalid line in revision definition: '${line}'`);
@@ -189,7 +189,7 @@ export class Deserializer {
   }
 
   public deserializeMarkers(string: string, skipHeader: {root?: boolean, part?: boolean} = {}): Markers {
-    let lines = string.trim().split(/\r\n|\r|\n/);
+    const lines = string.trim().split(/\r\n|\r|\n/);
     let index = 0;
     if (!skipHeader.root) {
       index = this.skipOthersRootHeader(lines, index);
@@ -197,26 +197,26 @@ export class Deserializer {
     if (!skipHeader.part) {
       index = this.skipOthersPartHeader(lines, "MARKER", index);
     }
-    let rawMarkers = new Map<string, Array<Marker>>();
+    const rawMarkers = new Map<string, Array<Marker>>();
     while (index < lines.length) {
-      let line = lines[index ++];
+      const line = lines[index ++];
       if (line.trim() !== "") {
-        let [uniqueName, wordMarkers] = this.deserializeWordMarker(line.trim());
+        const [uniqueName, wordMarkers] = this.deserializeWordMarker(line.trim());
         if (wordMarkers.length > 0) {
           rawMarkers.set(uniqueName, wordMarkers);
         }
       }
     }
-    let markers = new Markers(rawMarkers.entries());
+    const markers = new Markers(rawMarkers.entries());
     return markers;
   }
 
   public deserializeWordMarker(line: string): [string, Array<Marker>] {
-    let match = line.match(/^\-\s*(?:\{(.*?)\}|(.*?))\s*:\s*(.*?)\s*$/);
+    const match = line.match(/^\-\s*(?:\{(.*?)\}|(.*?))\s*:\s*(.*?)\s*$/);
     if (match) {
-      let uniqueName = match[1] ?? match[2];
-      let wordMarkers = match[3].split(/\s*,\s*/).map((value) => {
-        let wordMarker = MarkerUtil.cast(value);
+      const uniqueName = match[1] ?? match[2];
+      const wordMarkers = match[3].split(/\s*,\s*/).map((value) => {
+        const wordMarker = MarkerUtil.cast(value);
         if (wordMarker !== undefined) {
           return wordMarker;
         } else {
@@ -233,7 +233,7 @@ export class Deserializer {
     let index = fromIndex;
     let found = false;
     while (index < lines.length) {
-      let line = lines[index ++];
+      const line = lines[index ++];
       if (line.trim() !== "") {
         if (line.trim() === "**") {
           found = true;
@@ -253,7 +253,7 @@ export class Deserializer {
     let index = fromIndex;
     let found = false;
     while (index < lines.length) {
-      let line = lines[index ++];
+      const line = lines[index ++];
       if (line.trim() !== "") {
         if (line.trim() === "!" + tag) {
           found = true;

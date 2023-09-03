@@ -14,8 +14,8 @@ export class Revisions extends Array<Revision> {
   }
 
   public static fromPlain(plain: PlainRevisions): Revisions {
-    let rawRevisions = plain.map((plainRevision) => Revision.fromPlain(plainRevision));
-    let revisions = new Revisions(...rawRevisions);
+    const rawRevisions = plain.map((plainRevision) => Revision.fromPlain(plainRevision));
+    const revisions = new Revisions(...rawRevisions);
     return revisions;
   }
 
@@ -24,24 +24,24 @@ export class Revisions extends Array<Revision> {
   }
 
   public resolve(name: string, ignoreOptions?: IgnoreOptions): Array<string> {
-    let outerThis = this;
-    let resolveRec = function (currentName: string, beforeNames: Array<string>): Array<string> {
-      let normalizedCurrentName = StringNormalizer.normalize(currentName, ignoreOptions);
-      let revisions = outerThis.filter((revision) => {
-        let normalizedBeforeName = StringNormalizer.normalize(revision.beforeName, ignoreOptions);
+    const outerThis = this;
+    const resolveRec = function (currentName: string, beforeNames: Array<string>): Array<string> {
+      const normalizedCurrentName = StringNormalizer.normalize(currentName, ignoreOptions);
+      const revisions = outerThis.filter((revision) => {
+        const normalizedBeforeName = StringNormalizer.normalize(revision.beforeName, ignoreOptions);
         return normalizedBeforeName === normalizedCurrentName;
       });
-      let resultNames = [];
-      for (let revision of revisions) {
+      const resultNames = [];
+      for (const revision of revisions) {
         if (beforeNames.includes(revision.afterName)) {
         } else {
-          let result = resolveRec(revision.afterName, [...beforeNames, revision.afterName]);
+          const result = resolveRec(revision.afterName, [...beforeNames, revision.afterName]);
           resultNames.push(revision.afterName, ...result);
         }
       }
       return resultNames;
     };
-    let resultNames = resolveRec(name, [name]);
+    const resultNames = resolveRec(name, [name]);
     return resultNames;
   }
 
@@ -61,10 +61,10 @@ export class Revision implements PlainRevision {
   }
 
   public static fromPlain(plain: PlainRevision): Revision {
-    let date = plain.date;
-    let beforeName = plain.beforeName;
-    let afterName = plain.afterName;
-    let revision = new Revision(date, beforeName, afterName);
+    const date = plain.date;
+    const beforeName = plain.beforeName;
+    const afterName = plain.afterName;
+    const revision = new Revision(date, beforeName, afterName);
     return revision;
   }
 

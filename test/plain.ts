@@ -1,10 +1,14 @@
-//
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import "jest-extended";
 import mock from "mock-fs";
 import dedent from "ts-dedent";
 import {
-  Dictionary, DictionarySettings, Markers, Revisions, Word
+  Dictionary,
+  DictionarySettings,
+  Markers,
+  Revisions,
+  Word
 } from "../source";
 import {
   SingleLoader
@@ -12,7 +16,7 @@ import {
 
 
 describe("plain objects", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1128 ter
@@ -61,16 +65,16 @@ describe("plain objects", () => {
       `
     });
   });
-  afterAll(mock.restore);
+  afterEach(mock.restore);
   test("idempotency", async () => {
-    let loader = new SingleLoader("testdic.xdn");
-    let dictionary = await loader.asPromise();
-    let plainDictionary = JSON.stringify(dictionary.toPlain());
-    let restoredDictionary = Dictionary.fromPlain(JSON.parse(plainDictionary));
+    const loader = new SingleLoader("testdic.xdn");
+    const dictionary = await loader.asPromise();
+    const plainDictionary = JSON.stringify(dictionary.toPlain());
+    const restoredDictionary = Dictionary.fromPlain(JSON.parse(plainDictionary));
     expect(restoredDictionary.words.length).toBe(dictionary.words.length);
     for (let i = 0 ; i ++ ; i < restoredDictionary.words.length) {
-      let word = dictionary.words[i];
-      let restoredWord = restoredDictionary.words[i];
+      const word = dictionary.words[i];
+      const restoredWord = restoredDictionary.words[i];
       expect(restoredWord).toBeInstanceOf(Word);
       expect(restoredWord.dictionary === restoredDictionary).toBe(true);
       expect(restoredWord.uid).toBe(word.uid);

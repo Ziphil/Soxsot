@@ -1,4 +1,4 @@
-//
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import "jest-extended";
 import mock from "mock-fs";
@@ -19,7 +19,7 @@ import {
 
 
 describe("markup parser", () => {
-  let resolver = new MarkupResolver<string, string>({
+  const resolver = new MarkupResolver<string, string>({
     resolveLink: (name, children) => `<L:${name}|${children.join("")}>`,
     resolveBracket: (children) => `<B|${children.join("")}>`,
     resolveBrace: (children) => `<C|${children.join("")}>`,
@@ -27,7 +27,7 @@ describe("markup parser", () => {
     resolveEscape: (char) => `<E|${char}>`,
     join: (nodes) => nodes.join("")
   });
-  let parser = new MarkupParser(resolver);
+  const parser = new MarkupParser(resolver);
   test("bracket", () => {
     expect(parser.parse("[kol]")).toBe("<B|kol>");
     expect(parser.parse("foofoo [kol]bar[ces]")).toBe("foofoo <B|kol>bar<B|ces>");
@@ -62,7 +62,7 @@ describe("markup parser", () => {
 });
 
 describe("parser", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
         * @1036 lic+~~
@@ -117,18 +117,18 @@ describe("parser", () => {
       `
     });
   });
-  afterAll(mock.restore);
-  let resolver = MarkupResolver.createKeep();
-  let parser = new Parser(resolver);
-  let getWord = async function (): Promise<[Word, ParsedWord<string>]> {
-    let loader = new SingleLoader("testdic.xdn");
-    let dictionary = await loader.asPromise();
-    let rawWord = dictionary.words[0];
-    let word = parser.parse(dictionary.words[0]);
+  afterEach(mock.restore);
+  const resolver = MarkupResolver.createKeep();
+  const parser = new Parser(resolver);
+  const getWord = async function (): Promise<[Word, ParsedWord<string>]> {
+    const loader = new SingleLoader("testdic.xdn");
+    const dictionary = await loader.asPromise();
+    const rawWord = dictionary.words[0];
+    const word = parser.parse(dictionary.words[0]);
     return [rawWord, word];
   };
   test("basic", async () => {
-    let [rawWord, word] = await getWord();
+    const [rawWord, word] = await getWord();
     expect(rawWord).not.toBeNil();
     expect(rawWord.contents).toHaveProperty("ja");
     expect(rawWord.contents).toHaveProperty("en");
@@ -141,13 +141,13 @@ describe("parser", () => {
     expect(word.parts["en"]!.sort).toBe("V");
   });
   test("sections", async () => {
-    let [, word] = await getWord();
+    const [, word] = await getWord();
     expect(word.parts["ja"]!.sections[0].sort).toBe("動");
     expect(word.parts["ja"]!.sections[1].sort).toBe("動当");
     expect(word.parts["en"]!.sections[0].sort).toBe("V");
     expect(word.parts["en"]!.sections[1].sort).toBe("Vk");
-    for (let language of ["ja", "en"]) {
-      let sections = word.parts[language]!.sections;
+    for (const language of ["ja", "en"]) {
+      const sections = word.parts[language]!.sections;
       expect(sections.length).toBe(2);
       expect(sections[0].getFields(true).length).toBe(13);
       expect(sections[0].getFields(false).length).toBe(16);
@@ -164,8 +164,8 @@ describe("parser", () => {
     }
   });
   test("part japanese, section 0, equivalents", async () => {
-    let [, word] = await getWord();
-    let equivalents = word.parts["ja"]!.sections[0].equivalents;
+    const [, word] = await getWord();
+    const equivalents = word.parts["ja"]!.sections[0].equivalents;
     expect(equivalents[0].category).toBe("動");
     expect(equivalents[0].frame).toBe("格組");
     expect(equivalents[0].hidden).toBeFalse();
@@ -177,10 +177,10 @@ describe("parser", () => {
     expect(equivalents[1].names.length).toBe(2);
   });
   test("part japanese, section 0, normal informations", async () => {
-    let [, word] = await getWord();
-    let informations = word.parts["ja"]!.sections[0].informations.slice(0, 9) as Array<NormalInformation<string>>;
-    let normalInformations = word.parts["ja"]!.sections[0].getNormalInformations(false);
-    for (let information of informations) {
+    const [, word] = await getWord();
+    const informations = word.parts["ja"]!.sections[0].informations.slice(0, 9) as Array<NormalInformation<string>>;
+    const normalInformations = word.parts["ja"]!.sections[0].getNormalInformations(false);
+    for (const information of informations) {
       expect(information).toBeInstanceOf(NormalInformation);
     }
     expect(informations).toEqual(normalInformations);
@@ -205,10 +205,10 @@ describe("parser", () => {
     expect(informations[5].hidden).toBeTrue();
   });
   test("part japanese, section 0, phrase informations", async () => {
-    let [, word] = await getWord();
-    let informations = word.parts["ja"]!.sections[0].informations.slice(9, 11) as Array<PhraseInformation<string>>;
-    let phraseInformations = word.parts["ja"]!.sections[0].getPhraseInformations(false);
-    for (let information of informations) {
+    const [, word] = await getWord();
+    const informations = word.parts["ja"]!.sections[0].informations.slice(9, 11) as Array<PhraseInformation<string>>;
+    const phraseInformations = word.parts["ja"]!.sections[0].getPhraseInformations(false);
+    for (const information of informations) {
       expect(information).toBeInstanceOf(PhraseInformation);
       expect(information.kind).toBe("phrase");
     }
@@ -221,10 +221,10 @@ describe("parser", () => {
     expect(informations[1].text).toBe("説明あり成句。");
   });
   test("part japanese, section 0, example informations", async () => {
-    let [, word] = await getWord();
-    let informations = word.parts["ja"]!.sections[0].informations.slice(11, 12) as Array<ExampleInformation<string>>;
-    let exampleInformations = word.parts["ja"]!.sections[0].getExampleInformations(false);
-    for (let information of informations) {
+    const [, word] = await getWord();
+    const informations = word.parts["ja"]!.sections[0].informations.slice(11, 12) as Array<ExampleInformation<string>>;
+    const exampleInformations = word.parts["ja"]!.sections[0].getExampleInformations(false);
+    for (const information of informations) {
       expect(information).toBeInstanceOf(ExampleInformation);
       expect(information.kind).toBe("example");
     }
@@ -233,8 +233,8 @@ describe("parser", () => {
     expect(informations[0].translation).toBe("私は怖かったが、同時に安心もしていた。");
   });
   test("part japanese, section 0, relations", async () => {
-    let [, word] = await getWord();
-    let relations = word.parts["ja"]!.sections[0].relations;
+    const [, word] = await getWord();
+    const relations = word.parts["ja"]!.sections[0].relations;
     expect(relations[0].title).toBe("類");
     expect(relations[0].entries[0].name).toBe("{likom}");
     expect(relations[0].entries[0].refer).toBeTrue();

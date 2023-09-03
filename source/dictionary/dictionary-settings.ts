@@ -19,25 +19,25 @@ export class DictionarySettings {
   }
 
   public static createEmpty(): DictionarySettings {
-    let version = "";
-    let alphabetRule = "";
-    let revisions = new Revisions();
-    let settings = new DictionarySettings(version, alphabetRule, revisions);
+    const version = "";
+    const alphabetRule = "";
+    const revisions = new Revisions();
+    const settings = new DictionarySettings(version, alphabetRule, revisions);
     return settings;
   }
 
   public static fromPlain(plain: PlainDictionarySettings): DictionarySettings {
-    let version = plain.version;
-    let alphabetRule = plain.alphabetRule;
-    let revisions = Revisions.fromPlain(plain.revisions);
-    let settings = new DictionarySettings(version, alphabetRule, revisions);
+    const version = plain.version;
+    const alphabetRule = plain.alphabetRule;
+    const revisions = Revisions.fromPlain(plain.revisions);
+    const settings = new DictionarySettings(version, alphabetRule, revisions);
     return settings;
   }
 
   public toPlain(): PlainDictionarySettings {
-    let version = this.version;
-    let alphabetRule = this.alphabetRule;
-    let revisions = this.revisions.toPlain();
+    const version = this.version;
+    const alphabetRule = this.alphabetRule;
+    const revisions = this.revisions.toPlain();
     return {version, alphabetRule, revisions};
   }
 
