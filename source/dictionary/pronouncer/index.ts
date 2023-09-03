@@ -8,6 +8,10 @@ import {
 } from "./stable-pronouncer";
 
 
+export * from "./pronouncer";
+export * from "./stable-pronouncer";
+
+
 export class PronouncerCreator {
 
   public static createByVersion(version: string): Pronouncer | undefined {

@@ -24,7 +24,7 @@ import {
 } from "./part";
 import {
   PronouncerCreator
-} from "./pronouncer/pronouncer-creator";
+} from "./pronouncer";
 import {
   Relation
 } from "./relation";
