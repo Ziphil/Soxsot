@@ -24,12 +24,16 @@ export class InflectionSuggesterCreator {
 
   public static createByVersion(version: string, text: string, ignoreOptions: IgnoreOptions): Suggester | undefined {
     const match = version.match(/^(\w+)(?:\.(\w+))?$/);
-    const generation = match?.[1] ?? "";
-    const subgeneration = match?.[2] ?? "";
-    if (generation === "6" || generation === "S") {
-      return new StableInflectionSuggester(text, ignoreOptions);
-    } else if (version.match(/^7(\.\d+)?$/)) {
-      return new ShalInflectionSuggester(text, ignoreOptions);
+    if (match !== null) {
+      const generation = match[1] ?? "";
+      const subgeneration = match[2] !== undefined ? parseInt(match[2], 10) : 0;
+      if (generation === "6" || (generation === "7" && subgeneration <= 1) || generation === "S") {
+        return new StableInflectionSuggester(text, ignoreOptions);
+      } else if (generation === "7" && subgeneration >= 2) {
+        return new ShalInflectionSuggester(text, ignoreOptions);
+      } else {
+        return undefined;
+      }
     } else {
       return undefined;
     }
