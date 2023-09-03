@@ -1,0 +1,181 @@
+{
+  "sort": {
+    "nominal": {
+      "names": {"ja": "名辞", "en": "Nominal"},
+      "abbreviations": {"ja": "名", "en": "N"}
+    },
+    "verbal": {
+      "names": {"ja": "動辞", "en": "Verbal"},
+      "abbreviations": {"ja": "動", "en": "V"}
+    },
+    "adpredicative": {
+      "names": {"ja": "連述辞", "en": "Adpredicative"},
+      "abbreviations": {"ja": "述", "en": "D"}
+    },
+    "special": {
+      "names": {"ja": "特殊辞", "en": "Special"},
+      "abbreviations": {"ja": "特", "en": "S"}
+    },
+    "particle": {
+      "names": {"ja": "助接辞", "en": "Particle"},
+      "abbreviations": {"ja": "助", "en": "P"}
+    },
+    "connective": {
+      "names": {"ja": "連結辞", "en": "Connective"},
+      "abbreviations": {"ja": "連", "en": "C"}
+    },
+    "interjection": {
+      "names": {"ja": "間投辞", "en": "Interjection"},
+      "abbreviations": {"ja": "間", "en": "I"}
+    },
+    "functional": {
+      "names": {"ja": "機能辞", "en": "Functional"},
+      "abbreviations": {"ja": "機", "en": "F"}
+    }
+  },
+  "category": {
+    "noun": {
+      "names": {"ja": "名詞", "en": "Noun"},
+      "abbreviations": {"ja": "名", "en": "N"}
+    },
+    "verb": {
+      "names": {"ja": "動詞", "en": "Verb"},
+      "abbreviations": {"ja": "動", "en": "V"}
+    },
+    "adjective": {
+      "names": {"ja": "形容詞", "en": "Adjective"},
+      "abbreviations": {"ja": "形", "en": "A"}
+    },
+    "adverb": {
+      "names": {"ja": "副詞", "en": "Adverb"},
+      "abbreviations": {"ja": "副", "en": "B"}
+    },
+    "nonverbAdverb": {
+      "names": {"ja": "非動詞修飾副詞", "en": "Nonverb-modifying adverb"}
+    },
+    "adpredicative": {
+      "names": {"ja": "連述詞", "en": "Adpredicative"},
+      "abbreviations": {"ja": "述", "en": "D"}
+    },
+    "nonverbAdpredicative": {
+      "names": {"ja": "非動詞修飾連述詞", "en": "Nonverb-modifying adpredicative"}
+    },
+    "special": {
+      "names": {"ja": "特殊詞", "en": "Special"},
+      "abbreviations": {"ja": "特", "en": "S"}
+    },
+    "preposition": {
+      "names": {"ja": "助詞", "en": "Preposition"},
+      "abbreviations": {"ja": "助", "en": "P"}
+    },
+    "conjunction": {
+      "names": {"ja": "接続詞", "en": "Conjunction"},
+      "abbreviations": {"ja": "接", "en": "J"}
+    },
+    "connective": {
+      "names": {"ja": "連結詞", "en": "Connective"},
+      "abbreviations": {"ja": "接", "en": "C"}
+    },
+    "interjection": {
+      "names": {"ja": "間投詞", "en": "Interjection"},
+      "abbreviations": {"ja": "間", "en": "I"}
+    },
+    "functional": {
+      "names": {"ja": "機能詞", "en": "Functional"},
+      "abbreviations": {"ja": "機", "en": "F"}
+    }
+  },
+  "tense": {
+    "present": {
+      "names": {"ja": "現在時制", "en": "Present"},
+      "suffix": "a"
+    },
+    "past": {
+      "names": {"ja": "過去時制", "en": "Past"},
+      "suffix": "e"
+    },
+    "future": {
+      "names": {"ja": "未来時制", "en": "Future"},
+      "suffix": "i"
+    },
+    "diachronic": {
+      "names": {"ja": "通時時制", "en": "Diachronic"},
+      "suffix": "o"
+    }
+  },
+  "aspect": {
+    "inceptive": {
+      "names": {"ja": "開始相", "en": "Inceptive"},
+      "suffix": {"normal": "f", "adjutative": "v"}
+    },
+    "progressive": {
+      "names": {"ja": "経過相", "en": "Progressive"},
+      "suffix": {"normal": "c", "adjutative": "q"}
+    },
+    "perfect": {
+      "names": {"ja": "完了相", "en": "Perfect"},
+      "suffix": {"normal": "k", "adjutative": "g"}
+    },
+    "continuous": {
+      "names": {"ja": "継続相", "en": "Continuous"},
+      "suffix": {"normal": "t", "adjutative": "d"}
+    },
+    "indefinite": {
+      "names": {"ja": "無相", "en": "Indefinite"},
+      "suffix": {"normal": "s", "adjutative": "z"}
+    }
+  },
+  "voice": {
+    "normal": {
+      "names": {"ja": "通常態", "en": "Normal"}
+    },
+    "adjutative": {
+      "names": {"ja": "補助態", "en": "Adjutative"}
+    }
+  },
+  "polarity": {
+    "positive": {
+      "names": {"ja": "肯定", "en": "Positive"},
+      "prefix": ""
+    },
+    "negative": {
+      "names": {"ja": "否定", "en": "Negative"},
+      "prefix": "du"
+    }
+  },
+  "verbalInflectionCategory": {
+    "adjective": {
+      "prefix": "a"
+    },
+    "adverb": {
+      "prefix": "o"
+    },
+    "nonverbAdverb": {
+      "prefix": "io"
+    }
+  },
+  "nominalInflectionCategory": {
+    "adjective": {
+      "prefix": "a"
+    }
+  },
+  "adpredicativeInflectionCategory": {
+    "adpredicative": {
+      "prefix": "e"
+    },
+    "nonverbAdpredicative": {
+      "prefix": "ie"
+    }
+  },
+  "specialInflectionCategory": {
+    "special": {
+      "prefix": "e"
+    }
+  },
+  "particleInflectionType": {
+    "nonverb": {
+      "names": {"ja": "非動詞修飾", "en": "Nonverb-modifying"},
+      "prefix": "i"
+    }
+  }
+}
