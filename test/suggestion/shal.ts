@@ -6,10 +6,10 @@ import dedent from "ts-dedent";
 import {
   Dictionary,
   NormalParameter
-} from "../source";
+} from "../../source";
 import {
   SingleLoader
-} from "../source/io";
+} from "../../source/io";
 
 
 async function getDictionary(): Promise<Dictionary> {
@@ -33,7 +33,7 @@ function checkNoSuggestions(dictionary: Dictionary, text: string): void {
   expect(result.suggestions.length).toBe(0);
 }
 
-describe("suggester (version 7)", () => {
+describe("suggestion (version 7)", () => {
   beforeEach(() => {
     mock({
       "testdic.xdn": dedent`
@@ -108,5 +108,9 @@ describe("suggester (version 7)", () => {
     checkSuggestion(dictionary, "edutut", "特殊辞の活用", ["特殊詞", "否定"]);
     checkNoSuggestions(dictionary, "ietut");
     checkNoSuggestions(dictionary, "iedutut");
+  });
+  test("particle", async () => {
+    const dictionary = await getDictionary();
+    checkSuggestion(dictionary, "ivo", "助接辞の活用", ["非動詞修飾"]);
   });
 });
