@@ -4,7 +4,8 @@ import {
   Writable
 } from "ts-essentials";
 import {
-  MutationManager
+  MutationManager,
+  PlainMutationManager
 } from "../util/mutation-manager";
 import {
   DictionarySettings,
@@ -37,12 +38,12 @@ export class Dictionary {
   public readonly path: string | null;
   public readonly mutationManager: MutationManager<string>;
 
-  public constructor(words: ReadonlyArray<Word>, settings: DictionarySettings, markers: Markers, path: string | null) {
+  public constructor(words: ReadonlyArray<Word>, settings: DictionarySettings, markers: Markers, path: string | null, mutationManager?: MutationManager<string>) {
     this.words = words;
     this.settings = settings;
     this.markers = markers;
     this.path = path;
-    this.mutationManager = new MutationManager();
+    this.mutationManager = mutationManager ?? new MutationManager();
     for (const word of words) {
       word.setDictionary(this);
     }
@@ -53,7 +54,8 @@ export class Dictionary {
     const settings = DictionarySettings.fromPlain(plain.settings);
     const markers = Markers.fromPlain(plain.markers);
     const path = plain.path;
-    const dictionary = new Dictionary(words, settings, markers, path);
+    const mutationManager = MutationManager.fromPlain(plain.mutationManager);
+    const dictionary = new Dictionary(words, settings, markers, path, mutationManager);
     return dictionary;
   }
 
@@ -62,7 +64,8 @@ export class Dictionary {
     const settings = this.settings.toPlain();
     const markers = this.markers.toPlain();
     const path = this.path;
-    return {words, settings, markers, path};
+    const mutationManager = this.mutationManager.toPlain();
+    return {words, settings, markers, path, mutationManager};
   }
 
   public search(parameter: Parameter): SearchResult {
@@ -189,5 +192,6 @@ export interface PlainDictionary {
   settings: PlainDictionarySettings;
   markers: PlainMarkers;
   path: string | null;
+  mutationManager: PlainMutationManager<string>;
 
 }
