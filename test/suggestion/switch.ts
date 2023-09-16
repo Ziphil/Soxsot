@@ -39,7 +39,7 @@ describe("version 6.x", () => {
   afterEach(mock.restore);
   test("test", async () => {
     const dictionary = await getDictionary();
-    const parameter = new NormalParameter("", "name", "prefix", "ja");
+    const parameter = new NormalParameter("", "name", "prefix", "ja", "default");
     const suggesters = parameter["createSuggesters"](dictionary);
     expect(suggesters[1]).toBeInstanceOf(StableInflectionSuggester);
   });
@@ -62,7 +62,7 @@ describe("version S", () => {
   afterEach(mock.restore);
   test("test", async () => {
     const dictionary = await getDictionary();
-    const parameter = new NormalParameter("", "name", "prefix", "ja");
+    const parameter = new NormalParameter("", "name", "prefix", "ja", "default");
     const suggesters = parameter["createSuggesters"](dictionary);
     expect(suggesters[1]).toBeInstanceOf(StableInflectionSuggester);
   });
@@ -85,7 +85,7 @@ describe("version 7.1", () => {
   afterEach(mock.restore);
   test("test", async () => {
     const dictionary = await getDictionary();
-    const parameter = new NormalParameter("", "name", "prefix", "ja");
+    const parameter = new NormalParameter("", "name", "prefix", "ja", "default");
     const suggesters = parameter["createSuggesters"](dictionary);
     expect(suggesters[1]).toBeInstanceOf(StableInflectionSuggester);
   });
@@ -108,7 +108,7 @@ describe("version 7.2", () => {
   afterEach(mock.restore);
   test("test", async () => {
     const dictionary = await getDictionary();
-    const parameter = new NormalParameter("", "name", "prefix", "ja");
+    const parameter = new NormalParameter("", "name", "prefix", "ja", "default");
     const suggesters = parameter["createSuggesters"](dictionary);
     expect(suggesters[1]).toBeInstanceOf(ShalInflectionSuggester);
   });
