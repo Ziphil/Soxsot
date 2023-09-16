@@ -19,7 +19,7 @@ async function getDictionary(): Promise<Dictionary> {
 };
 
 function checkSuggestion(dictionary: Dictionary, text: string, kindName: string, descriptionNames: Array<string>): void {
-  const parameter = new NormalParameter(text, "name", "prefix", "ja");
+  const parameter = new NormalParameter(text, "name", "prefix", "ja", "default");
   const result = dictionary.search(parameter);
   expect(result.suggestions.length).toBeGreaterThan(0);
   const suggestion = result.suggestions[0];
@@ -28,7 +28,7 @@ function checkSuggestion(dictionary: Dictionary, text: string, kindName: string,
 }
 
 function checkNoSuggestions(dictionary: Dictionary, text: string): void {
-  const parameter = new NormalParameter(text, "name", "prefix", "ja");
+  const parameter = new NormalParameter(text, "name", "prefix", "ja", "default");
   const result = dictionary.search(parameter);
   expect(result.suggestions.length).toBe(0);
 }
