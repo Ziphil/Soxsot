@@ -6,9 +6,18 @@ export class MutationManager<N> {
   public readonly changedNames: Set<N>;
   public readonly deletedNames: Set<N>;
 
-  public constructor() {
-    this.changedNames = new Set();
-    this.deletedNames = new Set();
+  public constructor(changedName?: Iterable<N>, deletedName?: Iterable<N>) {
+    this.changedNames = new Set(changedName);
+    this.deletedNames = new Set(deletedName);
+  }
+
+  public static fromPlain<N>(plain: PlainMutationManager<N>): MutationManager<N> {
+    const markers = new MutationManager(plain.changedNames, plain.deletedNames);
+    return markers;
+  }
+
+  public toPlain(): PlainMutationManager<N> {
+    return {changedNames: [...this.changedNames], deletedNames: [...this.deletedNames]};
   }
 
   public change(name: N): void {
@@ -38,5 +47,13 @@ export class MutationManager<N> {
     this.changedNames.clear();
     this.deletedNames.clear();
   }
+
+}
+
+
+export interface PlainMutationManager<N> {
+
+  changedNames: Array<N>;
+  deletedNames: Array<N>;
 
 }
