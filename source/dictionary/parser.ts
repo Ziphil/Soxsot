@@ -23,6 +23,7 @@ import {
   Part
 } from "./part";
 import {
+  PronouncerConfigs,
   PronouncerCreator
 } from "./pronouncer";
 import {
@@ -39,9 +40,11 @@ import {
 export class Parser<S> {
 
   private readonly markupParser: MarkupParser<S, unknown>;
+  private readonly configs?: ParserConfigs;
 
-  public constructor(resolver: MarkupResolver<S, any>) {
+  public constructor(resolver: MarkupResolver<S, any>, configs?: ParserConfigs) {
     this.markupParser = new MarkupParser(resolver);
+    this.configs = configs;
   }
 
   public static createSimple(): Parser<string> {
@@ -59,7 +62,7 @@ export class Parser<S> {
   /** 与えられた単語データをパースして、`ParsedWord` オブジェクトとして返します。
    * パースした全てのデータではなく一部の項目の内容のみが必要な場合は、`lookup` から始まるメソッドを使用した方が軽量です。*/
   public parse(word: Word): ParsedWord<S> {
-    const pronouncer = PronouncerCreator.createByVersion(word.dictionary?.settings.version ?? "");
+    const pronouncer = PronouncerCreator.createByVersion(word.dictionary?.settings.version ?? "", this.configs?.pronouncerConfigs);
     const name = word.name;
     const uniqueName = word.uniqueName;
     const date = word.date;
@@ -564,6 +567,10 @@ export class MarkupResolver<S, E> {
 
 }
 
+
+type ParserConfigs = {
+  pronouncerConfigs?: PronouncerConfigs
+};
 
 type MarkupResolverSpec<S, E> = {
   resolveLink: LinkResolver<E>,
