@@ -23,7 +23,7 @@ export class Revisions extends Array<Revision> {
     return this.map((revision) => revision.toPlain());
   }
 
-  public resolve(name: string, ignoreOptions?: IgnoreOptions): Array<string> {
+  public resolve(name: string, ignoreOptions: IgnoreOptions): Array<string> {
     const outerThis = this;
     const resolveRec = function (currentName: string, beforeNames: Array<string>): Array<string> {
       const normalizedCurrentName = StringNormalizer.normalize(currentName, ignoreOptions);

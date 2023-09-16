@@ -30,17 +30,19 @@ export class NormalParameter extends Parameter {
   public readonly language: string;
   public readonly ignoreOptions: IgnoreOptions;
 
-  public constructor(text: string, mode: WordMode, type: WordType, language: string, ignoreOptions?: IgnoreOptions) {
+  /** 通常の検索パラメータを生成します。
+   * `ignoreOptions` に `"default"` を指定すると、`mode` や `type` の記述に従ってデフォルトの無視設定が使用されます。*/
+  public constructor(text: string, mode: WordMode, type: WordType, language: string, ignoreOptions: IgnoreOptions | "default") {
     super();
     this.text = text;
     this.mode = mode;
     this.type = type;
     this.language = language;
-    this.ignoreOptions = ignoreOptions ?? this.getDefaultIgnoreOptions();
+    this.ignoreOptions = ignoreOptions === "default" ? this.getDefaultIgnoreOptions() : ignoreOptions;
   }
 
   public static createEmpty(language: string): NormalParameter {
-    const parameter = new NormalParameter("", "both", "prefix", language);
+    const parameter = new NormalParameter("", "both", "prefix", language, {case: false, diacritic: false, space: true, wave: true});
     return parameter;
   }
 
@@ -59,9 +61,9 @@ export class NormalParameter extends Parameter {
     const mode = this.mode;
     const type = this.type;
     if ((mode === "name" || mode === "both") && (type !== "pair" && type !== "regular")) {
-      return {case: false, diacritic: true};
+      return {case: false, diacritic: true, space: true, wave: true};
     } else {
-      return {case: false, diacritic: false};
+      return {case: false, diacritic: false, space: true, wave: true};
     }
   }
 
