@@ -125,8 +125,10 @@ export class Dictionary {
       if (uid !== null) {
         const oldWord = this.words.find((word) => word.uid === uid);
         if (oldWord !== undefined) {
+          const oldUniqueName = oldWord.uniqueName;
+          const newUniqueName = newWord.uniqueName;
           oldWord.edit(newWord);
-          this.mutationManager.rename(oldWord.uniqueName, newWord.uniqueName);
+          this.mutationManager.rename(oldUniqueName, newUniqueName);
         }
       } else {
         const newRealWord = Word.fromPlain(newWord);
