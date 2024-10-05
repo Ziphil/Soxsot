@@ -149,10 +149,10 @@ export class Word {
     this.ensureDictionary();
     let comparisonString = "";
     const alphabetRule = this.dictionary.settings.alphabetRule;
-    const apostrophe = alphabetRule.includes("'");
+    const apostrophe = alphabetRule.includes("'") || alphabetRule.includes("’");
     for (let i = 0 ; i < this.uniqueName.length ; i ++) {
       const char = this.uniqueName.charAt(i);
-      if ((apostrophe || char !== "'") && char !== "-" && char !== "+" && char !== "~") {
+      if ((apostrophe || (char !== "'" && char !== "’")) && char !== "-" && char !== "+" && char !== "~") {
         const position = alphabetRule.indexOf(char);
         if (position >= 0) {
           comparisonString += String.fromCodePoint(position + 200);
@@ -161,7 +161,7 @@ export class Word {
         }
       }
     }
-    const match = this.uniqueName.match(/^(\+)?(')?(.+?)(')?(\+)?(~*)$/);
+    const match = this.uniqueName.match(/^(\+)?('|’)?(.+?)('|’)?(\+)?(~*)$/);
     if (match) {
       if (match[2]) {
         comparisonString += String.fromCodePoint(150);

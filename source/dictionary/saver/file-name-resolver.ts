@@ -15,7 +15,8 @@ export class FileNameResolver {
 
   public static createDefault(): FileNameResolver {
     const resolveWordBaseName = function (uniqueName: string): string {
-      const match = uniqueName.match(/^(\+)?(.+?)(\+)?(~*)$/);
+      const modifiedUniqueName = uniqueName.replace(/’/g, "'");
+      const match = modifiedUniqueName.match(/^(\+)?(.+?)(\+)?(~*)$/);
       if (match) {
         let modifier = "";
         if (match[1]) {
