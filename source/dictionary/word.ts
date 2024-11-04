@@ -7,6 +7,7 @@ import {Dictionary} from "./dictionary";
 import {ValidationError} from "./error";
 import {Marker} from "./marker";
 import {Parser} from "./parser";
+import {isValidUniqueName} from "./util";
 
 
 export class Word {
@@ -18,7 +19,7 @@ export class Word {
   public readonly date: number;
   public readonly contents: Contents;
   public readonly equivalentNames!: EquivalentNames;
-  private comparisonString!: string;
+  public readonly comparisonString!: string;
 
   public constructor(uniqueName: string, date: number, contents: Contents) {
     this.uid = uuid();
@@ -91,7 +92,7 @@ export class Word {
   }
 
   public validateEdit(newWord: PlainWord): string | null {
-    if (!Word.isValidUniqueName(newWord.uniqueName)) {
+    if (!isValidUniqueName(newWord.uniqueName)) {
       return "invalidUniqueName";
     } else {
       return null;
@@ -133,66 +134,13 @@ export class Word {
 
   private updateComparisonString(): void {
     this.ensureDictionary();
-    let comparisonString = "";
-    const alphabetRule = this.dictionary.settings.alphabetRule;
-    const apostrophe = alphabetRule.includes("'") || alphabetRule.includes("’");
-    for (let i = 0 ; i < this.uniqueName.length ; i ++) {
-      const char = this.uniqueName.charAt(i);
-      if ((apostrophe || (char !== "'" && char !== "’")) && char !== "-" && char !== "+" && char !== "~") {
-        const position = alphabetRule.indexOf(char);
-        if (position >= 0) {
-          comparisonString += String.fromCodePoint(position + 200);
-        } else {
-          comparisonString += String.fromCodePoint(1000);
-        }
-      }
-    }
-    const match = this.uniqueName.match(/^(\+)?('|’)?(.+?)('|’)?(\+)?(~*)$/);
-    if (match) {
-      if (match[2]) {
-        comparisonString += String.fromCodePoint(150);
-      }
-      if (match[4]) {
-        comparisonString += String.fromCodePoint(151);
-      }
-      if (match[1]) {
-        comparisonString += String.fromCodePoint(160);
-      }
-      if (match[5]) {
-        comparisonString += String.fromCodePoint(161);
-      }
-      if (match[6].length > 0) {
-        comparisonString += String.fromCodePoint(match[6].length + 100);
-      }
-    } else {
-      throw new Error("cannot happen");
-    }
-    this.comparisonString = comparisonString;
+    this.writable.comparisonString = this.dictionary.nameSorter.calcComparisonString(this.uniqueName);
   }
 
   private ensureDictionary(): asserts this is Word & {dictionary: Dictionary} {
     if (!this.dictionary) {
       throw new Error("no dictionary set");
     }
-  }
-
-  public static sortWords(words: Array<Word>): Array<Word> {
-    const sortedWords = words.sort((firstWord, secondWord) => {
-      const firstComparisonString = firstWord.comparisonString;
-      const secondComparisonString = secondWord.comparisonString;
-      if (firstComparisonString < secondComparisonString) {
-        return -1;
-      } else if (firstComparisonString > secondComparisonString) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-    return sortedWords;
-  }
-
-  public static isValidUniqueName(uniqueName: string): boolean {
-    return uniqueName.match(/^(\+)?((?:\p{L}|-|')+?)(\+)?(~*)$/u) !== null;
   }
 
   private get writable(): Writable<this> {

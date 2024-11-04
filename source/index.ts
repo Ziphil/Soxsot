@@ -18,6 +18,7 @@ export * from "./dictionary/revision";
 export * from "./dictionary/section";
 export * from "./dictionary/search-result";
 export * from "./dictionary/suggestion";
+export * from "./dictionary/util";
 export * from "./dictionary/word";
 
 
