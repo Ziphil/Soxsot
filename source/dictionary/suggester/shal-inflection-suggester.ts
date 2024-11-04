@@ -1,32 +1,13 @@
 //
 
-import {
-  ObjectUtil
-} from "../../util/object";
-import {
-  IgnoreOptions,
-  StringNormalizer
-} from "../../util/string-normalizer";
-import {
-  SHAL_DATA,
-  ShalSort
-} from "../data/shal-data";
-import {
-  Dictionary
-} from "../dictionary";
-import {
-  Parser
-} from "../parser";
-import {
-  Suggestion,
-  SuggestionDescription
-} from "../suggestion";
-import {
-  Word
-} from "../word";
-import {
-  Suggester
-} from "./suggester";
+import {ObjectUtil} from "../../util/object";
+import {IgnoreOptions, StringNormalizer} from "../../util/string-normalizer";
+import {SHAL_DATA, ShalSort} from "../data/shal-data";
+import {Dictionary} from "../dictionary";
+import {Parser} from "../parser";
+import {Suggestion, SuggestionDescription} from "../suggestion";
+import {Word} from "../word";
+import {Suggester} from "./suggester";
 
 
 export class ShalInflectionSuggester extends Suggester {

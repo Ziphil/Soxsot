@@ -1,34 +1,14 @@
 //
 
 import fs from "fs";
-import {
-  WriteStream
-} from "fs";
-import {
-  Dictionary
-} from "../dictionary";
-import {
-  DictionarySettings
-} from "../dictionary-settings";
-import {
-  ExampleInformation,
-  InformationKindUtil,
-  NormalInformation,
-  PhraseInformation
-} from "../information";
-import {
-  ParsedWord
-} from "../parsed-word";
-import {
-  MarkupResolver,
-  Parser
-} from "../parser";
-import {
-  Word
-} from "../word";
-import {
-  Saver
-} from "./saver";
+import {WriteStream} from "fs";
+import {Dictionary} from "../dictionary";
+import {DictionarySettings} from "../dictionary-settings";
+import {ExampleInformation, InformationKindUtil, NormalInformation, PhraseInformation} from "../information";
+import {ParsedWord} from "../parsed-word";
+import {MarkupResolver, Parser} from "../parser";
+import {Word} from "../word";
+import {Saver} from "./saver";
 
 
 export class OldShaleianSaver extends Saver {

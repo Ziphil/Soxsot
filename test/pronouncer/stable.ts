@@ -1,8 +1,6 @@
 //
 
-import {
-  StablePronouncer
-} from "../../source/dictionary/pronouncer/stable-pronouncer";
+import {StablePronouncer} from "../../source/dictionary/pronouncer/stable-pronouncer";
 
 
 describe("pronouncer (version 6)", () => {

@@ -1,8 +1,6 @@
 //
 
-import {
-  ObjectUtil
-} from "../util/object";
+import {ObjectUtil} from "../util/object";
 
 
 export class Information<S, K extends InformationKind = InformationKind> {

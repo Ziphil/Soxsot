@@ -1,17 +1,9 @@
 //
 
-import {
-  IgnoreOptions
-} from "../../util/string-normalizer";
-import {
-  ShalInflectionSuggester
-} from "./shal-inflection-suggester";
-import {
-  StableInflectionSuggester
-} from "./stable-inflection-suggester";
-import type {
-  Suggester
-} from "./suggester";
+import {IgnoreOptions} from "../../util/string-normalizer";
+import {ShalInflectionSuggester} from "./shal-inflection-suggester";
+import {StableInflectionSuggester} from "./stable-inflection-suggester";
+import type {Suggester} from "./suggester";
 
 
 export * from "./revision-suggester";

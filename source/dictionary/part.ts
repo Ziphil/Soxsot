@@ -1,8 +1,6 @@
 //
 
-import {
-  Section
-} from "./section";
+import {Section} from "./section";
 
 
 export class Part<S> {

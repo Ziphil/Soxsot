@@ -1,26 +1,12 @@
 //
 
-import {
-  NewHairianDate
-} from "talqis";
-import {
-  Writable
-} from "ts-essentials";
-import {
-  v1 as uuid
-} from "uuid";
-import {
-  Dictionary
-} from "./dictionary";
-import {
-  ValidationError
-} from "./error";
-import {
-  Marker
-} from "./marker";
-import {
-  Parser
-} from "./parser";
+import {NewHairianDate} from "talqis";
+import {Writable} from "ts-essentials";
+import {v1 as uuid} from "uuid";
+import {Dictionary} from "./dictionary";
+import {ValidationError} from "./error";
+import {Marker} from "./marker";
+import {Parser} from "./parser";
 
 
 export class Word {

@@ -1,17 +1,8 @@
 //
 
-import {
-  Equivalent
-} from "./equivalent";
-import {
-  ExampleInformation,
-  Information,
-  NormalInformation,
-  PhraseInformation
-} from "./information";
-import {
-  Relation
-} from "./relation";
+import {Equivalent} from "./equivalent";
+import {ExampleInformation, Information, NormalInformation, PhraseInformation} from "./information";
+import {Relation} from "./relation";
 
 
 export class Section<S> {

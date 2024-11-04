@@ -1,11 +1,7 @@
 //
 
-import {
-  Suggestion
-} from "./suggestion";
-import {
-  Word
-} from "./word";
+import {Suggestion} from "./suggestion";
+import {Word} from "./word";
 
 
 export class SearchResult {

@@ -13,9 +13,7 @@ import {
   PhraseInformation,
   Word
 } from "../source";
-import {
-  SingleLoader
-} from "../source/io";
+import {SingleLoader} from "../source/io";
 
 
 describe("markup parser", () => {

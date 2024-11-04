@@ -1,26 +1,12 @@
 //
 
-import {
-  extname
-} from "path";
-import {
-  Dictionary
-} from "../dictionary";
-import {
-  DirectoryDiffSaver
-} from "./directory-diff-saver";
-import {
-  DirectorySaver
-} from "./directory-saver";
-import {
-  OldShaleianSaver
-} from "./old-shaleian-saver";
-import {
-  Saver
-} from "./saver";
-import {
-  SingleSaver
-} from "./single-saver";
+import {extname} from "path";
+import {Dictionary} from "../dictionary";
+import {DirectoryDiffSaver} from "./directory-diff-saver";
+import {DirectorySaver} from "./directory-saver";
+import {OldShaleianSaver} from "./old-shaleian-saver";
+import {Saver} from "./saver";
+import {SingleSaver} from "./single-saver";
 
 
 export class SaverCreator {

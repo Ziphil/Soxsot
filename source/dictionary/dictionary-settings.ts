@@ -1,9 +1,6 @@
 //
 
-import {
-  PlainRevisions,
-  Revisions
-} from "./revision";
+import {PlainRevisions, Revisions} from "./revision";
 
 
 export class DictionarySettings {

@@ -1,40 +1,15 @@
 //
 
-import {
-  Writable
-} from "ts-essentials";
-import {
-  Equivalent
-} from "./equivalent";
-import {
-  ExampleInformation,
-  Information,
-  NormalInformation,
-  PhraseInformation
-} from "./information";
-import {
-  InformationKindUtil
-} from "./information";
-import {
-  ParsedWord,
-  Parts
-} from "./parsed-word";
-import {
-  Part
-} from "./part";
-import {
-  PronouncerConfigs,
-  PronouncerCreator
-} from "./pronouncer";
-import {
-  Relation
-} from "./relation";
-import {
-  Section
-} from "./section";
-import {
-  Word
-} from "./word";
+import {Writable} from "ts-essentials";
+import {Equivalent} from "./equivalent";
+import {ExampleInformation, Information, NormalInformation, PhraseInformation} from "./information";
+import {InformationKindUtil} from "./information";
+import {ParsedWord, Parts} from "./parsed-word";
+import {Part} from "./part";
+import {PronouncerConfigs, PronouncerCreator} from "./pronouncer";
+import {Relation} from "./relation";
+import {Section} from "./section";
+import {Word} from "./word";
 
 
 export class Parser<S> {

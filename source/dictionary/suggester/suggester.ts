@@ -1,18 +1,9 @@
 //
 
-import {
-  IgnoreOptions,
-  StringNormalizer
-} from "../../util/string-normalizer";
-import {
-  Dictionary
-} from "../dictionary";
-import {
-  Suggestion
-} from "../suggestion";
-import {
-  Word
-} from "../word";
+import {IgnoreOptions, StringNormalizer} from "../../util/string-normalizer";
+import {Dictionary} from "../dictionary";
+import {Suggestion} from "../suggestion";
+import {Word} from "../word";
 
 
 export abstract class Suggester {

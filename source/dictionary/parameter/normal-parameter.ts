@@ -1,25 +1,10 @@
 //
 
-import {
-  IgnoreOptions,
-  StringNormalizer
-} from "../../util/string-normalizer";
-import {
-  Dictionary
-} from "../dictionary";
-import {
-  InflectionSuggesterCreator,
-  RevisionSuggester,
-  Suggester
-} from "../suggester";
-import {
-  Word
-} from "../word";
-import {
-  Parameter,
-  WordMode,
-  WordType
-} from "./parameter";
+import {IgnoreOptions, StringNormalizer} from "../../util/string-normalizer";
+import {Dictionary} from "../dictionary";
+import {InflectionSuggesterCreator, RevisionSuggester, Suggester} from "../suggester";
+import {Word} from "../word";
+import {Parameter, WordMode, WordType} from "./parameter";
 
 
 export class NormalParameter extends Parameter {

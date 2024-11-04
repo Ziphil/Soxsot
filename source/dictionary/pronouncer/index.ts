@@ -1,14 +1,8 @@
 //
 
-import {
-  Pronouncer
-} from "./pronouncer";
-import {
-  ShalPronouncer
-} from "./shal-pronouncer";
-import {
-  StablePronouncer
-} from "./stable-pronouncer";
+import {Pronouncer} from "./pronouncer";
+import {ShalPronouncer} from "./shal-pronouncer";
+import {StablePronouncer} from "./stable-pronouncer";
 
 
 export * from "./pronouncer";

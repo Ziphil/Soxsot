@@ -1,8 +1,6 @@
 //
 
-import {
-  MutationManager
-} from "../source/util/mutation-manager";
+import {MutationManager} from "../source/util/mutation-manager";
 
 
 function checkManager<T>(manager: MutationManager<T>, expectedChangedNames: Array<T>, expectedDeletedNames: Array<T>): void {

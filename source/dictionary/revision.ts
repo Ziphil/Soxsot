@@ -1,9 +1,6 @@
 //
 
-import {
-  IgnoreOptions,
-  StringNormalizer
-} from "../util/string-normalizer";
+import {IgnoreOptions, StringNormalizer} from "../util/string-normalizer";
 
 
 export class Revisions extends Array<Revision> {

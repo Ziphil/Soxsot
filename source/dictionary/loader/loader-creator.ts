@@ -1,17 +1,9 @@
 //
 
-import {
-  extname
-} from "path";
-import {
-  DirectoryLoader
-} from "./directory-loader";
-import {
-  Loader
-} from "./loader";
-import {
-  SingleLoader
-} from "./single-loader";
+import {extname} from "path";
+import {DirectoryLoader} from "./directory-loader";
+import {Loader} from "./loader";
+import {SingleLoader} from "./single-loader";
 
 
 export class LoaderCreator {

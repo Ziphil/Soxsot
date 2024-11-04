@@ -1,23 +1,11 @@
 //
 
-import {
-  ObjectUtil
-} from "../../util/object";
-import {
-  IgnoreOptions
-} from "../../util/string-normalizer";
-import {
-  Dictionary
-} from "../dictionary";
-import {
-  Suggestion
-} from "../suggestion";
-import {
-  Word
-} from "../word";
-import {
-  Suggester
-} from "./suggester";
+import {ObjectUtil} from "../../util/object";
+import {IgnoreOptions} from "../../util/string-normalizer";
+import {Dictionary} from "../dictionary";
+import {Suggestion} from "../suggestion";
+import {Word} from "../word";
+import {Suggester} from "./suggester";
 
 
 export class RevisionSuggester extends Suggester {

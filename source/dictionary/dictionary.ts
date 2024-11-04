@@ -1,33 +1,13 @@
 //
 
-import {
-  Writable
-} from "ts-essentials";
-import {
-  MutationManager,
-  PlainMutationManager
-} from "../util/mutation-manager";
-import {
-  DictionarySettings,
-  PlainDictionarySettings
-} from "./dictionary-settings";
-import {
-  ValidationError
-} from "./error";
-import {
-  Markers,
-  PlainMarkers
-} from "./marker";
-import {
-  Parameter
-} from "./parameter/parameter";
-import {
-  SearchResult
-} from "./search-result";
-import {
-  PlainWord,
-  Word
-} from "./word";
+import {Writable} from "ts-essentials";
+import {MutationManager, PlainMutationManager} from "../util/mutation-manager";
+import {DictionarySettings, PlainDictionarySettings} from "./dictionary-settings";
+import {ValidationError} from "./error";
+import {Markers, PlainMarkers} from "./marker";
+import {Parameter} from "./parameter/parameter";
+import {SearchResult} from "./search-result";
+import {PlainWord, Word} from "./word";
 
 
 export class Dictionary {
