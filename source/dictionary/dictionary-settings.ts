@@ -5,9 +5,9 @@ import {PlainRevisions, Revisions} from "./revision";
 
 export class DictionarySettings {
 
-  public version: string;
-  public alphabetRule: string;
-  public revisions: Revisions;
+  public readonly version: string;
+  public readonly alphabetRule: string;
+  public readonly revisions: Revisions;
 
   public constructor(version: string, alphabetRule: string, revisions: Revisions) {
     this.version = version;
