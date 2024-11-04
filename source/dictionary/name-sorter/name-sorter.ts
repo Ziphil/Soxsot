@@ -3,11 +3,11 @@
 
 export abstract class NameSorter {
 
-  public abstract calcComparisonString(name: string): string;
+  public abstract calcComparisonString(uniqueName: string): string;
 
-  public compare(firstName: string, secondName: string): -1 | 0 | 1 {
-    const firstComparisonString = this.calcComparisonString(firstName);
-    const secondComparisonString = this.calcComparisonString(secondName);
+  public compare(firstUniqueName: string, secondUniqueName: string): -1 | 0 | 1 {
+    const firstComparisonString = this.calcComparisonString(firstUniqueName);
+    const secondComparisonString = this.calcComparisonString(secondUniqueName);
     const sign = NameSorter.compareComparisonString(firstComparisonString, secondComparisonString);
     return sign;
   }

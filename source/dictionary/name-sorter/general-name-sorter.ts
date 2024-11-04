@@ -12,11 +12,11 @@ export class GeneralNameSorter extends NameSorter {
     this.alphabetString = alphabetString;
   }
 
-  public calcComparisonString(name: string): string {
+  public calcComparisonString(uniqueName: string): string {
     let comparisonString = "";
     const hasApostrophe = this.alphabetString.includes("'") || this.alphabetString.includes("’");
-    for (let i = 0 ; i < name.length ; i ++) {
-      const char = name.charAt(i);
+    for (let i = 0 ; i < uniqueName.length ; i ++) {
+      const char = uniqueName.charAt(i);
       if ((hasApostrophe || (char !== "'" && char !== "’")) && char !== "-" && char !== "+" && char !== "~") {
         const position = this.alphabetString.indexOf(char);
         if (position >= 0) {
@@ -26,17 +26,17 @@ export class GeneralNameSorter extends NameSorter {
         }
       }
     }
-    const match = name.match(/^(\+)?('|’)?(.+?)('|’)?(\+)?(~*)$/)!;
-    if (match[2]) {
+    const match = uniqueName.match(/^(\+)?('|’)?(.+?)('|’)?(\+)?(~*)$/)!;
+    if (match[4]) {
       comparisonString += String.fromCodePoint(150);
     }
-    if (match[4]) {
+    if (match[2]) {
       comparisonString += String.fromCodePoint(151);
     }
-    if (match[1]) {
+    if (match[5]) {
       comparisonString += String.fromCodePoint(160);
     }
-    if (match[5]) {
+    if (match[1]) {
       comparisonString += String.fromCodePoint(161);
     }
     if (match[6].length > 0) {

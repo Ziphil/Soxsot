@@ -177,5 +177,9 @@
       "names": {"ja": "非動詞修飾", "en": "Nonverb-modifying"},
       "prefix": "i"
     }
+  },
+  "order": {
+    "alphabet": "sztdkgfvpbcqxjlrnmyhaeiou",
+    "diacritic": "\u0302\u0301\u0300"
   }
 }
