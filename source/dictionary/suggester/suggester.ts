@@ -1,6 +1,6 @@
 //
 
-import {IgnoreOptions, StringNormalizer} from "../../util/string-normalizer";
+import {IgnoreOptions, normalizeString} from "../../util/string";
 import {Dictionary} from "../dictionary";
 import {Suggestion} from "../suggestion";
 import {Word} from "../word";
@@ -14,7 +14,7 @@ export abstract class Suggester {
 
   public constructor(text: string, ignoreOptions: IgnoreOptions) {
     this.text = text;
-    this.normalizedText = StringNormalizer.normalize(text, ignoreOptions);
+    this.normalizedText = normalizeString(text, ignoreOptions);
     this.ignoreOptions = ignoreOptions;
   }
 

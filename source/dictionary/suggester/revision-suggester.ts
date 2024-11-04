@@ -1,7 +1,7 @@
 //
 
 import {ObjectUtil} from "../../util/object";
-import {IgnoreOptions} from "../../util/string-normalizer";
+import {IgnoreOptions} from "../../util/string";
 import {Dictionary} from "../dictionary";
 import {Suggestion} from "../suggestion";
 import {Word} from "../word";
