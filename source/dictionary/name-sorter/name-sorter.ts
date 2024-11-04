@@ -15,10 +15,12 @@ export abstract class NameSorter {
   public sort(strings: Array<string>): Array<string>;
   public sort<V>(values: Array<V>, getName: (value: V) => string): Array<V>;
   public sort<V>(values: Array<V>, getName?: (value: V) => string): Array<V> {
+    const comparisonStrings = new Map<V, string>();
     const sortedValues = values.sort((firstValue, secondValue) => {
-      const firstName = getName?.(firstValue) ?? firstValue as string;
-      const secondName = getName?.(secondValue) ?? firstValue as string;
-      return this.compare(firstName, secondName);
+      const firstComparisonString = comparisonStrings.get(firstValue) ?? this.calcComparisonString(getName?.(firstValue) ?? firstValue as string);
+      const secondComparisonString = comparisonStrings.get(secondValue) ?? this.calcComparisonString(getName?.(secondValue) ?? secondValue as string);
+      const sign = NameSorter.compareComparisonString(firstComparisonString, secondComparisonString);
+      return sign;
     });
     return sortedValues;
   }
