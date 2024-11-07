@@ -1,11 +1,7 @@
 //
 
-import {
-  EventEmitter
-} from "events";
-import {
-  Dictionary
-} from "../dictionary";
+import {EventEmitter} from "events";
+import {Dictionary} from "../dictionary";
 
 
 export abstract class Saver extends EventEmitter {

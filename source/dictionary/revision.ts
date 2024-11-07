@@ -1,9 +1,6 @@
 //
 
-import {
-  IgnoreOptions,
-  StringNormalizer
-} from "../util/string-normalizer";
+import {IgnoreOptions, normalizeString} from "../util/string";
 
 
 export class Revisions extends Array<Revision> {
@@ -26,9 +23,9 @@ export class Revisions extends Array<Revision> {
   public resolve(name: string, ignoreOptions: IgnoreOptions): Array<string> {
     const outerThis = this;
     const resolveRec = function (currentName: string, beforeNames: Array<string>): Array<string> {
-      const normalizedCurrentName = StringNormalizer.normalize(currentName, ignoreOptions);
+      const normalizedCurrentName = normalizeString(currentName, ignoreOptions);
       const revisions = outerThis.filter((revision) => {
-        const normalizedBeforeName = StringNormalizer.normalize(revision.beforeName, ignoreOptions);
+        const normalizedBeforeName = normalizeString(revision.beforeName, ignoreOptions);
         return normalizedBeforeName === normalizedCurrentName;
       });
       const resultNames = [];

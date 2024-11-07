@@ -1,8 +1,6 @@
 //
 
-import {
-  ShalPronouncer
-} from "../../source/dictionary/pronouncer/shal-pronouncer";
+import {ShalPronouncer} from "../../source/dictionary/pronouncer/shal-pronouncer";
 
 
 describe("pronouncer (version 6)", () => {

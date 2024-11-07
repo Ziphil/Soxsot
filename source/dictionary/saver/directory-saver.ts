@@ -1,32 +1,14 @@
 //
 
-import {
-  promises as fs
-} from "fs";
-import {
-  join as joinPath
-} from "path";
-import {
-  Dictionary
-} from "../dictionary";
-import {
-  DictionarySettings
-} from "../dictionary-settings";
-import {
-  Markers
-} from "../marker";
-import {
-  Word
-} from "../word";
-import {
-  FileNameResolver
-} from "./file-name-resolver";
-import {
-  Saver
-} from "./saver";
-import {
-  Serializer
-} from "./serializer";
+import {promises as fs} from "fs";
+import {join as joinPath} from "path";
+import {Dictionary} from "../dictionary";
+import {DictionarySettings} from "../dictionary-settings";
+import {Markers} from "../marker";
+import {Word} from "../word";
+import {FileNameResolver} from "./file-name-resolver";
+import {Saver} from "./saver";
+import {Serializer} from "./serializer";
 
 
 export class DirectorySaver extends Saver {

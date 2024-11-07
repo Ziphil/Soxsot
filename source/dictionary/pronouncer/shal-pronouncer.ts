@@ -1,8 +1,6 @@
 //
 
-import {
-  Pronouncer
-} from "./pronouncer";
+import {Pronouncer} from "./pronouncer";
 
 
 export class ShalPronouncer extends Pronouncer {

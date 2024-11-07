@@ -1,21 +1,11 @@
 //
 
 import fs from "fs";
-import {
-  WriteStream
-} from "fs";
-import {
-  Dictionary
-} from "../dictionary";
-import {
-  Word
-} from "../word";
-import {
-  Saver
-} from "./saver";
-import {
-  Serializer
-} from "./serializer";
+import {WriteStream} from "fs";
+import {Dictionary} from "../dictionary";
+import {Word} from "../word";
+import {Saver} from "./saver";
+import {Serializer} from "./serializer";
 
 
 export class SingleSaver extends Saver {

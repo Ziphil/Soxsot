@@ -1,33 +1,14 @@
 //
 
-import {
-  Writable
-} from "ts-essentials";
-import {
-  MutationManager,
-  PlainMutationManager
-} from "../util/mutation-manager";
-import {
-  DictionarySettings,
-  PlainDictionarySettings
-} from "./dictionary-settings";
-import {
-  ValidationError
-} from "./error";
-import {
-  Markers,
-  PlainMarkers
-} from "./marker";
-import {
-  Parameter
-} from "./parameter/parameter";
-import {
-  SearchResult
-} from "./search-result";
-import {
-  PlainWord,
-  Word
-} from "./word";
+import {Writable} from "ts-essentials";
+import {MutationManager, PlainMutationManager} from "../util/mutation-manager";
+import {DictionarySettings, PlainDictionarySettings} from "./dictionary-settings";
+import {ValidationError} from "./error";
+import {Markers, PlainMarkers} from "./marker";
+import {GeneralNameSorter, NameSorter} from "./name-sorter";
+import {Parameter} from "./parameter/parameter";
+import {SearchResult} from "./search-result";
+import {PlainWord, Word} from "./word";
 
 
 export class Dictionary {
@@ -37,6 +18,7 @@ export class Dictionary {
   public readonly markers: Markers;
   public readonly path: string | null;
   public readonly mutationManager: MutationManager<string>;
+  public readonly nameSorter: GeneralNameSorter;
 
   public constructor(words: ReadonlyArray<Word>, settings: DictionarySettings, markers: Markers, path: string | null, mutationManager?: MutationManager<string>) {
     this.words = words;
@@ -44,6 +26,7 @@ export class Dictionary {
     this.markers = markers;
     this.path = path;
     this.mutationManager = mutationManager ?? new MutationManager();
+    this.nameSorter = new GeneralNameSorter(settings.alphabetRule);
     for (const word of words) {
       word.setDictionary(this);
     }
@@ -80,7 +63,7 @@ export class Dictionary {
         }
         suggestions.push(...parameter.suggest(word, this));
       }
-      Word.sortWords(words);
+      NameSorter.sortPrecalced(words, (word) => word.comparisonString);
       return [words, suggestions];
     });
     return result;
@@ -175,6 +158,7 @@ export class Dictionary {
   public changeSettings(newSettings: PlainDictionarySettings): void {
     const newRealSettings = DictionarySettings.fromPlain(newSettings);
     this.writable.settings = newRealSettings;
+    this.writable.nameSorter = new GeneralNameSorter(newRealSettings.alphabetRule);
   }
 
   private get writable(): Writable<this> {

@@ -1,31 +1,15 @@
 //
 
 import fs from "fs";
-import {
-  ReadStream
-} from "fs";
+import {ReadStream} from "fs";
 import readline from "readline";
-import {
-  Interface
-} from "readline";
-import {
-  Dictionary
-} from "../dictionary";
-import {
-  DictionarySettings
-} from "../dictionary-settings";
-import {
-  Markers
-} from "../marker";
-import {
-  Word
-} from "../word";
-import {
-  Deserializer
-} from "./deserializer";
-import {
-  Loader
-} from "./loader";
+import {Interface} from "readline";
+import {Dictionary} from "../dictionary";
+import {DictionarySettings} from "../dictionary-settings";
+import {Markers} from "../marker";
+import {Word} from "../word";
+import {Deserializer} from "./deserializer";
+import {Loader} from "./loader";
 
 
 export class SingleLoader extends Loader {

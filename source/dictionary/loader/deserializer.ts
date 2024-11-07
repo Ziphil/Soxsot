@@ -1,24 +1,10 @@
 //
 
-import {
-  DictionarySettings
-} from "../dictionary-settings";
-import {
-  ParseError
-} from "../error";
-import {
-  Marker,
-  MarkerUtil,
-  Markers
-} from "../marker";
-import {
-  Revision,
-  Revisions
-} from "../revision";
-import {
-  PlainContents,
-  Word
-} from "../word";
+import {DictionarySettings} from "../dictionary-settings";
+import {ParseError} from "../error";
+import {Marker, MarkerUtil, Markers} from "../marker";
+import {Revision, Revisions} from "../revision";
+import {PlainContents, Word} from "../word";
 
 
 export class Deserializer {

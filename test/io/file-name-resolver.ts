@@ -2,9 +2,7 @@
 
 
 import "jest-extended";
-import {
-  FileNameResolver
-} from "../../source";
+import {FileNameResolver} from "../../source";
 
 
 describe("file name resolver", () => {

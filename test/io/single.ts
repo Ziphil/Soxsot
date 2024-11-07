@@ -1,20 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {
-  promises as fs
-} from "fs";
+import {promises as fs} from "fs";
 import "jest-extended";
 import mock from "mock-fs";
 import dedent from "ts-dedent";
-import {
-  Dictionary,
-  DictionarySettings,
-  Markers
-} from "../../source";
-import {
-  SingleLoader,
-  SingleSaver
-} from "../../source/io";
+import {Dictionary, DictionarySettings, Markers} from "../../source";
+import {SingleLoader, SingleSaver} from "../../source/io";
 
 
 describe("load/save single file format", () => {

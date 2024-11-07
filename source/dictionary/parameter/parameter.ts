@@ -1,17 +1,9 @@
 //
 
-import {
-  Dictionary
-} from "../dictionary";
-import {
-  Suggester
-} from "../suggester/suggester";
-import {
-  Suggestion
-} from "../suggestion";
-import {
-  Word
-} from "../word";
+import {Dictionary} from "../dictionary";
+import {Suggester} from "../suggester/suggester";
+import {Suggestion} from "../suggestion";
+import {Word} from "../word";
 
 
 export abstract class Parameter {

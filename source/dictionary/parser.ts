@@ -1,40 +1,15 @@
 //
 
-import {
-  Writable
-} from "ts-essentials";
-import {
-  Equivalent
-} from "./equivalent";
-import {
-  ExampleInformation,
-  Information,
-  NormalInformation,
-  PhraseInformation
-} from "./information";
-import {
-  InformationKindUtil
-} from "./information";
-import {
-  ParsedWord,
-  Parts
-} from "./parsed-word";
-import {
-  Part
-} from "./part";
-import {
-  PronouncerConfigs,
-  PronouncerCreator
-} from "./pronouncer";
-import {
-  Relation
-} from "./relation";
-import {
-  Section
-} from "./section";
-import {
-  Word
-} from "./word";
+import {Writable} from "ts-essentials";
+import {Equivalent} from "./equivalent";
+import {ExampleInformation, Information, NormalInformation, PhraseInformation} from "./information";
+import {InformationKindUtil} from "./information";
+import {ParsedWord, Parts} from "./parsed-word";
+import {Part} from "./part";
+import {PronouncerConfigs, createPronouncerByVersion} from "./pronouncer";
+import {Relation} from "./relation";
+import {Section} from "./section";
+import {Word} from "./word";
 
 
 export class Parser<S> {
@@ -62,7 +37,7 @@ export class Parser<S> {
   /** 与えられた単語データをパースして、`ParsedWord` オブジェクトとして返します。
    * パースした全てのデータではなく一部の項目の内容のみが必要な場合は、`lookup` から始まるメソッドを使用した方が軽量です。*/
   public parse(word: Word): ParsedWord<S> {
-    const pronouncer = PronouncerCreator.createByVersion(word.dictionary?.settings.version ?? "", this.configs?.pronouncerConfigs);
+    const pronouncer = createPronouncerByVersion(word.dictionary?.settings.version ?? "", this.configs?.pronouncerConfigs);
     const name = word.name;
     const uniqueName = word.uniqueName;
     const date = word.date;

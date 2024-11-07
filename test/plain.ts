@@ -10,12 +10,8 @@ import {
   Revisions,
   Word
 } from "../source";
-import {
-  SingleLoader
-} from "../source/io";
-import {
-  MutationManager
-} from "../source/util/mutation-manager";
+import {SingleLoader} from "../source/io";
+import {MutationManager} from "../source/util/mutation-manager";
 
 
 async function getEditedDictionary(): Promise<Dictionary> {

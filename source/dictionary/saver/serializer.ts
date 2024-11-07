@@ -1,18 +1,9 @@
 //
 
-import {
-  DictionarySettings
-} from "../dictionary-settings";
-import {
-  Markers
-} from "../marker";
-import {
-  Revision,
-  Revisions
-} from "../revision";
-import {
-  Word
-} from "../word";
+import {DictionarySettings} from "../dictionary-settings";
+import {Markers} from "../marker";
+import {Revision, Revisions} from "../revision";
+import {Word} from "../word";
 
 
 export class Serializer {

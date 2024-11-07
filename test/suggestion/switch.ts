@@ -3,17 +3,9 @@
 import "jest-extended";
 import mock from "mock-fs";
 import dedent from "ts-dedent";
-import {
-  Dictionary,
-  NormalParameter
-} from "../../source";
-import {
-  ShalInflectionSuggester,
-  StableInflectionSuggester
-} from "../../source/dictionary/suggester";
-import {
-  SingleLoader
-} from "../../source/io";
+import {Dictionary, NormalParameter} from "../../source";
+import {ShalInflectionSuggester, StableInflectionSuggester} from "../../source/dictionary/suggester";
+import {SingleLoader} from "../../source/io";
 
 
 async function getDictionary(): Promise<Dictionary> {

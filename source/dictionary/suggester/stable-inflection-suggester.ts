@@ -1,32 +1,13 @@
 //
 
-import {
-  ObjectUtil
-} from "../../util/object";
-import {
-  IgnoreOptions,
-  StringNormalizer
-} from "../../util/string-normalizer";
-import {
-  STABLE_DATA,
-  StableSort
-} from "../data/stable-data";
-import {
-  Dictionary
-} from "../dictionary";
-import {
-  Parser
-} from "../parser";
-import {
-  Suggestion,
-  SuggestionDescription
-} from "../suggestion";
-import {
-  Word
-} from "../word";
-import {
-  Suggester
-} from "./suggester";
+import {ObjectUtil} from "../../util/object";
+import {IgnoreOptions, normalizeString} from "../../util/string";
+import {STABLE_DATA, StableSort} from "../data/stable-data";
+import {Dictionary} from "../dictionary";
+import {Parser} from "../parser";
+import {Suggestion, SuggestionDescription} from "../suggestion";
+import {Word} from "../word";
+import {Suggester} from "./suggester";
 
 
 export class StableInflectionSuggester extends Suggester {
@@ -177,7 +158,7 @@ export class StableInflectionSuggester extends Suggester {
 
   public suggest(word: Word, dictionary: Dictionary): Array<Suggestion> {
     const suggestions = [];
-    const normalizedName = StringNormalizer.normalize(word.name, this.ignoreOptions);
+    const normalizedName = normalizeString(word.name, this.ignoreOptions);
     for (const candidate of this.candidates) {
       const [sort, kind, descriptions, name] = candidate;
       const wordSort = Parser.createKeep().lookupSort(word, "ja");

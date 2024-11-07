@@ -1,8 +1,6 @@
 //
 
-import {
-  Part
-} from "./part";
+import {Part} from "./part";
 
 
 export class ParsedWord<S> {
