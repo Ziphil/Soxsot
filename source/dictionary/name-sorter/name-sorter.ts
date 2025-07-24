@@ -17,8 +17,18 @@ export abstract class NameSorter {
   public sort<V>(values: Array<V>, getName?: (value: V) => string): Array<V> {
     const comparisonStrings = new Map<V, string>();
     const sortedValues = values.sort((firstValue, secondValue) => {
-      const firstComparisonString = comparisonStrings.get(firstValue) ?? this.calcComparisonString(getName?.(firstValue) ?? firstValue as string);
-      const secondComparisonString = comparisonStrings.get(secondValue) ?? this.calcComparisonString(getName?.(secondValue) ?? secondValue as string);
+      const firstComparisonString = comparisonStrings.get(firstValue) ?? (() => {
+        const name = getName?.(firstValue) ?? firstValue as string;
+        const comparisonString = this.calcComparisonString(name);
+        comparisonStrings.set(firstValue, comparisonString);
+        return comparisonString;
+      })();
+      const secondComparisonString = comparisonStrings.get(secondValue) ?? (() => {
+        const name = getName?.(secondValue) ?? secondValue as string;
+        const comparisonString = this.calcComparisonString(name);
+        comparisonStrings.set(secondValue, comparisonString);
+        return comparisonString;
+      })();
       const sign = NameSorter.compareComparisonString(firstComparisonString, secondComparisonString);
       return sign;
     });
